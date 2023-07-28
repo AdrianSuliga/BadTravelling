@@ -3,6 +3,9 @@
         <file>images/AppScreenArt/TitleScreenBackground.png</file>
         <file>images/Level 1 - Central Square/Bezdomny.png</file>
         <file>images/Level 1 - Central Square/Dresiarz.png</file>
+        <file>images/AppScreenArt/TitleIcon.png</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/other">
+        <file>other/Girassol-Regular.ttf</file>
+    </qresource>
 </RCC>
