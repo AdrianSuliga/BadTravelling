@@ -3,8 +3,10 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
+#include <QLabel>
 #include "titlescreen.h"
 #include "titlebar.h"
+#include "sexscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,11 +25,22 @@ private slots:
     void unmaximizeIt();
     //TITLE SCREEN
     void setTitleScreen();
+    void transitionToSexScreen();
+    //SEX SCREEN
+    void setSexScreen();
+
+    //GLOBAL FUNCTIONALITIES
+    void fadeAwayAnimation(QWidget *widget);
+    void delay(int miliseconds);
 
 private:
     Ui::MainWindow *ui;
-    TitleScreen *tS;
+    int sex; //0 - woman, 1 - man
+
     TitleBar *tB;
+
+    TitleScreen *tS;
+    SexScreen *sS;
 
     QVBoxLayout *mainLayout;
 };
