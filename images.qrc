@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/AppScreenArt/TitleScreenBackground.png</file>
+        <file>images/Level 1 - Central Square/Bezdomny.png</file>
+        <file>images/Level 1 - Central Square/Dresiarz.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
