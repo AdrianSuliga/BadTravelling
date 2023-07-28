@@ -2,6 +2,7 @@
 #define TITLEBAR_H
 
 #include <QWidget>
+#include <QFont>
 
 namespace Ui {
 class TitleBar;
@@ -21,13 +22,12 @@ signals:
     void userWantsToExit();
 private slots:
     void on_minimiseButton_clicked();
-
     void on_maximiseButton_clicked();
-
     void on_exitButton_clicked();
 
 private:
     Ui::TitleBar *ui;
+    QFont Garissol;
 };
 
 #endif // TITLEBAR_H
