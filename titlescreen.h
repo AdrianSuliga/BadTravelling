@@ -2,6 +2,7 @@
 #define TITLESCREEN_H
 
 #include <QWidget>
+#include <QFont>
 
 namespace Ui {
 class TitleScreen;
@@ -22,15 +23,13 @@ signals:
     void exitClicked();
 private slots:
     void on_exitButton_clicked();
-
     void on_aboutButton_clicked();
-
     void on_newgameButton_clicked();
-
     void on_continueButton_clicked();
 
 private:
     Ui::TitleScreen *ui;
+    QFont Girassol;
 };
 
 #endif // TITLESCREEN_H
