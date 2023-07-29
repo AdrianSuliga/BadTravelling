@@ -60,30 +60,36 @@ void MainWindow::setTitleScreen()
 
 void MainWindow::transitionToSexScreen()
 {
-    fadeAwayAnimation(tS);
-    delay(1000);
+    fadeAwayAnimation(tS, 500);
+    delay(500);
     delete tS;
-    setSexScreen();
-}
 
-void MainWindow::setSexScreen()
-{
     sS = new SexScreen();
-
     mainLayout -> insertWidget(1, sS);
-    sS -> animateText();
+    fadeInAnimation(sS, 500);
 }
 
-void MainWindow::fadeAwayAnimation(QWidget *widget)
+void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)
 {
     QGraphicsOpacityEffect *fadeAwayEffect = new QGraphicsOpacityEffect(widget);
     widget->setGraphicsEffect(fadeAwayEffect);
     QPropertyAnimation *fadeAwayAnimation = new QPropertyAnimation(fadeAwayEffect, "opacity");
-    fadeAwayAnimation -> setDuration(1000);
+    fadeAwayAnimation -> setDuration(ms);
     fadeAwayAnimation -> setStartValue(1);
     fadeAwayAnimation -> setEndValue(0);
     fadeAwayAnimation -> setEasingCurve(QEasingCurve::OutBack);
     fadeAwayAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
+}
+void MainWindow::fadeInAnimation(QWidget *widget, int ms)
+{
+    QGraphicsOpacityEffect *fadeInEffect = new QGraphicsOpacityEffect(widget);
+    widget -> setGraphicsEffect(fadeInEffect);
+    QPropertyAnimation *fadeInAnimation = new QPropertyAnimation(fadeInEffect, "opacity");
+    fadeInAnimation -> setDuration(ms);
+    fadeInAnimation -> setStartValue(0);
+    fadeInAnimation -> setEndValue(1);
+    fadeInAnimation -> setEasingCurve(QEasingCurve::InBack);
+    fadeInAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
 }
 void MainWindow::delay(int miliseconds)
 {
