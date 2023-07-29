@@ -25,12 +25,11 @@ private slots:
     void unmaximizeIt();
     //TITLE SCREEN
     void setTitleScreen();
-    void transitionToSexScreen();
     //SEX SCREEN
-    void setSexScreen();
-
+    void transitionToSexScreen();
     //GLOBAL FUNCTIONALITIES
-    void fadeAwayAnimation(QWidget *widget);
+    void fadeAwayAnimation(QWidget *widget, int ms);
+    void fadeInAnimation(QWidget *widget, int ms);
     void delay(int miliseconds);
 
 private:
