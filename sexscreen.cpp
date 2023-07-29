@@ -4,6 +4,7 @@
 #include <QStyleOption>
 #include <QTime>
 #include <QFontDatabase>
+#include <QDebug>
 
 SexScreen::SexScreen(QWidget *parent) :
     QWidget(parent),
@@ -16,6 +17,8 @@ SexScreen::SexScreen(QWidget *parent) :
     QFont Girassol(family);
 
     ui->titleLabel->setFont(family);
+    connect(ui->manWidget, &QClickableWidget::clicked, this, [this]() {emit manChosen();});
+    connect(ui->womanWidget, &QClickableWidget::clicked, this, [this]() {emit womanChosen();});
 }
 
 SexScreen::~SexScreen()
@@ -31,22 +34,4 @@ void SexScreen::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void SexScreen::animateText()
-{
-    QString showThis = "";
-    QString textToAnimate = ui->titleLabel->text();
-    for (int i=0; i<textToAnimate.length(); i++)
-    {
-        showThis += textToAnimate[i];
-        ui->titleLabel->setText(showThis);
-        delay(50);
-    }
-}
 
-void SexScreen::delay(int miliseconds)
-{
-    QTime dieTime = QTime::currentTime().addMSecs(miliseconds);
-    while (QTime::currentTime() < dieTime) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-    }
-}
