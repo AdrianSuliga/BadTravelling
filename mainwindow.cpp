@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <QFile>
 #include <QTime>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
@@ -13,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setWindowState(Qt::WindowFullScreen);
     setWindowTitle("NIEFORTUNNA PODRÓŻ");
+    setWindowIcon(QIcon(QPixmap(":/images/images/AppScreenArt/TitleIcon.png")));
     setTitleScreen();
     ui->centralwidget->layout()->setContentsMargins(0, 0, 0, 0);
     ui->centralwidget->layout()->setSpacing(0);
@@ -49,7 +51,7 @@ void MainWindow::setTitleScreen()
     mainLayout -> insertWidget(1, tS);
 
     //connect(tS, &TitleScreen::continueClicked, this, );
-    connect(tS, &TitleScreen::newgameClicked, this, &MainWindow::transitionToSexScreen);
+    connect(tS, &TitleScreen::newgameClicked, this, &MainWindow::setSexScreen);
     //connect(tS, &TitleScreen::aboutClicked, this );
     connect(tS, &TitleScreen::exitClicked, this, &MainWindow::close);
 
@@ -58,15 +60,61 @@ void MainWindow::setTitleScreen()
     connect(tB, &TitleBar::userWantsToExit, this, &MainWindow::close);
 }
 
-void MainWindow::transitionToSexScreen()
+void MainWindow::setSexScreen()
 {
     fadeAwayAnimation(tS, 500);
-    delay(500);
     delete tS;
 
     sS = new SexScreen();
     mainLayout -> insertWidget(1, sS);
     fadeInAnimation(sS, 500);
+
+    connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setPrologueScreen();});
+    connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setPrologueScreen();});
+}
+
+void MainWindow::setPrologueScreen()
+{
+    fadeAwayAnimation(sS, 500);
+    delete sS;
+
+    pS = new PrologueScreen(this, sex);
+    mainLayout -> insertWidget(1, pS);
+    fadeInAnimation(pS, 2000);
+    animatePrologueText(":/dialogs/dialogs/male/Level 0 - Prologue/PrologWstep.txt");
+}
+void MainWindow::animatePrologueText(QString path)
+{
+    QFile textfile(path);
+    int lineCount = 1;
+    if (textfile.open(QIODevice::ReadOnly))
+    {
+        QTextStream stream(&textfile);
+        while (stream.atEnd() == false)
+        {
+            QString line = stream.readLine();
+            if (line == "")
+            {
+                pS->animateText("");
+                delay(1000);
+            }
+            else if (lineCount == 7 || lineCount == 9 || lineCount == 10)
+            {
+                pS->animateText(line);
+                fadeInAnimation(pS, 2000);
+                delay(1500);
+                fadeAwayAnimation(pS, 2000);
+            }
+            else
+            {
+                pS->animateText(line);
+                fadeInAnimation(pS, 1500);
+                delay(1000);
+                fadeAwayAnimation(pS, 1500);
+            }
+            lineCount++;
+        }
+    }
 }
 
 void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)
@@ -79,6 +127,7 @@ void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)
     fadeAwayAnimation -> setEndValue(0);
     fadeAwayAnimation -> setEasingCurve(QEasingCurve::OutBack);
     fadeAwayAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
+    delay(ms);
 }
 void MainWindow::fadeInAnimation(QWidget *widget, int ms)
 {
@@ -90,6 +139,7 @@ void MainWindow::fadeInAnimation(QWidget *widget, int ms)
     fadeInAnimation -> setEndValue(1);
     fadeInAnimation -> setEasingCurve(QEasingCurve::InBack);
     fadeInAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
+    delay(ms);
 }
 void MainWindow::delay(int miliseconds)
 {
