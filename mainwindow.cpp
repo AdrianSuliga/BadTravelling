@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <QMessageBox>
 #include <QFile>
 #include <QTime>
 #include <QGraphicsOpacityEffect>
@@ -81,7 +82,19 @@ void MainWindow::setPrologueScreen()
     pS = new PrologueScreen(this, sex);
     mainLayout -> insertWidget(1, pS);
     fadeInAnimation(pS, 2000);
-    animatePrologueText(":/dialogs/dialogs/male/Level 0 - Prologue/PrologWstep.txt");
+    /*switch (sex)
+    {
+    case 0:
+        animatePrologueText(":/dialogs/dialogs/female/Level 0 - Prologue/PrologWstep.txt");
+        break;
+    case 1:
+        animatePrologueText(":/dialogs/dialogs/male/Level 0 - Prologue/PrologWstep.txt");
+        break;
+    default:
+        QMessageBox::critical(this, "ERROR", "Cannot initialize dialog");
+        return;
+    }*/
+    setPrologueGameplayScreen();
 }
 void MainWindow::animatePrologueText(QString path)
 {
@@ -96,25 +109,41 @@ void MainWindow::animatePrologueText(QString path)
             if (line == "")
             {
                 pS->animateText("");
-                delay(1000);
+                delay(100);
             }
-            else if (lineCount == 7 || lineCount == 9 || lineCount == 10)
+            else if (lineCount == 4 || lineCount == 7 || lineCount == 9 || lineCount == 10)
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 2000);
-                delay(1500);
-                fadeAwayAnimation(pS, 2000);
+                fadeInAnimation(pS, 300);
+                delay(500);
+                fadeAwayAnimation(pS, 100);
             }
             else
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 1500);
-                delay(1000);
-                fadeAwayAnimation(pS, 1500);
+                fadeInAnimation(pS, 300);
+                delay(200);
+                fadeAwayAnimation(pS, 100);
             }
             lineCount++;
         }
     }
+}
+
+void MainWindow::setPrologueGameplayScreen()
+{
+    pG = new PrologueGameplay(this);
+    delete pS;
+    mainLayout -> insertWidget(1, pG);
+    fadeInAnimation(pG, 2000);
+
+    connect(pG, &PrologueGameplay::prologueEnded, this, &MainWindow::setGameScreen);
+}
+
+void MainWindow::setGameScreen()
+{
+    fadeAwayAnimation(pG, 500);
+    delete pG;
 }
 
 void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)
