@@ -8,7 +8,7 @@ PrologueScreen::PrologueScreen(QWidget *parent, int sex) :
     ui(new Ui::PrologueScreen)
 {
     ui->setupUi(this);
-    int id = QFontDatabase::addApplicationFont(":/other/other/Girassol-Regular.ttf");
+    int id = QFontDatabase::addApplicationFont(":/other/other/Fonts/Girassol-Regular.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont Girassol(family);
     ui->infoLabel->setFont(Girassol);
@@ -21,13 +21,6 @@ PrologueScreen::~PrologueScreen()
 
 void PrologueScreen::animateText(QString text)
 {
-    /*QString current = "";
-    for (int i=0; i<text.length(); i++)
-    {
-        current += text[i];
-        ui->infoLabel->setText(current);
-        delay(50);
-    }*/
     ui->infoLabel->setText(text);
 }
 void PrologueScreen::delay(int ms)
