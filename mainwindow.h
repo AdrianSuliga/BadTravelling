@@ -8,6 +8,7 @@
 #include "titlebar.h"
 #include "sexscreen.h"
 #include "prologuescreen.h"
+#include "prologuegameplay.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -31,6 +32,10 @@ private slots:
     //PROLOGUE SCREEN
     void setPrologueScreen();
     void animatePrologueText(QString path);
+    //PROLOGUE GAMEPLAY SCREEN
+    void setPrologueGameplayScreen();
+    //GAME SCREEN
+    void setGameScreen();
     //GLOBAL FUNCTIONALITIES
     void fadeAwayAnimation(QWidget *widget, int ms);
     void fadeInAnimation(QWidget *widget, int ms);
@@ -45,6 +50,7 @@ private:
     TitleScreen *tS;
     SexScreen *sS;
     PrologueScreen *pS;
+    PrologueGameplay *pG;
 
     QVBoxLayout *mainLayout;
 };
