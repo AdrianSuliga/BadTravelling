@@ -70,8 +70,10 @@ void MainWindow::setSexScreen()
     mainLayout -> insertWidget(1, sS);
     fadeInAnimation(sS, 500);
 
-    connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setPrologueScreen();});
-    connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setPrologueScreen();});
+    //connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setPrologueScreen();});
+    //connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setPrologueScreen();});
+    connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setGameScreen();});
+    connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setGameScreen();});
 }
 
 void MainWindow::setPrologueScreen()
@@ -132,7 +134,7 @@ void MainWindow::animatePrologueText(QString path)
 
 void MainWindow::setPrologueGameplayScreen()
 {
-    pG = new PrologueGameplay(this);
+    pG = new PrologueGameplay(this, sex);
     delete pS;
     mainLayout -> insertWidget(1, pG);
     fadeInAnimation(pG, 2000);
@@ -142,8 +144,12 @@ void MainWindow::setPrologueGameplayScreen()
 
 void MainWindow::setGameScreen()
 {
-    fadeAwayAnimation(pG, 500);
-    delete pG;
+    fadeAwayAnimation(sS, 500);
+    delete sS;
+
+    gS = new GameScreen(this);
+    mainLayout -> insertWidget(1, gS);
+    fadeInAnimation(gS, 2000);
 }
 
 void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)
