@@ -12,7 +12,7 @@ class PrologueGameplay : public QWidget
     Q_OBJECT
 
 public:
-    explicit PrologueGameplay(QWidget *parent = nullptr);
+    explicit PrologueGameplay(QWidget *parent = nullptr, int sex = -1);
     ~PrologueGameplay();
 private slots:
     void animateText(QString text);
@@ -27,7 +27,7 @@ signals:
 private:
     Ui::PrologueGameplay *ui;
     int dialogCount;
-    QString dialogs[9];
+    QString dialogs[10];
 };
 
 #endif // PROLOGUEGAMEPLAY_H
