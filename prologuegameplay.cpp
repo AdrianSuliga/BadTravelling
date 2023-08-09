@@ -5,13 +5,16 @@
 #include <QPainter>
 #include <QStyleOption>
 
-PrologueGameplay::PrologueGameplay(QWidget *parent) :
+PrologueGameplay::PrologueGameplay(QWidget *parent, int sex) :
     QWidget(parent),
     ui(new Ui::PrologueGameplay)
 {
     ui->setupUi(this);
     dialogCount = 0;
-    readDialogFromFile(":/dialogs/dialogs/female/Level 0 - Prologue/MonologBohatera_01.txt");
+    if (sex == 0)
+        readDialogFromFile(":/dialogs/dialogs/female/Level 0 - Prologue/MonologBohatera_01.txt");
+    if (sex == 1)
+        readDialogFromFile(":/dialogs/dialogs/male/Level 0 - Prologue/MonologBohatera_01.txt");
     animateText(dialogs[0]);
 }
 
@@ -56,14 +59,24 @@ void PrologueGameplay::on_nextPageButton_clicked()
 {
     ui->nextPageButton->setEnabled(false);
     dialogCount++;
-    if (dialogCount == 3)
-        changeBackground(0);
-    if (dialogCount == 6)
-        changeBackground(1);
-    if (dialogCount == 7)
+    switch (dialogCount)
     {
+    case 2:
+        changeBackground(0);
+        break;
+    case 5:
+        changeBackground(1);
+        break;
+    case 6:
+        changeBackground(2);
+        break;
+    case 7:
+        changeBackground(3);
+        break;
+    case 10:
         emit prologueEnded();
         return;
+        break;
     }
     animateText(dialogs[dialogCount]);
     ui->nextPageButton->setEnabled(true);
@@ -86,33 +99,33 @@ void PrologueGameplay::delay(int ms)
 
 void PrologueGameplay::changeBackground(int whichOne)
 {
-    QString fstver = "#PrologueGameplay {"
-            "border-image: url(:/images/images/AppScreenArt/TitleScreenBackground.png) 0 0 0 0 stretch stretch;"
-            "}"
-            "#mainWidget {"
-            "border-style: solid;"
-            "font-size: 22px;"
-            "font-weight: bold;"
-            "background-color: rgba(40,40,40,150);"
-            "padding-left: 18px;"
-            "}"
-            "#dialogLabel {"
-            "font-size: 20px;"
-            "color: rgb(180,180,180);"
-            "}"
-            "#nextPageButton {"
-            "border-style: solid;"
-            "font-weight: bold;"
-            "font-size: 18px;"
-            "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), "
-                                              "stop:1 rgba(60,60,60,200));"
-            "color: rgb(180, 180, 180);"
-            "}"
-            "#nextPageButton:hover {"
-            "background-color: rgba(60,60,60, 150);"
-            "}";
-    QString sndver = "#PrologueGameplay {"
-                     "border-image: url(:/images/images/Level 0 - Prologue/WloszczowaPolnoc.png) 0 0 0 0 stretch stretch;"
+    QString pic2ver = "#PrologueGameplay {"
+                    "border-image: url(:/images/images/Level 0 - Prologue/Pic2.png) 0 0 0 0 stretch stretch;"
+                    "}"
+                    "#mainWidget {"
+                    "border-style: solid;"
+                    "font-size: 22px;"
+                    "font-weight: bold;"
+                    "background-color: rgba(40,40,40,150);"
+                    "padding-left: 18px;"
+                    "}"
+                    "#dialogLabel {"
+                    "font-size: 28px;"
+                    "color: rgb(180,180,180);"
+                    "}"
+                    "#nextPageButton {"
+                    "border-style: solid;"
+                    "font-weight: bold;"
+                    "font-size: 18px;"
+                    "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), "
+                                                      "stop:1 rgba(60,60,60,200));"
+                    "color: rgb(180, 180, 180);"
+                    "}"
+                    "#nextPageButton:hover {"
+                    "background-color: rgba(60,60,60, 150);"
+                    "}";
+    QString pic3ver = "#PrologueGameplay {"
+                     "border-image: url(:/images/images/Level 0 - Prologue/Pic3.png) 0 0 0 0 stretch stretch;"
                      "}"
                      "#mainWidget {"
                      "border-style: solid;"
@@ -122,7 +135,7 @@ void PrologueGameplay::changeBackground(int whichOne)
                      "padding-left: 18px;"
                      "}"
                      "#dialogLabel {"
-                     "font-size: 20px;"
+                     "font-size: 28px;"
                      "color: rgb(180,180,180);"
                      "}"
                      "#nextPageButton {"
@@ -136,13 +149,69 @@ void PrologueGameplay::changeBackground(int whichOne)
                      "#nextPageButton:hover {"
                      "background-color: rgba(60,60,60, 150);"
                      "}";
+    QString pic4ver = "#PrologueGameplay {"
+                      "border-image: url(:/images/images/Level 0 - Prologue/Pic4.png) 0 0 0 0 stretch stretch;"
+                      "}"
+                      "#mainWidget {"
+                      "border-style: solid;"
+                      "font-size: 22px;"
+                      "font-weight: bold;"
+                      "background-color: rgba(40,40,40,150);"
+                      "padding-left: 18px;"
+                      "}"
+                      "#dialogLabel {"
+                      "font-size: 28px;"
+                      "color: rgb(180,180,180);"
+                      "}"
+                      "#nextPageButton {"
+                      "border-style: solid;"
+                      "font-weight: bold;"
+                      "font-size: 18px;"
+                      "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), "
+                                                        "stop:1 rgba(60,60,60,200));"
+                      "color: rgb(180, 180, 180);"
+                      "}"
+                      "#nextPageButton:hover {"
+                      "background-color: rgba(60,60,60, 150);"
+                      "}";
+    QString pic5ver = "#PrologueGameplay {"
+                      "border-image: url(:/images/images/Level 0 - Prologue/Pic5.png) 0 0 0 0 stretch stretch;"
+                      "}"
+                      "#mainWidget {"
+                      "border-style: solid;"
+                      "font-size: 22px;"
+                      "font-weight: bold;"
+                      "background-color: rgba(40,40,40,150);"
+                      "padding-left: 18px;"
+                      "}"
+                      "#dialogLabel {"
+                      "font-size: 28px;"
+                      "color: rgb(180,180,180);"
+                      "}"
+                      "#nextPageButton {"
+                      "border-style: solid;"
+                      "font-weight: bold;"
+                      "font-size: 18px;"
+                      "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), "
+                                                        "stop:1 rgba(60,60,60,200));"
+                      "color: rgb(180, 180, 180);"
+                      "}"
+                      "#nextPageButton:hover {"
+                      "background-color: rgba(60,60,60, 150);"
+                      "}";
     switch (whichOne)
     {
     case 0:
-        this->setStyleSheet(fstver);
+        this->setStyleSheet(pic2ver);
         break;
     case 1:
-        this->setStyleSheet(sndver);
+        this->setStyleSheet(pic3ver);
+        break;
+    case 2:
+        this->setStyleSheet(pic4ver);
+        break;
+    case 3:
+        this->setStyleSheet(pic5ver);
         break;
     }
 }
