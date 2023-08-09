@@ -1,11 +1,75 @@
 <RCC>
+    <qresource prefix="/other">
+        <file>other/Fonts/Girassol-Regular.ttf</file>
+        <file>other/Music/TitleScreenBackgroundMusic.mp3</file>
+    </qresource>
+    <qresource prefix="/dialogs">
+        <file>dialogs/male/Level 0 - Prologue/PrologWstep.txt</file>
+        <file>dialogs/female/Level 0 - Prologue/PrologWstep.txt</file>
+        <file>dialogs/female/Level 0 - Prologue/MonologBohatera_01.txt</file>
+        <file>dialogs/male/Level 0 - Prologue/MonologBohatera_01.txt</file>
+    </qresource>
     <qresource prefix="/images">
         <file>images/AppScreenArt/TitleScreenBackground.png</file>
+        <file>images/AppScreenArt/attackPoints.png</file>
+        <file>images/AppScreenArt/DarkHeart.png</file>
+        <file>images/AppScreenArt/DarkShield.png</file>
+        <file>images/AppScreenArt/DarkSword.png</file>
+        <file>images/AppScreenArt/defensePoints.png</file>
+        <file>images/AppScreenArt/healthPoints.png</file>
+        <file>images/AppScreenArt/Man.png</file>
+        <file>images/AppScreenArt/TitleIcon.png</file>
+        <file>images/AppScreenArt/Woman.png</file>
         <file>images/Level 1 - Central Square/Bezdomny.png</file>
         <file>images/Level 1 - Central Square/Dresiarz.png</file>
-        <file>images/AppScreenArt/TitleIcon.png</file>
-    </qresource>
-    <qresource prefix="/other">
-        <file>other/Girassol-Regular.ttf</file>
+        <file>images/Level 2 - Pilica River/Jezus.png</file>
+        <file>images/Level 2 - Pilica River/WscieklyPies.png</file>
+        <file>images/Level 3 - Kurzelow/AdamCzarny.png</file>
+        <file>images/Level 3 - Kurzelow/AdamZKurzelowa.png</file>
+        <file>images/Level 3 - Kurzelow/BydleceSilyZbrojne.png</file>
+        <file>images/Level 3 - Kurzelow/CoolaMinecraftOfficial.png</file>
+        <file>images/Level 3 - Kurzelow/JanBrozek.png</file>
+        <file>images/Level 3 - Kurzelow/MrBallsamn.png</file>
+        <file>images/Level 4 - Ogrodowa/Borowa.png</file>
+        <file>images/Level 4 - Ogrodowa/MieszkaniecOgrodowej.png</file>
+        <file>images/Level 4 - Ogrodowa/PoteznaBorowa.png</file>
+        <file>images/Level 4 - Ogrodowa/Rzepon.png</file>
+        <file>images/Level 5 - Central Square Again/Bezdomny.png</file>
+        <file>images/Level 5 - Central Square Again/Dresiarz.png</file>
+        <file>images/Level 5 - Central Square Again/PoteznyMatfiz.png</file>
+        <file>images/Level 6 - Underworld/DuchyZydow.png</file>
+        <file>images/Level 6 - Underworld/DuchZyda.png</file>
+        <file>images/Level 6 - Underworld/JacekJaworek.png</file>
+        <file>images/Level 7 - Wiejska/Alpha.png</file>
+        <file>images/Level 7 - Wiejska/Jedrzej.png</file>
+        <file>images/Level 7 - Wiejska/MieszkancyWiejskiej.png</file>
+        <file>images/Level 7 - Wiejska/MieszkancyWiejskiej_2.png</file>
+        <file>images/Level 7 - Wiejska/Omega.png</file>
+        <file>images/Level 7 - Wiejska/SeniorHiszpanek.png</file>
+        <file>images/Level 7 - Wiejska/Sezy.png</file>
+        <file>images/Level 8 - Sikorski High/BuszDragon.png</file>
+        <file>images/Shop - Normal/HealthClass1.png</file>
+        <file>images/Shop - Normal/HealthClass2.png</file>
+        <file>images/Shop - Normal/HealthClass3.png</file>
+        <file>images/Shop - Normal/HealthClass4.png</file>
+        <file>images/Shop - Normal/HealthClass5.png</file>
+        <file>images/Shop - Normal/ShieldClass1.png</file>
+        <file>images/Shop - Normal/ShieldClass2.png</file>
+        <file>images/Shop - Normal/ShieldClass3.png</file>
+        <file>images/Shop - Normal/ShieldClass4.png</file>
+        <file>images/Shop - Normal/ShieldClass5.png</file>
+        <file>images/Shop - Normal/WeaponClass1.png</file>
+        <file>images/Shop - Normal/WeaponClass2.png</file>
+        <file>images/Shop - Normal/WeaponClass3.png</file>
+        <file>images/Shop - Normal/WeaponClass4.png</file>
+        <file>images/Shop - Normal/WeaponClass5.png</file>
+        <file>images/Shop - Special/Blahaj.png</file>
+        <file>images/Shop - Special/DrPieprzer.png</file>
+        <file>images/Shop - Special/Manul.png</file>
+        <file>images/Level 0 - Prologue/Pic1.png</file>
+        <file>images/Level 0 - Prologue/Pic2.png</file>
+        <file>images/Level 0 - Prologue/Pic3.png</file>
+        <file>images/Level 0 - Prologue/Pic4.png</file>
+        <file>images/Level 0 - Prologue/Pic5.png</file>
     </qresource>
 </RCC>
