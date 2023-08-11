@@ -147,7 +147,7 @@ void MainWindow::setGameScreen()
     fadeAwayAnimation(sS, 500);
     delete sS;
 
-    gS = new GameScreen(this);
+    gS = new GameScreen(this, sex);
     mainLayout -> insertWidget(1, gS);
     fadeInAnimation(gS, 2000);
 }
