@@ -71,5 +71,10 @@
         <file>images/Level 0 - Prologue/Pic3.png</file>
         <file>images/Level 0 - Prologue/Pic4.png</file>
         <file>images/Level 0 - Prologue/Pic5.png</file>
+        <file>images/AppScreenArt/Coins.png</file>
+        <file>images/AppScreenArt/healingPotion.png</file>
+        <file>images/AppScreenArt/healingPotionHover.png</file>
+        <file>images/Level 8 - Sikorski High/Dapo.png</file>
+        <file>images/Level 8 - Sikorski High/PaniJadzia.png</file>
     </qresource>
 </RCC>
