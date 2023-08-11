@@ -9,6 +9,7 @@
 #include "sexscreen.h"
 #include "prologuescreen.h"
 #include "prologuegameplay.h"
+#include "gamescreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -51,6 +52,7 @@ private:
     SexScreen *sS;
     PrologueScreen *pS;
     PrologueGameplay *pG;
+    GameScreen *gS;
 
     QVBoxLayout *mainLayout;
 };
