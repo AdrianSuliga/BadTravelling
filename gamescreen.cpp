@@ -4,6 +4,7 @@
 #include <QStyleOption>
 #include <QFontDatabase>
 #include <QTime>
+#include <cstdlib>
 
 GameScreen::GameScreen(QWidget *parent, int gender) :
     QWidget(parent),
@@ -32,6 +33,9 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->blahajShopPriceLabel->setFont(Girassol);
     ui->manulShopPriceLabel->setFont(Girassol);
     ui->drPieprzerShopPriceLabel->setFont(Girassol);
+    ui->blahajShopLabel->setFont(Girassol);
+    ui->manulShopLabel->setFont(Girassol);
+    ui->drPieprzerShopLabel->setFont(Girassol);
 
     ui->heroAttackPointsLabel->setFont(Girassol);
     ui->heroDefensePointsLabel->setFont(Girassol);
@@ -93,6 +97,10 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     connect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
     connect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
     connect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+
+    connect(ui->continueButton, &QPushButton::clicked, this, &GameScreen::drawEnemy);
+
+    level1MainFunction();
 }
 
 GameScreen::~GameScreen()
@@ -136,6 +144,16 @@ void GameScreen::loadVariables()
     if (shieldLevel >= 20 && shieldLevel <= 24)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
+    if (healthLevel >= 0 && healthLevel <= 4)
+        ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 5 && healthLevel <= 9)
+        ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 10 && healthLevel <= 14)
+        ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 15 && healthLevel <= 19)
+        ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 20 && healthLevel <= 24)
+        ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
     ui->weaponShopPriceLabel->setText(QString::number(weaponPrice));
     ui->shieldShopPriceLabel->setText(QString::number(shieldPrice));
@@ -146,7 +164,6 @@ void GameScreen::loadVariables()
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
 }
-
 void GameScreen::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;
@@ -155,11 +172,15 @@ void GameScreen::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void GameScreen::on_continueButton_clicked()
+//LEVEL 1 - CENTRAL SQUARE
+void GameScreen::level1MainFunction()
 {
-
+    srand(time(nullptr));
+    drawEnemy();
+    fight();
 }
 
+//SHOP
 void GameScreen::userWantsToBuyWeapon()
 {
     if (wealth >= weaponPrice)
@@ -318,15 +339,60 @@ void GameScreen::userWantsToBuyHealth()
 }
 void GameScreen::userWantsToBuyBlahaj()
 {
-
+    if (wealth >= ui->blahajShopPriceLabel->text().toInt(nullptr, 10))
+    {
+        wealth -= ui->blahajShopPriceLabel->text().toInt(nullptr, 10);
+        ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
+        blahajOwned = true;
+        ui->blahajShopLabel->setText("KUPIONO");
+        ui->blahajShopPriceLabel->setText("---");
+        ui->blahajShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
+        disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
+    }
+    else
+    {
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
+        delay(500);
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
+    }
 }
 void GameScreen::userWantsToBuyManul()
 {
-
+    if (wealth >= ui->manulShopPriceLabel->text().toInt(nullptr, 10))
+    {
+        wealth -= ui->manulShopPriceLabel->text().toInt(nullptr, 10);
+        ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
+        manulOwned = true;
+        ui->manulShopLabel->setText("KUPIONO");
+        ui->manulShopPriceLabel->setText("---");
+        ui->manulShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
+        disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
+    }
+    else
+    {
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
+        delay(500);
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
+    }
 }
 void GameScreen::userWantsToBuyDrPieprzer()
 {
-
+    if (wealth >= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10))
+    {
+        wealth -= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10);
+        ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
+        drPieprzerOwned = true;
+        ui->drPieprzerShopLabel->setText("KUPIONO");
+        ui->drPieprzerShopPriceLabel->setText("---");
+        ui->drPieprzerShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
+        disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+    }
+    else
+    {
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
+        delay(500);
+        ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
+    }
 }
 
 void GameScreen::delay(int ms)
@@ -334,5 +400,63 @@ void GameScreen::delay(int ms)
     QTime dieTime = QTime::currentTime().addMSecs(ms);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
+void GameScreen::drawEnemy()
+{
+    switch (gameLevel)
+    {
+    case 1:
+        int enemyType = rand() % 2;
+        if (enemyType == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;");
+            enemyAttack = 20;
+            enemyDefense = 40;
+            enemyHealth = 80;
+            ui->enemyAttackPointsLabel->setText("20");
+            ui->enemyDefensePointsLabel->setText("40");
+            ui->enemyHealthPointsLabel->setText("80");
+            ui->enemyHealthBar->setMaximum(0);
+            ui->enemyHealthBar->setMaximum(80);
+            ui->enemyHealthBar->setValue(80);
+        }
+        if (enemyType == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;");
+            enemyAttack = 40;
+            enemyDefense = 20;
+            enemyHealth = 50;
+            ui->enemyAttackPointsLabel->setText("40");
+            ui->enemyDefensePointsLabel->setText("20");
+            ui->enemyHealthPointsLabel->setText("50");
+            ui->enemyHealthBar->setMaximum(0);
+            ui->enemyHealthBar->setMaximum(50);
+            ui->enemyHealthBar->setValue(50);
+        }
+        break;
+    /*case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    case 7:
+        break;
+    case 8:
+        break;*/
+    }
+}
+
+void GameScreen::fight()
+{
+    connect(ui->enemyLabel, &QClickableLabel::clicked, this, [this]() {
+        enemyHealth -= sqrt(heroAttack * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+        ui->enemyHealthBar->setValue(enemyHealth);
+    } );
 }
 
