@@ -17,9 +17,12 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 private slots:
+    //SETUP
     void loadVariables();
-    void on_continueButton_clicked();
+    //LEVEL 1
+    void level1MainFunction();
     //void enemyAttacked();
+    //SHOP
     void userWantsToBuyWeapon();
     void userWantsToBuyShield();
     void userWantsToBuyHealth();
@@ -27,7 +30,10 @@ private slots:
     void userWantsToBuyManul();
     void userWantsToBuyDrPieprzer();
     //void userWantsToHeal();
+    //OTHER
     void delay(int ms);
+    void drawEnemy();
+    void fight();
 
 private:
     Ui::GameScreen *ui;
