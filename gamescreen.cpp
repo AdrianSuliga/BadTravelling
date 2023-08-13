@@ -4,6 +4,8 @@
 #include <QStyleOption>
 #include <QFontDatabase>
 #include <QTime>
+#include <QTimer>
+#include <QThread>
 #include <cstdlib>
 
 GameScreen::GameScreen(QWidget *parent, int gender) :
@@ -455,8 +457,39 @@ void GameScreen::drawEnemy()
 void GameScreen::fight()
 {
     connect(ui->enemyLabel, &QClickableLabel::clicked, this, [this]() {
-        enemyHealth -= sqrt(heroAttack * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
-        ui->enemyHealthBar->setValue(enemyHealth);
+        double damage = floor(0.2 * static_cast<double>(heroAttack) *
+                              (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+        if (enemyHealth - static_cast<int>(damage) >= 0)
+        {
+            enemyHealth -= static_cast<int>(damage);
+            ui->enemyHealthBar->setValue(enemyHealth);
+        }
+        else if (enemyHealth - static_cast<int>(damage) < 0)
+        {
+            enemyHealth = 0;
+            ui->enemyHealthBar->setValue(0);
+        }
     } );
+    QThread enemyAttackThread;
+}
+
+void GameScreen::attack()
+{
+    double damage = floor(0.2 * static_cast<double>(enemyAttack) *
+                          (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
+    while (enemyHealth > 0)
+    {
+        if (heroHealth - static_cast<int>(damage) >= 0)
+        {
+            heroHealth -= static_cast<int>(damage);
+            ui->heroHealthBar->setValue(heroHealth);
+        }
+        else if (heroHealth - static_cast<int>(damage) < 0)
+        {
+            heroHealth = 0;
+            ui->heroHealthBar->setValue(0);
+        }
+        delay(1000);
+    }
 }
 
