@@ -34,6 +34,7 @@ private slots:
     void delay(int ms);
     void drawEnemy();
     void fight();
+    void attack();
 
 private:
     Ui::GameScreen *ui;
