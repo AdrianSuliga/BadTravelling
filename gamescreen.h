@@ -2,6 +2,8 @@
 #define GAMESCREEN_H
 
 #include <QWidget>
+#include <deadenemywidget.h>
+#include <deadherowidget.h>
 
 namespace Ui {
 class GameScreen;
@@ -21,6 +23,7 @@ private slots:
     void loadVariables();
     //LEVEL 1
     void level1MainFunction();
+    void showTutorial();
     //void enemyAttacked();
     //SHOP
     void userWantsToBuyWeapon();
@@ -32,10 +35,10 @@ private slots:
     //void userWantsToHeal();
     //OTHER
     void delay(int ms);
-    void drawEnemy();
+    void drawEnemy(int whatToDraw);
     void fight();
-    void attack();
-
+signals:
+    void enemyKilled();
 private:
     Ui::GameScreen *ui;
     int sex;
@@ -43,6 +46,8 @@ private:
     int heroAttack, heroDefense, heroHealth, heroMaxHealth, enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice, healingPrice;
     short weaponLevel, shieldLevel, healthLevel, gameLevel;
+    DeadEnemyWidget *deadEnemy;
+    DeadHeroWidget *deadHero;
 };
 
 #endif // GAMESCREEN_H
