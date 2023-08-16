@@ -4,9 +4,10 @@
 #include <QStyleOption>
 #include <QFontDatabase>
 #include <QTime>
-#include <QTimer>
 #include <QThread>
+#include <enemyattackcontroller.h>
 #include <cstdlib>
+#include <QBoxLayout>
 
 GameScreen::GameScreen(QWidget *parent, int gender) :
     QWidget(parent),
@@ -119,6 +120,8 @@ void GameScreen::loadVariables()
     ui->heroAttackPointsLabel->setText(QString::number(heroAttack, 10));
     ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
     ui->heroHealthPointsLabel->setText(QString::number(heroHealth, 10));
+    ui->heroHealthBar->setMaximum(heroMaxHealth);
+    ui->heroHealthBar->setValue(heroHealth);
 
     ui->enemyAttackPointsLabel->setText("-");
     ui->enemyDefensePointsLabel->setText("-");
@@ -178,8 +181,15 @@ void GameScreen::paintEvent(QPaintEvent *event)
 void GameScreen::level1MainFunction()
 {
     srand(time(nullptr));
-    drawEnemy();
+    showTutorial();
+    drawEnemy(0);
     fight();
+}
+
+void GameScreen::showTutorial()
+{
+    //ui->enemyLabel->setStyleSheet("");
+    //QVBoxLayout *buff = ui->enemyWidget->layout();
 }
 
 //SHOP
@@ -296,6 +306,7 @@ void GameScreen::userWantsToBuyHealth()
             heroMaxHealth += healthLevel * 12;
         if (sex == 1)
             heroMaxHealth += healthLevel * 10;
+        heroHealth = heroMaxHealth;
         healthPrice = 100 * healthLevel * healthLevel * cbrt(healthLevel) + 100;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
@@ -323,6 +334,9 @@ void GameScreen::userWantsToBuyHealth()
             ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
         if (healthLevel >= 21 && healthLevel <= 25)
             ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
+
+        ui->heroHealthBar->setMaximum(heroMaxHealth);
+        ui->heroHealthBar->setValue(heroMaxHealth);
 
         ui->healthLevelLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16pt;");
         ui->heroHealthPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
@@ -397,42 +411,43 @@ void GameScreen::userWantsToBuyDrPieprzer()
     }
 }
 
-void GameScreen::delay(int ms)
+//FIGHT
+void GameScreen::drawEnemy(int whatToDraw)
 {
-    QTime dieTime = QTime::currentTime().addMSecs(ms);
-    while (QTime::currentTime() < dieTime)
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-}
-
-void GameScreen::drawEnemy()
-{
+    int enemyType = -1;
     switch (gameLevel)
     {
     case 1:
-        int enemyType = rand() % 2;
+        if (whatToDraw == 0)
+            enemyType = 0;
+        if (whatToDraw == 1)
+            enemyType = 1;
+        if (whatToDraw == -1)
+            enemyType = rand() % 2;
+
         if (enemyType == 0)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 20;
+            enemyAttack = 10;
             enemyDefense = 40;
             enemyHealth = 80;
-            ui->enemyAttackPointsLabel->setText("20");
+            ui->enemyAttackPointsLabel->setText("10");
             ui->enemyDefensePointsLabel->setText("40");
             ui->enemyHealthPointsLabel->setText("80");
-            ui->enemyHealthBar->setMaximum(0);
+            ui->enemyHealthBar->setMinimum(0);
             ui->enemyHealthBar->setMaximum(80);
             ui->enemyHealthBar->setValue(80);
         }
         if (enemyType == 1)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 40;
+            enemyAttack = 20;
             enemyDefense = 20;
             enemyHealth = 50;
-            ui->enemyAttackPointsLabel->setText("40");
+            ui->enemyAttackPointsLabel->setText("20");
             ui->enemyDefensePointsLabel->setText("20");
             ui->enemyHealthPointsLabel->setText("50");
-            ui->enemyHealthBar->setMaximum(0);
+            ui->enemyHealthBar->setMinimum(0);
             ui->enemyHealthBar->setMaximum(50);
             ui->enemyHealthBar->setValue(50);
         }
@@ -453,9 +468,15 @@ void GameScreen::drawEnemy()
         break;*/
     }
 }
-
 void GameScreen::fight()
 {
+    disconnect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
+    disconnect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
+    disconnect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
+    disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
+    disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
+    disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+
     connect(ui->enemyLabel, &QClickableLabel::clicked, this, [this]() {
         double damage = floor(0.2 * static_cast<double>(heroAttack) *
                               (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
@@ -469,16 +490,27 @@ void GameScreen::fight()
             enemyHealth = 0;
             ui->enemyHealthBar->setValue(0);
         }
-    } );
-    QThread enemyAttackThread;
-}
 
-void GameScreen::attack()
-{
-    double damage = floor(0.2 * static_cast<double>(enemyAttack) *
-                          (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
-    while (enemyHealth > 0)
+        if (enemyHealth == 0)
+            emit enemyKilled();
+    } );
+
+    double sendThis = floor(0.2 * static_cast<double>(enemyAttack) *
+                            (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
+
+    QThread *attackThread = new QThread(this);
+    EnemyAttackController *attackController = new EnemyAttackController(this, heroHealth, static_cast<int>(sendThis));
+
+    attackController -> moveToThread(attackThread);
+
+    connect(attackThread, &QThread::started, attackController, &EnemyAttackController::attackController);
+    connect(attackController, &EnemyAttackController::heroKilled, attackThread, &QThread::quit);
+
+    connect(attackController, &EnemyAttackController::attack, this, [this]()
     {
+        double damage = floor(0.2 * static_cast<double>(enemyAttack) *
+            (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
+
         if (heroHealth - static_cast<int>(damage) >= 0)
         {
             heroHealth -= static_cast<int>(damage);
@@ -489,7 +521,28 @@ void GameScreen::attack()
             heroHealth = 0;
             ui->heroHealthBar->setValue(0);
         }
-        delay(1000);
-    }
+    } );
+
+    connect(attackController, &EnemyAttackController::heroKilled, attackThread, &QThread::deleteLater);
+    connect(attackController, &EnemyAttackController::heroKilled, attackController, &EnemyAttackController::deleteLater);
+
+    attackThread -> start();
+
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        deadEnemy = new DeadEnemyWidget();
+        ui->enemyLabel->hide();
+        QVBoxLayout *buff = qobject_cast<QVBoxLayout*>(ui->enemyWidget->layout());
+        buff -> insertWidget(0, deadEnemy, 6);
+        ui->enemyAttackPointsLabel->setText("---");
+        ui->enemyDefensePointsLabel->setText("---");
+        ui->enemyHealthPointsLabel->setText("---");
+    });
+}
+
+void GameScreen::delay(int ms)
+{
+    QTime dieTime = QTime::currentTime().addMSecs(ms);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
