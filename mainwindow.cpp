@@ -84,7 +84,7 @@ void MainWindow::setPrologueScreen()
     pS = new PrologueScreen(this, sex);
     mainLayout -> insertWidget(1, pS);
     fadeInAnimation(pS, 2000);
-    /*switch (sex)
+    switch (sex)
     {
     case 0:
         animatePrologueText(":/dialogs/dialogs/female/Level 0 - Prologue/PrologWstep.txt");
@@ -95,7 +95,7 @@ void MainWindow::setPrologueScreen()
     default:
         QMessageBox::critical(this, "ERROR", "Cannot initialize dialog");
         return;
-    }*/
+    }
     setPrologueGameplayScreen();
 }
 void MainWindow::animatePrologueText(QString path)
@@ -111,21 +111,21 @@ void MainWindow::animatePrologueText(QString path)
             if (line == "")
             {
                 pS->animateText("");
-                delay(100);
+                delay(1000);
             }
             else if (lineCount == 4 || lineCount == 7 || lineCount == 9 || lineCount == 10)
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 300);
-                delay(500);
-                fadeAwayAnimation(pS, 100);
+                fadeInAnimation(pS, 3000);
+                delay(5000);
+                fadeAwayAnimation(pS, 1000);
             }
             else
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 300);
-                delay(200);
-                fadeAwayAnimation(pS, 100);
+                fadeInAnimation(pS, 3000);
+                delay(2000);
+                fadeAwayAnimation(pS, 1000);
             }
             lineCount++;
         }
