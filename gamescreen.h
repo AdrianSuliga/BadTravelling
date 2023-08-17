@@ -2,8 +2,11 @@
 #define GAMESCREEN_H
 
 #include <QWidget>
+#include <QThread>
+#include <enemyattackcontroller.h>
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
+#include <tutorialinfo.h>
 
 namespace Ui {
 class GameScreen;
@@ -26,6 +29,8 @@ private slots:
     void showTutorial();
     //void enemyAttacked();
     //SHOP
+    void connectShop();
+    void disconnectShop();
     void userWantsToBuyWeapon();
     void userWantsToBuyShield();
     void userWantsToBuyHealth();
@@ -48,6 +53,9 @@ private:
     short weaponLevel, shieldLevel, healthLevel, gameLevel;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
+    TutorialInfo *tutorialWidget;
+    QThread *attackThread;
+    EnemyAttackController *attackController;
 };
 
 #endif // GAMESCREEN_H
