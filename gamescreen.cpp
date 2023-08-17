@@ -4,8 +4,6 @@
 #include <QStyleOption>
 #include <QFontDatabase>
 #include <QTime>
-#include <QThread>
-#include <enemyattackcontroller.h>
 #include <cstdlib>
 #include <QBoxLayout>
 
@@ -43,9 +41,11 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->heroAttackPointsLabel->setFont(Girassol);
     ui->heroDefensePointsLabel->setFont(Girassol);
     ui->heroHealthPointsLabel->setFont(Girassol);
+    ui->heroHealthBar->setFont(Girassol);
     ui->enemyAttackPointsLabel->setFont(Girassol);
     ui->enemyDefensePointsLabel->setFont(Girassol);
     ui->enemyHealthPointsLabel->setFont(Girassol);
+    ui->enemyHealthBar->setFont(Girassol);
 
     gameLevel = 1;
 
@@ -94,14 +94,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     loadVariables();
 
-    connect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
-    connect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
-    connect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
-    connect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
-    connect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
-    connect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
-
-    connect(ui->continueButton, &QPushButton::clicked, this, &GameScreen::drawEnemy);
+    connectShop();
 
     level1MainFunction();
 }
@@ -168,6 +161,17 @@ void GameScreen::loadVariables()
     ui->drPieprzerShopPriceLabel->setText(QString::number(drPieprzerPrice));
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
+
+    deadEnemy = new DeadEnemyWidget(this);
+    deadHero = new DeadHeroWidget(this);
+    tutorialWidget = new TutorialInfo(this);
+    QVBoxLayout *vertical = qobject_cast<QVBoxLayout*>(ui->enemyWidget->layout());
+    vertical->insertWidget(0,deadEnemy,6);
+    vertical->insertWidget(1,deadHero,6);
+    vertical->insertWidget(2,tutorialWidget,6);
+    deadEnemy->hide();
+    deadHero->hide();
+    tutorialWidget->hide();
 }
 void GameScreen::paintEvent(QPaintEvent *event)
 {
@@ -188,13 +192,33 @@ void GameScreen::level1MainFunction()
 
 void GameScreen::showTutorial()
 {
-    //ui->enemyLabel->setStyleSheet("");
-    //QVBoxLayout *buff = ui->enemyWidget->layout();
+    ui->enemyLabel->hide();
+    tutorialWidget->show();
 }
 
 //SHOP
+void GameScreen::connectShop()
+{
+    connect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
+    connect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
+    connect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
+    connect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
+    connect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
+    connect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+}
+void GameScreen::disconnectShop()
+{
+    disconnect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
+    disconnect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
+    disconnect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
+    disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
+    disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
+    disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+}
+
 void GameScreen::userWantsToBuyWeapon()
 {
+    disconnectShop();
     if (wealth >= weaponPrice)
     {
         wealth -= weaponPrice;
@@ -245,9 +269,11 @@ void GameScreen::userWantsToBuyWeapon()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 void GameScreen::userWantsToBuyShield()
 {
+    disconnectShop();
     if (wealth >= shieldPrice)
     {
         wealth -= shieldPrice;
@@ -295,9 +321,11 @@ void GameScreen::userWantsToBuyShield()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 void GameScreen::userWantsToBuyHealth()
 {
+    disconnectShop();
     if (wealth >= healthPrice)
     {
         wealth -= healthPrice;
@@ -352,9 +380,11 @@ void GameScreen::userWantsToBuyHealth()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 void GameScreen::userWantsToBuyBlahaj()
 {
+    disconnectShop();
     if (wealth >= ui->blahajShopPriceLabel->text().toInt(nullptr, 10))
     {
         wealth -= ui->blahajShopPriceLabel->text().toInt(nullptr, 10);
@@ -371,9 +401,11 @@ void GameScreen::userWantsToBuyBlahaj()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 void GameScreen::userWantsToBuyManul()
 {
+    disconnectShop();
     if (wealth >= ui->manulShopPriceLabel->text().toInt(nullptr, 10))
     {
         wealth -= ui->manulShopPriceLabel->text().toInt(nullptr, 10);
@@ -390,9 +422,11 @@ void GameScreen::userWantsToBuyManul()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 void GameScreen::userWantsToBuyDrPieprzer()
 {
+    disconnectShop();
     if (wealth >= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10))
     {
         wealth -= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10);
@@ -409,6 +443,7 @@ void GameScreen::userWantsToBuyDrPieprzer()
         delay(500);
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     }
+    connectShop();
 }
 
 //FIGHT
@@ -470,13 +505,7 @@ void GameScreen::drawEnemy(int whatToDraw)
 }
 void GameScreen::fight()
 {
-    disconnect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
-    disconnect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
-    disconnect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
-    disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
-    disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
-    disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
-
+    disconnectShop();
     connect(ui->enemyLabel, &QClickableLabel::clicked, this, [this]() {
         double damage = floor(0.2 * static_cast<double>(heroAttack) *
                               (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
@@ -498,8 +527,8 @@ void GameScreen::fight()
     double sendThis = floor(0.2 * static_cast<double>(enemyAttack) *
                             (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
 
-    QThread *attackThread = new QThread(this);
-    EnemyAttackController *attackController = new EnemyAttackController(this, heroHealth, static_cast<int>(sendThis));
+    attackThread = new QThread(this);
+    attackController = new EnemyAttackController(this, heroHealth, static_cast<int>(sendThis));
 
     attackController -> moveToThread(attackThread);
 
@@ -523,20 +552,28 @@ void GameScreen::fight()
         }
     } );
 
-    connect(attackController, &EnemyAttackController::heroKilled, attackThread, &QThread::deleteLater);
+    connect(this, &GameScreen::enemyKilled, attackThread, &QThread::quit);
+    connect(this, &GameScreen::enemyKilled, attackController, &EnemyAttackController::deleteLater);
+
+    connect(attackThread, &QThread::finished, attackThread, &QThread::deleteLater);
     connect(attackController, &EnemyAttackController::heroKilled, attackController, &EnemyAttackController::deleteLater);
 
-    attackThread -> start();
-
-    connect(this, &GameScreen::enemyKilled, this, [this]() {
-        deadEnemy = new DeadEnemyWidget();
+    connect(attackController, &EnemyAttackController::heroKilled, this, [this]() {
         ui->enemyLabel->hide();
-        QVBoxLayout *buff = qobject_cast<QVBoxLayout*>(ui->enemyWidget->layout());
-        buff -> insertWidget(0, deadEnemy, 6);
+        deadHero->show();
+        ui->heroLabel->setStyleSheet("");
+        connectShop();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        ui->enemyLabel->hide();
+        deadEnemy->show();
         ui->enemyAttackPointsLabel->setText("---");
         ui->enemyDefensePointsLabel->setText("---");
         ui->enemyHealthPointsLabel->setText("---");
+        connectShop();
     });
+
+    attackThread -> start();
 }
 
 void GameScreen::delay(int ms)
