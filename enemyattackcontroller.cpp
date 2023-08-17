@@ -18,8 +18,12 @@ void EnemyAttackController::attackController()
         emit attack();
         buffer -= dmg;
         delay();
-    } //THIS DOES NOT STOP! - FIX THAT
-    emit heroKilled();
+        if (buffer <= 0)
+        {
+            emit heroKilled();
+            break;
+        }
+    }
 }
 
 void EnemyAttackController::delay()
