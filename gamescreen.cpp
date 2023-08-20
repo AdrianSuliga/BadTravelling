@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QTime>
 #include <cstdlib>
+#include <QDebug>
 #include <QBoxLayout>
 
 GameScreen::GameScreen(QWidget *parent, int gender) :
@@ -17,10 +18,6 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     QFont Girassol(family);
 
     sex = gender;
-
-    ui->weaponLevelLabel->setFont(Girassol);
-    ui->shieldLevelLabel->setFont(Girassol);
-    ui->healthLevelLabel->setFont(Girassol);
 
     ui->dialogLabel->setFont(Girassol);
     ui->nameLabel->setFont(Girassol);
@@ -47,7 +44,11 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->enemyHealthPointsLabel->setFont(Girassol);
     ui->enemyHealthBar->setFont(Girassol);
 
+    ui->infoAboutActionLabel->setFont(Girassol);
+    ui->confirmButton->setFont(Girassol);
+
     gameLevel = 1;
+    numberOfRounds = 0;
 
     if (sex == 0)
     {
@@ -69,6 +70,10 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
         heroHealth = 50;
         heroMaxHealth = 50;
     }
+    heroTemporaryDefense = -1;
+    tempDefenseOn = false;
+    tempDefenseUsed = false;
+
     enemyAttack = -1;
     enemyDefense = -1;
     enemyHealth = -1;
@@ -86,7 +91,6 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     blahajPrice = 10000;
     manulPrice = 50000;
     drPieprzerPrice = 100000;
-    healingPrice = -1;
 
     blahajOwned = false;
     manulOwned = false;
@@ -106,10 +110,6 @@ GameScreen::~GameScreen()
 
 void GameScreen::loadVariables()
 {
-    ui->weaponLevelLabel->setText("POZIOM " + QString::number(weaponLevel));
-    ui->shieldLevelLabel->setText("POZIOM " + QString::number(shieldLevel));
-    ui->healthLevelLabel->setText("POZIOM " + QString::number(healthLevel));
-
     ui->heroAttackPointsLabel->setText(QString::number(heroAttack, 10));
     ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
     ui->heroHealthPointsLabel->setText(QString::number(heroHealth, 10));
@@ -119,6 +119,8 @@ void GameScreen::loadVariables()
     ui->enemyAttackPointsLabel->setText("-");
     ui->enemyDefensePointsLabel->setText("-");
     ui->enemyHealthPointsLabel->setText("-");
+    ui->enemyHealthBar->setMaximum(1);
+    ui->enemyHealthBar->setValue(0);
 
     if (weaponLevel >= 0 && weaponLevel <= 4)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
@@ -172,6 +174,7 @@ void GameScreen::loadVariables()
     deadEnemy->hide();
     deadHero->hide();
     tutorialWidget->hide();
+    ui->confirmButton->hide();
 }
 void GameScreen::paintEvent(QPaintEvent *event)
 {
@@ -186,13 +189,21 @@ void GameScreen::level1MainFunction()
 {
     srand(time(nullptr));
     showTutorial();
-    drawEnemy(0);
-    fight();
+    connect(tutorialWidget, &TutorialInfo::endTutorial, this, [this]() {
+        tutorialWidget->hide();
+        delete tutorialWidget;
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(0);
+        fight();
+    });
 }
-
 void GameScreen::showTutorial()
 {
     ui->enemyLabel->hide();
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
     tutorialWidget->show();
 }
 
@@ -230,7 +241,6 @@ void GameScreen::userWantsToBuyWeapon()
         weaponPrice = 100 * weaponLevel * weaponLevel * cbrt(weaponLevel) + 100;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
-        ui->weaponLevelLabel->setText("LEVEL " + QString::number(weaponLevel));
         ui->heroAttackPointsLabel->setText(QString::number(heroAttack));
         ui->weaponShopPriceLabel->setText(QString::number(weaponPrice));
         if (weaponLevel >= 0 && weaponLevel <= 4)
@@ -245,22 +255,20 @@ void GameScreen::userWantsToBuyWeapon()
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass5.png) 0 0 0 0 stretch stretch;");
 
         if (weaponLevel > 0 && weaponLevel <= 5)
-            ui->weaponLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
+            ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
         if (weaponLevel >= 6 && weaponLevel <= 10)
-            ui->weaponLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
+            ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
         if (weaponLevel >= 11 && weaponLevel <= 15)
-            ui->weaponLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass3.png) 0 0 0 0 stretch stretch;");
+            ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass3.png) 0 0 0 0 stretch stretch;");
         if (weaponLevel >= 16 && weaponLevel <= 20)
-            ui->weaponLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass4.png) 0 0 0 0 stretch stretch;");
+            ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass4.png) 0 0 0 0 stretch stretch;");
         if (weaponLevel >= 21 && weaponLevel <= 25)
-            ui->weaponLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass5.png) 0 0 0 0 stretch stretch;");
+            ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass5.png) 0 0 0 0 stretch stretch;");
 
-        ui->weaponLevelLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16pt;");
         ui->heroAttackPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
 
         delay(500);
 
-        ui->weaponLevelLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16pt;");
         ui->heroAttackPointsLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16px;");
     }
     else
@@ -279,10 +287,9 @@ void GameScreen::userWantsToBuyShield()
         wealth -= shieldPrice;
         shieldLevel++;
         heroDefense += shieldLevel * 5;
-        shieldPrice = 100 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 100;
+        shieldPrice = 90 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 90;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
-        ui->shieldLevelLabel->setText("LEVEL " + QString::number(shieldLevel));
         ui->heroDefensePointsLabel->setText(QString::number(heroDefense));
         ui->shieldShopPriceLabel->setText(QString::number(shieldPrice));
         if (shieldLevel >= 0 && shieldLevel <= 4)
@@ -297,22 +304,20 @@ void GameScreen::userWantsToBuyShield()
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
         if (shieldLevel > 0 && shieldLevel <= 5)
-            ui->shieldLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
+            ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
         if (shieldLevel >= 6 && shieldLevel <= 10)
-            ui->shieldLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
+            ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
         if (shieldLevel >= 11 && shieldLevel <= 15)
-            ui->shieldLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
+            ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
         if (shieldLevel >= 16 && shieldLevel <= 20)
-            ui->shieldLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
+            ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
         if (shieldLevel >= 21 && shieldLevel <= 25)
-            ui->shieldLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
+            ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
-        ui->shieldLevelLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16pt;");
         ui->heroDefensePointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
 
         delay(500);
 
-        ui->shieldLevelLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16pt;");
         ui->heroDefensePointsLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16px;");
     }
     else
@@ -335,10 +340,9 @@ void GameScreen::userWantsToBuyHealth()
         if (sex == 1)
             heroMaxHealth += healthLevel * 10;
         heroHealth = heroMaxHealth;
-        healthPrice = 100 * healthLevel * healthLevel * cbrt(healthLevel) + 100;
+        healthPrice = 120 * healthLevel * healthLevel * cbrt(healthLevel) + 120;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
-        ui->healthLevelLabel->setText("LEVEL " + QString::number(healthLevel));
         ui->heroHealthPointsLabel->setText(QString::number(heroMaxHealth));
         ui->healthShopPriceLabel->setText(QString::number(healthPrice));
         if (healthLevel >= 0 && healthLevel <= 4)
@@ -353,25 +357,23 @@ void GameScreen::userWantsToBuyHealth()
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
         if (healthLevel > 0 && healthLevel <= 5)
-            ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
+            ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
         if (healthLevel >= 6 && healthLevel <= 10)
-            ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
+            ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
         if (healthLevel >= 11 && healthLevel <= 15)
-            ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
+            ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
         if (healthLevel >= 16 && healthLevel <= 20)
-            ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
+            ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
         if (healthLevel >= 21 && healthLevel <= 25)
-            ui->healthLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
+            ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroHealthBar->setMaximum(heroMaxHealth);
         ui->heroHealthBar->setValue(heroMaxHealth);
 
-        ui->healthLevelLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16pt;");
         ui->heroHealthPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
 
         delay(500);
 
-        ui->healthLevelLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16pt;");
         ui->heroHealthPointsLabel->setStyleSheet("color: rgb(180, 180, 180); font-size: 16px;");
     }
     else
@@ -385,17 +387,17 @@ void GameScreen::userWantsToBuyHealth()
 void GameScreen::userWantsToBuyBlahaj()
 {
     disconnectShop();
-    if (wealth >= ui->blahajShopPriceLabel->text().toInt(nullptr, 10))
+    if (wealth >= blahajPrice && blahajOwned == false)
     {
-        wealth -= ui->blahajShopPriceLabel->text().toInt(nullptr, 10);
+        wealth -= blahajPrice;
         ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
         blahajOwned = true;
+        ui->blahajSlotLabel->setStyleSheet("border-image: url(:/images/images/Shop - Special/Blahaj.png) 0 0 0 0 stretch stretch;");
         ui->blahajShopLabel->setText("KUPIONO");
         ui->blahajShopPriceLabel->setText("---");
         ui->blahajShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
-        disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
     }
-    else
+    else if (wealth < blahajPrice)
     {
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
         delay(500);
@@ -406,17 +408,17 @@ void GameScreen::userWantsToBuyBlahaj()
 void GameScreen::userWantsToBuyManul()
 {
     disconnectShop();
-    if (wealth >= ui->manulShopPriceLabel->text().toInt(nullptr, 10))
+    if (wealth >= manulPrice && manulOwned == false)
     {
-        wealth -= ui->manulShopPriceLabel->text().toInt(nullptr, 10);
+        wealth -= manulPrice;
         ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
         manulOwned = true;
+        ui->manulSlotLabel->setStyleSheet("border-image: url(:/images/images/Shop - Special/Manul.png) 0 0 0 0 stretch stretch;");
         ui->manulShopLabel->setText("KUPIONO");
         ui->manulShopPriceLabel->setText("---");
         ui->manulShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
-        disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
     }
-    else
+    else if (wealth < manulPrice)
     {
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
         delay(500);
@@ -427,17 +429,17 @@ void GameScreen::userWantsToBuyManul()
 void GameScreen::userWantsToBuyDrPieprzer()
 {
     disconnectShop();
-    if (wealth >= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10))
+    if (wealth >= drPieprzerPrice && drPieprzerOwned == false)
     {
-        wealth -= ui->drPieprzerShopPriceLabel->text().toInt(nullptr, 10);
+        wealth -= drPieprzerPrice;
         ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
         drPieprzerOwned = true;
+        ui->drPieprzerSlotLabel->setStyleSheet("border-image: url(:/images/images/Shop - Special/DrPieprzer.png) 0 0 0 0 stretch stretch;");
         ui->drPieprzerShopLabel->setText("KUPIONO");
         ui->drPieprzerShopPriceLabel->setText("---");
         ui->drPieprzerShopLabel->setStyleSheet("font-size: 20px; font-weight: bold; color: rgb(180,180,180);");
-        disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
     }
-    else
+    else if (wealth < drPieprzerPrice)
     {
         ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
         delay(500);
@@ -505,75 +507,145 @@ void GameScreen::drawEnemy(int whatToDraw)
 }
 void GameScreen::fight()
 {
-    disconnectShop();
-    connect(ui->enemyLabel, &QClickableLabel::clicked, this, [this]() {
-        double damage = floor(0.2 * static_cast<double>(heroAttack) *
-                              (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
-        if (enemyHealth - static_cast<int>(damage) >= 0)
-        {
-            enemyHealth -= static_cast<int>(damage);
-            ui->enemyHealthBar->setValue(enemyHealth);
-        }
-        else if (enemyHealth - static_cast<int>(damage) < 0)
-        {
-            enemyHealth = 0;
-            ui->enemyHealthBar->setValue(0);
-        }
-
-        if (enemyHealth == 0)
-            emit enemyKilled();
-    } );
-
-    double sendThis = floor(0.2 * static_cast<double>(enemyAttack) *
-                            (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
-
-    attackThread = new QThread(this);
-    attackController = new EnemyAttackController(this, heroHealth, static_cast<int>(sendThis));
-
-    attackController -> moveToThread(attackThread);
-
-    connect(attackThread, &QThread::started, attackController, &EnemyAttackController::attackController);
-    connect(attackController, &EnemyAttackController::heroKilled, attackThread, &QThread::quit);
-
-    connect(attackController, &EnemyAttackController::attack, this, [this]()
+    if (numberOfRounds % 2 == 0)
     {
-        double damage = floor(0.2 * static_cast<double>(enemyAttack) *
-            (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
-
-        if (heroHealth - static_cast<int>(damage) >= 0)
+        ui->infoAboutActionLabel->setText("TWOJA TURA");
+        ui->attackActionButton->setEnabled(true);
+        ui->defenseActionButton->setEnabled(true);
+        ui->healActionButton->setEnabled(true);
+        return;
+    }
+    if (numberOfRounds % 2 == 1)
+    {
+        ui->infoAboutActionLabel->setText("TURA PRZECIWNIKA");
+        int enemyBaseDamage = 0;
+        if (tempDefenseOn == false)
         {
-            heroHealth -= static_cast<int>(damage);
-            ui->heroHealthBar->setValue(heroHealth);
+            enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
+                                    (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
         }
-        else if (heroHealth - static_cast<int>(damage) < 0)
+        if (tempDefenseOn == true)
         {
+            enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
+                                    (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroTemporaryDefense)));
+            tempDefenseUsed = true;
+            ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
+            ui->heroDefensePointsLabel->setStyleSheet("color: rgb(180,180,180); font-size: 16px;");
+        }
+        int enemyRealDamage = rand() % static_cast<int>(0.4*enemyBaseDamage + 1) + static_cast<int>(0.8*enemyBaseDamage);
+        if (heroHealth >= enemyRealDamage)
+            heroHealth -= enemyRealDamage;
+        else if (heroHealth < enemyRealDamage)
             heroHealth = 0;
-            ui->heroHealthBar->setValue(0);
-        }
-    } );
+        ui->heroHealthBar -> setValue(heroHealth);
+        numberOfRounds++;
+        fight();
+    }
+    if (tempDefenseUsed == true)
+    {
+        heroTemporaryDefense = -1;
+        tempDefenseOn = false;
+        tempDefenseUsed = false;
+        ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
+        ui->heroDefensePointsLabel->setStyleSheet("color: rgb(180,180,180); font-size: 16px;");
+        return;
+    }
+}
 
-    connect(this, &GameScreen::enemyKilled, attackThread, &QThread::quit);
-    connect(this, &GameScreen::enemyKilled, attackController, &EnemyAttackController::deleteLater);
+void GameScreen::heroIsDead()
+{
 
-    connect(attackThread, &QThread::finished, attackThread, &QThread::deleteLater);
-    connect(attackController, &EnemyAttackController::heroKilled, attackController, &EnemyAttackController::deleteLater);
+}
 
-    connect(attackController, &EnemyAttackController::heroKilled, this, [this]() {
-        ui->enemyLabel->hide();
-        deadHero->show();
-        ui->heroLabel->setStyleSheet("");
-        connectShop();
-    });
-    connect(this, &GameScreen::enemyKilled, this, [this]() {
-        ui->enemyLabel->hide();
-        deadEnemy->show();
-        ui->enemyAttackPointsLabel->setText("---");
-        ui->enemyDefensePointsLabel->setText("---");
-        ui->enemyHealthPointsLabel->setText("---");
-        connectShop();
-    });
+void GameScreen::enemyIsDead()
+{
 
-    attackThread -> start();
+}
+
+void GameScreen::on_attackActionButton_clicked()
+{
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
+
+    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    ui->infoAboutActionLabel->setText("Czy wykonać atak? Obrażenia: " + QString::number(0.8 * baseDamage) + " - " +
+                                      QString::number(1.2 * baseDamage));
+    ui->confirmButton->show();
+    connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
+}
+void GameScreen::on_defenseActionButton_clicked()
+{
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
+
+    short percentage = 0;
+    if (shieldLevel * 4 <= 100)
+        percentage = shieldLevel * 4;
+    else if (shieldLevel * 4 > 100)
+        percentage = 100;
+
+    ui->infoAboutActionLabel->setText("Czy wykonać akcję obrony? Szansa na odbicie: " + QString::number(percentage) + "%");
+    ui->confirmButton->show();
+    connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
+}
+void GameScreen::on_healActionButton_clicked()
+{
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
+
+    if (heroHealth < 0.8 * heroMaxHealth)
+    {
+        ui->infoAboutActionLabel->setText("Czy chcesz się uleczyć? Odzyskane życie przy leczeniu: " + QString::number(0.2 * heroMaxHealth));
+        ui->confirmButton->show();
+        connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
+    }
+    else
+        ui->infoAboutActionLabel->setText("Czy chcesz się uleczyć? Odzyskane życie przy leczeniu: 0");
+}
+
+void GameScreen::heroAttacks()
+{
+    numberOfRounds++;
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
+    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
+    ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10));
+    if (enemyHealth >= realDamage)
+        enemyHealth -= realDamage;
+    else if (enemyHealth < realDamage)
+        enemyHealth = 0;
+    ui->enemyHealthBar->setValue(enemyHealth);
+
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+    fight();
+}
+void GameScreen::heroDefends()
+{
+    numberOfRounds++;
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
+    heroTemporaryDefense = heroDefense*4;
+    tempDefenseOn = true;
+    ui->heroDefensePointsLabel->setText(QString::number(heroTemporaryDefense));
+    ui->heroDefensePointsLabel->setStyleSheet("color: rgb(0, 200, 250); font-size: 16px;");
+
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+    fight();
+}
+void GameScreen::heroHealsHimself()
+{
+    numberOfRounds++;
+    connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
+    heroHealth += heroMaxHealth * 0.2;
+    ui->heroHealthBar->setValue(heroHealth);
+
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+    fight();
 }
 
 void GameScreen::delay(int ms)
@@ -582,4 +654,3 @@ void GameScreen::delay(int ms)
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
-
