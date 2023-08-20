@@ -3,12 +3,7 @@
         <file>other/Fonts/Girassol-Regular.ttf</file>
         <file>other/Music/TitleScreenBackgroundMusic.mp3</file>
     </qresource>
-    <qresource prefix="/dialogs">
-        <file>dialogs/male/Level 0 - Prologue/PrologWstep.txt</file>
-        <file>dialogs/female/Level 0 - Prologue/PrologWstep.txt</file>
-        <file>dialogs/female/Level 0 - Prologue/MonologBohatera_01.txt</file>
-        <file>dialogs/male/Level 0 - Prologue/MonologBohatera_01.txt</file>
-    </qresource>
+    <qresource prefix="/dialogs"/>
     <qresource prefix="/images">
         <file>images/AppScreenArt/TitleScreenBackground.png</file>
         <file>images/AppScreenArt/attackPoints.png</file>
