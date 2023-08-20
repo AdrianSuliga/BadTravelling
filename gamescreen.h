@@ -2,8 +2,6 @@
 #define GAMESCREEN_H
 
 #include <QWidget>
-#include <QThread>
-#include <enemyattackcontroller.h>
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
 #include <tutorialinfo.h>
@@ -27,7 +25,6 @@ private slots:
     //LEVEL 1
     void level1MainFunction();
     void showTutorial();
-    //void enemyAttacked();
     //SHOP
     void connectShop();
     void disconnectShop();
@@ -37,25 +34,36 @@ private slots:
     void userWantsToBuyBlahaj();
     void userWantsToBuyManul();
     void userWantsToBuyDrPieprzer();
-    //void userWantsToHeal();
     //OTHER
     void delay(int ms);
+    //FIGHT
     void drawEnemy(int whatToDraw);
     void fight();
+    void heroIsDead();
+    void enemyIsDead();
+    void on_attackActionButton_clicked();
+    void on_defenseActionButton_clicked();
+    void on_healActionButton_clicked();
+    void heroAttacks();
+    void heroDefends();
+    void heroHealsHimself();
+
 signals:
     void enemyKilled();
+    void heroKilled();
+    void heroEndsRound();
+    void enemyEndsRound();
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned;
-    int heroAttack, heroDefense, heroHealth, heroMaxHealth, enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
-    int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice, healingPrice;
-    short weaponLevel, shieldLevel, healthLevel, gameLevel;
+    bool blahajOwned, manulOwned, drPieprzerOwned, tempDefenseOn, tempDefenseUsed;
+    int heroAttack, heroDefense, heroTemporaryDefense, heroHealth, heroMaxHealth,
+        enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
+    int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
+    short weaponLevel, shieldLevel, healthLevel, gameLevel, numberOfRounds;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
     TutorialInfo *tutorialWidget;
-    QThread *attackThread;
-    EnemyAttackController *attackController;
 };
 
 #endif // GAMESCREEN_H
