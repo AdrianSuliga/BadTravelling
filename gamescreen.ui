@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1091</width>
-    <height>572</height>
+    <width>1106</width>
+    <height>590</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,197 +18,46 @@
 border-image: url(:/images/images/Level 0 - Prologue/Pic5.png) 0 0 0 0 stretch stretch;
 }</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="6,8,3">
+  <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="6,8,3">
    <item>
-    <layout class="QVBoxLayout" name="heroSideLayout" stretch="1,4,2">
+    <layout class="QVBoxLayout" name="verticalLayout_11" stretch="3,1,2">
      <item>
-      <widget class="QWidget" name="inventoryWidget" native="true">
-       <property name="styleSheet">
-        <string notr="true">#inventoryWidget {
-background-color: rgba(20,20,20,200);
-}</string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="keychainLabel">
-          <property name="styleSheet">
-           <string notr="true">#keychainLabel {
-background-color: rgb(50,50,50);
-}</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="keyLabel">
-          <property name="styleSheet">
-           <string notr="true">#keyLabel {
-background-color: rgb(50,50,50);
-}</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="idLabel">
-          <property name="styleSheet">
-           <string notr="true">#idLabel {
-background-color: rgb(50,50,50);
-}</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="moneyLabel">
-          <property name="styleSheet">
-           <string notr="true">#moneyLabel {
-background-color: rgb(50,50,50);
-}</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="middleHeroSideLayout" stretch="4,5">
+      <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="2,5">
        <item>
-        <widget class="QWidget" name="equipmentWidget" native="true">
+        <widget class="QWidget" name="specialItemsWidget" native="true">
          <property name="styleSheet">
-          <string notr="true">#equipmentWidget {
-background-color: rgba(20,20,20,200);
-}</string>
+          <string notr="true">background-color: rgba(20,20,20,150);</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <layout class="QHBoxLayout" name="weaponLayout" stretch="1,1">
-            <item>
-             <widget class="QLabel" name="weaponLabel">
-              <property name="styleSheet">
-               <string notr="true">#weaponLabel {
-background-color: rgb(50,50,50);
-border-image: url(:/images/images/AppScreenArt/DarkSword.png) 0 0 0 0 stretch stretch;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="weaponLevelLabel">
-              <property name="font">
-               <font>
-                <pointsize>16</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(180,180,180);
-font-size: 16pt;</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="blahajSlotLabel">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(50,50,50);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="shieldLayout" stretch="1,1">
-            <item>
-             <widget class="QLabel" name="shieldLabel">
-              <property name="styleSheet">
-               <string notr="true">#shieldLabel {
-background-color: rgb(50,50,50);
-border-image: url(:/images/images/AppScreenArt/DarkShield.png) 0 0 0 0 stretch stretch;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="shieldLevelLabel">
-              <property name="font">
-               <font>
-                <pointsize>16</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(180,180,180);
-font-size: 16pt;</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="manulSlotLabel">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(50,50,50);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="healthLayout" stretch="1,1">
-            <item>
-             <widget class="QLabel" name="healthLabel">
-              <property name="styleSheet">
-               <string notr="true">#healthLabel {
-background-color: rgb(50,50,50);
-border-image: url(:/images/images/AppScreenArt/DarkHeart.png) 0 0 0 0 stretch stretch;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="healthLevelLabel">
-              <property name="font">
-               <font>
-                <pointsize>16</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(180,180,180);
-font-size: 16pt;</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="drPieprzerSlotLabel">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(50,50,50);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -220,9 +69,12 @@ font-size: 16pt;</string>
 background-color: rgba(20,20,20,200);
 }</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="6,1,2">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="6,1">
           <item>
            <widget class="QLabel" name="heroLabel">
+            <property name="styleSheet">
+             <string notr="true">border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -343,31 +195,72 @@ font-size: 16px;</string>
             </layout>
            </widget>
           </item>
-          <item>
-           <widget class="QProgressBar" name="heroHealthBar">
-            <property name="styleSheet">
-             <string notr="true">#heroHealthBar {
-color: rgb(180,180,180);
-background-color: rgb(170,210,170);
-text-align: center;
-font-size: 24px;
-}
-#heroHealthBar::chunk {
-background-color: rgb(10,150,0);
-}</string>
-            </property>
-            <property name="value">
-             <number>90</number>
-            </property>
-            <property name="format">
-             <string>%v</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QWidget" name="inventoryWidget" native="true">
+       <property name="styleSheet">
+        <string notr="true">#inventoryWidget {
+background-color: rgba(20,20,20,200);
+}</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="keychainLabel">
+          <property name="styleSheet">
+           <string notr="true">#keychainLabel {
+background-color: rgb(50,50,50);
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="keyLabel">
+          <property name="styleSheet">
+           <string notr="true">#keyLabel {
+background-color: rgb(50,50,50);
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="idLabel">
+          <property name="styleSheet">
+           <string notr="true">#idLabel {
+background-color: rgb(50,50,50);
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="moneyLabel">
+          <property name="styleSheet">
+           <string notr="true">#moneyLabel {
+background-color: rgb(50,50,50);
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </item>
      <item>
       <widget class="QWidget" name="dialogWidget" native="true">
@@ -376,7 +269,7 @@ background-color: rgb(10,150,0);
 background-color: rgba(20,20,20,200);
 }</string>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
         <item>
          <layout class="QVBoxLayout" name="nameAndSpeakerLayout" stretch="4,1">
           <item>
@@ -462,137 +355,154 @@ color: rgb(180,180,180);
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="enemyWidget" native="true">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="6,1,2">
-      <item>
-       <widget class="QClickableLabel" name="enemyLabel">
-        <property name="text">
-         <string/>
+    <layout class="QVBoxLayout" name="verticalLayout_15" stretch="4,1">
+     <item>
+      <widget class="QWidget" name="enemyWidget" native="true">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="7,1,1">
+        <property name="spacing">
+         <number>0</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="enemyStatWidget" native="true">
-        <property name="styleSheet">
-         <string notr="true">#enemyStatWidget {
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QClickableLabel" name="enemyLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="enemyStatWidget" native="true">
+          <property name="styleSheet">
+           <string notr="true">#enemyStatWidget {
 background-color: rgba(40,40,40,200);
 }</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="2,2,1,2,2,1,2,2">
-         <item>
-          <widget class="QLabel" name="enemyAttackPointsIconLabel">
-           <property name="styleSheet">
-            <string notr="true">#enemyAttackPointsIconLabel {
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1,1,1,1,1,1,1">
+           <item>
+            <widget class="QLabel" name="enemyAttackPointsIconLabel">
+             <property name="styleSheet">
+              <string notr="true">#enemyAttackPointsIconLabel {
 border-image: url(:/images/images/AppScreenArt/attackPoints.png) 0 0 0 0 stretch stretch;
 }</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="enemyAttackPointsLabel">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(180,180,180);
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="enemyAttackPointsLabel">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(180,180,180);
 font-size: 20px;</string>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>6</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="enemyDefensePointsIconLabel">
-           <property name="styleSheet">
-            <string notr="true">#enemyDefensePointsIconLabel {
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>6</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="enemyDefensePointsIconLabel">
+             <property name="styleSheet">
+              <string notr="true">#enemyDefensePointsIconLabel {
 border-image: url(:/images/images/AppScreenArt/defensePoints.png) 0 0 0 0 stretch stretch;
 }</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="enemyDefensePointsLabel">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(180,180,180);
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="enemyDefensePointsLabel">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(180,180,180);
 font-size: 20px;</string>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>7</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="enemyHealthPointsIconLabel">
-           <property name="styleSheet">
-            <string notr="true">#enemyHealthPointsIconLabel {
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>7</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="enemyHealthPointsIconLabel">
+             <property name="styleSheet">
+              <string notr="true">#enemyHealthPointsIconLabel {
 border-image: url(:/images/images/AppScreenArt/healthPoints.png) 0 0 0 0 stretch stretch;
 }</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="enemyHealthPointsLabel">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(180,180,180);
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="enemyHealthPointsLabel">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(180,180,180);
 font-size: 20px;</string>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="enemyHealthBar">
-        <property name="styleSheet">
-         <string notr="true">#enemyHealthBar {
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="enemyHealthBar">
+          <property name="styleSheet">
+           <string notr="true">#enemyHealthBar {
 color: rgb(180,180,180);
 background-color: rgb(200,100,100);
 text-align: center;
@@ -601,554 +511,726 @@ font-size: 24px;
 #enemyHealthBar::chunk {
 background-color: rgb(170,0,0);
 }</string>
-        </property>
-        <property name="value">
-         <number>90</number>
-        </property>
-        <property name="format">
-         <string>%v</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="shopWidget" native="true">
-     <property name="styleSheet">
-      <string notr="true">#shopWidget {
-background-color: rgba(20,20,20,200);
-}</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_10" stretch="1,1,8,2">
-      <item>
-       <widget class="QLabel" name="shopLabel">
-        <property name="styleSheet">
-         <string notr="true">#shopLabel {
-background-color: rgb(20,20,20);
-color: rgb(180,180,180);
-font-size: 20px;
-}</string>
-        </property>
-        <property name="text">
-         <string>SKLEP</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="widget" native="true">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(20,20,20);</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,1,1">
-         <item>
-          <widget class="QLabel" name="majatekLabel">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-           </property>
-           <property name="text">
-            <string>MAJĄTEK:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="amountOfMoneyLabel">
-           <property name="styleSheet">
-            <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-           </property>
-           <property name="text">
-            <string>-</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="coinsLabel">
-           <property name="minimumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,1">
-        <item>
-         <layout class="QVBoxLayout" name="normalShopLayout" stretch="1,1,1">
-          <item>
-           <widget class="QClickableWidget" name="weaponShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#weaponShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#weaponShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="weaponShopLabel">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="weaponShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_3">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QClickableWidget" name="shieldShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#shieldShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#shieldShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="shieldShopLabel">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="shieldShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_5">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QClickableWidget" name="healthShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#healthShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#healthShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="healthShopLabel">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="healthShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_7">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="specialShopLayout">
-          <item>
-           <widget class="QClickableWidget" name="blahajShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#blahajShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#blahajShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_7" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="blahajShopLabel">
-               <property name="styleSheet">
-                <string notr="true">#blahajShopLabel {
-border-image: url(:/images/images/Shop - Special/Blahaj.png) 0 0 0 0 stretch stretch;
-}</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="blahajShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_4">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QClickableWidget" name="manulShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#manulShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#manulShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_8" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="manulShopLabel">
-               <property name="styleSheet">
-                <string notr="true">#manulShopLabel {
-border-image: url(:/images/images/Shop - Special/Manul.png) 0 0 0 0 stretch stretch;
-}</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="manulShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_6">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QClickableWidget" name="drPieprzerShopWidget" native="true">
-            <property name="styleSheet">
-             <string notr="true">#drPieprzerShopWidget {
-background-color: rgba(20,20,20,200);
-}
-#drPieprzerShopWidget:hover {
-background-color: rgb(20,20,20);
-}</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_9" stretch="2,1">
-             <property name="spacing">
-              <number>5</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="drPieprzerShopLabel">
-               <property name="styleSheet">
-                <string notr="true">#drPieprzerShopLabel {
-border-image: url(:/images/images/Shop - Special/DrPieprzer.png) 0 0 0 0 stretch stretch;
-}</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="3,2">
-               <item>
-                <widget class="QLabel" name="drPieprzerShopPriceLabel">
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(180,180,180);
-font-size: 20px;</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="coinsLabel_2">
-                 <property name="minimumSize">
-                  <size>
-                   <width>30</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+          </property>
+          <property name="value">
+           <number>90</number>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_13">
-        <item>
-         <spacer name="horizontalSpacer_6">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="healingPotionLabel">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>200</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">#healingPotionLabel {
-border-image: url(:/images/images/AppScreenArt/healingPotion.png) 0 0 0 0 stretch stretch;
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_13" stretch="1,1">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QProgressBar" name="heroHealthBar">
+         <property name="styleSheet">
+          <string notr="true">#heroHealthBar {
+color: rgb(180,180,180);
+background-color: rgb(100,200,100);
+text-align: center;
+font-size: 24px;
 }
-#healingPotionLabel:hover {
-border-image: url(:/images/images/AppScreenArt/healingPotionHover.png) 0 0 0 0 stretch stretch;
+#heroHealthBar::chunk {
+background-color: rgb(10,150,0);
+}</string>
+         </property>
+         <property name="value">
+          <number>90</number>
+         </property>
+         <property name="format">
+          <string>%v</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="actionsWidget" native="true">
+         <property name="styleSheet">
+          <string notr="true">#actionsWidget {
+background-color: rgba(20,20,20,200);
+}
+QPushButton:hover {
+border-width: 2px;
+border-color: rgb(180,180,180);
+background-color: rgb(20,20,20);
+}</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="1,1,1,1,1,1,1">
+          <item>
+           <spacer name="horizontalSpacer_9">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="attackActionButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-image: url(:/images/images/AppScreenArt/DarkSword.png) 0 0 0 0 stretch stretch;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="defenseActionButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-image: url(:/images/images/AppScreenArt/DarkShield.png) 0 0 0 0 stretch stretch;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="healActionButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-image: url(:/images/images/AppScreenArt/DarkHeart.png) 0 0 0 0 stretch stretch;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_10">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_14" stretch="4,1">
+     <item>
+      <widget class="QWidget" name="shopWidget" native="true">
+       <property name="styleSheet">
+        <string notr="true">#shopWidget {
+background-color: rgba(20,20,20,200);
+}</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_10" stretch="1,1,5">
+        <item>
+         <widget class="QLabel" name="shopLabel">
+          <property name="styleSheet">
+           <string notr="true">#shopLabel {
+background-color: rgb(20,20,20);
+color: rgb(180,180,180);
+font-size: 30px;
 }</string>
           </property>
           <property name="text">
-           <string/>
+           <string>SKLEP</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_7">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+         <widget class="QWidget" name="widget" native="true">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(20,20,20);</string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+          <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,1,1">
+           <item>
+            <widget class="QLabel" name="majatekLabel">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+             </property>
+             <property name="text">
+              <string>MAJĄTEK:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="amountOfMoneyLabel">
+             <property name="styleSheet">
+              <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="coinsLabel">
+             <property name="minimumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="1,1">
+          <item>
+           <layout class="QVBoxLayout" name="normalShopLayout" stretch="1,1,1">
+            <item>
+             <widget class="QClickableWidget" name="weaponShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#weaponShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#weaponShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="weaponShopLabel">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="weaponShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_3">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QClickableWidget" name="shieldShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#shieldShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#shieldShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_5" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="shieldShopLabel">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="shieldShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_5">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QClickableWidget" name="healthShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#healthShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#healthShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="healthShopLabel">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="healthShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_7">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="specialShopLayout">
+            <item>
+             <widget class="QClickableWidget" name="blahajShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#blahajShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#blahajShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="blahajShopLabel">
+                 <property name="styleSheet">
+                  <string notr="true">#blahajShopLabel {
+border-image: url(:/images/images/Shop - Special/Blahaj.png) 0 0 0 0 stretch stretch;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="blahajShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_4">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QClickableWidget" name="manulShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#manulShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#manulShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_8" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="manulShopLabel">
+                 <property name="styleSheet">
+                  <string notr="true">#manulShopLabel {
+border-image: url(:/images/images/Shop - Special/Manul.png) 0 0 0 0 stretch stretch;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="manulShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_6">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QClickableWidget" name="drPieprzerShopWidget" native="true">
+              <property name="styleSheet">
+               <string notr="true">#drPieprzerShopWidget {
+background-color: rgba(20,20,20,200);
+}
+#drPieprzerShopWidget:hover {
+background-color: rgb(20,20,20);
+border-style: solid;
+border-width: 2px;
+border-color: rgb(180,180,180);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_9" stretch="2,1">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="drPieprzerShopLabel">
+                 <property name="styleSheet">
+                  <string notr="true">#drPieprzerShopLabel {
+border-image: url(:/images/images/Shop - Special/DrPieprzer.png) 0 0 0 0 stretch stretch;
+}</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="3,2">
+                 <item>
+                  <widget class="QLabel" name="drPieprzerShopPriceLabel">
+                   <property name="styleSheet">
+                    <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+                   </property>
+                   <property name="text">
+                    <string>-</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="coinsLabel_2">
+                   <property name="minimumSize">
+                    <size>
+                     <width>30</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">border-image: url(:/images/images/AppScreenArt/Coins.png) 0 0 0 0 stretch stretch;</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="actionSelectionWidget" native="true">
+       <property name="styleSheet">
+        <string notr="true">#actionSelectionWidget {
+background-color: rgba(20,20,20,150);
+}</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_12" stretch="4,1">
+        <item>
+         <widget class="QLabel" name="infoAboutActionLabel">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(180,180,180);
+font-size: 20px;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_14">
+          <item>
+           <widget class="QPushButton" name="confirmButton">
+            <property name="text">
+             <string>TAK</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
