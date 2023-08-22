@@ -2,6 +2,7 @@
 #define GAMESCREEN_H
 
 #include <QWidget>
+#include <QHash>
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
 #include <tutorialinfo.h>
@@ -36,6 +37,8 @@ private slots:
     void userWantsToBuyDrPieprzer();
     //OTHER
     void delay(int ms);
+    void loadScene(QString pathToDialog, int numOfLines);
+    void showOneDialog(QString* dialogs, int totalNumOfLines);
     //FIGHT
     void drawEnemy(int whatToDraw);
     void fight();
@@ -47,12 +50,10 @@ private slots:
     void heroAttacks();
     void heroDefends();
     void heroHealsHimself();
-
 signals:
     void enemyKilled();
     void heroKilled();
-    void heroEndsRound();
-    void enemyEndsRound();
+    void sceneEnded();
 private:
     Ui::GameScreen *ui;
     int sex;
@@ -60,7 +61,8 @@ private:
     int heroAttack, heroDefense, heroTemporaryDefense, heroHealth, heroMaxHealth,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
-    short weaponLevel, shieldLevel, healthLevel, gameLevel, numberOfRounds;
+    short weaponLevel, shieldLevel, healthLevel, gameLevel, numberOfRounds, counterOfLines;
+    QHash<QString, QString> nameToPath;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
     TutorialInfo *tutorialWidget;
