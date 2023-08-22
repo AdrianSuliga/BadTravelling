@@ -3,6 +3,9 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QFontDatabase>
+#include <QFile>
+#include <QTextStream>
+#include <QStyleFactory>
 #include <QTime>
 #include <cstdlib>
 #include <QDebug>
@@ -39,16 +42,22 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->heroDefensePointsLabel->setFont(Girassol);
     ui->heroHealthPointsLabel->setFont(Girassol);
     ui->heroHealthBar->setFont(Girassol);
+    ui->heroHealthBar->setStyle(QStyleFactory::create("Fusion"));
     ui->enemyAttackPointsLabel->setFont(Girassol);
     ui->enemyDefensePointsLabel->setFont(Girassol);
     ui->enemyHealthPointsLabel->setFont(Girassol);
     ui->enemyHealthBar->setFont(Girassol);
+    ui->enemyHealthBar->setStyle(QStyleFactory::create("Fusion"));
 
     ui->infoAboutActionLabel->setFont(Girassol);
     ui->confirmButton->setFont(Girassol);
 
     gameLevel = 1;
     numberOfRounds = 0;
+    counterOfLines = 0;
+    nameToPath["PODRÓŻNIK"] = "border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;";
+    nameToPath["PODRÓŻNICZKA"] = "border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;";
+    nameToPath["MENEL"] = "border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;";
 
     if (sex == 0)
     {
@@ -196,8 +205,20 @@ void GameScreen::level1MainFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         drawEnemy(0);
-        fight();
+        QString *fstScene = new QString[2];
+        if (sex == 0)
+            fstScene[0] = "PODRÓŻNICZKA";
+        if (sex == 1)
+            fstScene[0] = "PODRÓŻNIK";
+        fstScene[1] = "???";
+        showOneDialog(fstScene, 2);
+        delete[] fstScene;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
     });
+    connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
 }
 void GameScreen::showTutorial()
 {
@@ -568,8 +589,8 @@ void GameScreen::on_attackActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
     int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
-    ui->infoAboutActionLabel->setText("Czy wykonać atak? Obrażenia: " + QString::number(0.8 * baseDamage) + " - " +
-                                      QString::number(1.2 * baseDamage));
+    ui->infoAboutActionLabel->setText("Czy wykonać atak? Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
+                                      QString::number(static_cast<int>(1.2 * baseDamage)));
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
 }
@@ -639,7 +660,8 @@ void GameScreen::heroHealsHimself()
 {
     numberOfRounds++;
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
-    heroHealth += heroMaxHealth * 0.2;
+    double healingParameter = static_cast<double>(rand() % 4 + 2) / 10;
+    heroHealth += heroMaxHealth * healingParameter;
     ui->heroHealthBar->setValue(heroHealth);
 
     ui->attackActionButton->setEnabled(false);
@@ -653,4 +675,59 @@ void GameScreen::delay(int ms)
     QTime dieTime = QTime::currentTime().addMSecs(ms);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
+void GameScreen::loadScene(QString pathToDialog, int numOfLines)
+{
+    QFile dialogFile(pathToDialog);
+    QString* dialogs = new QString[numOfLines];
+    counterOfLines = 0;
+    if (dialogFile.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&dialogFile);
+        while (!in.atEnd())
+        {
+            *dialogs = in.readLine();
+            dialogs++;
+        }
+        dialogs -= numOfLines;
+    }
+    else
+    {
+        qDebug() << "COULD NOT OPEN .TXT FILE!";
+        return;
+    }
+    ui->continueButton->setEnabled(true);
+    connect(ui->continueButton, &QPushButton::clicked, this, [this, dialogs, numOfLines]() { showOneDialog(dialogs, numOfLines); });
+}
+void GameScreen::showOneDialog(QString *dialogs, int totalNumOfLines)
+{
+    ui->continueButton->setEnabled(false);
+    QString name = dialogs[counterOfLines];
+    QString text = dialogs[counterOfLines + 1];
+    QString toShow = "";
+    ui->nameLabel->setText(name);
+    ui->speakerLabel->setStyleSheet(nameToPath[name]);
+    for (int i=0; i<text.length(); i++)
+    {
+        toShow += text[i];
+        ui->dialogLabel->setText(toShow);
+        delay(50);
+    }
+    counterOfLines += 2;
+
+    if (totalNumOfLines == 2)
+    {
+        counterOfLines = 0;
+        ui->continueButton->setEnabled(false);
+        return;
+    }
+    if (counterOfLines == totalNumOfLines)
+    {
+        counterOfLines = 0;
+        ui->continueButton->setEnabled(false);
+        emit sceneEnded();
+        return;
+    }
+    ui->continueButton->setEnabled(true);
 }
