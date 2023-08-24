@@ -55,9 +55,51 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     gameLevel = 1;
     numberOfRounds = 0;
     counterOfLines = 0;
+    actionPoints = 0;
     nameToPath["PODRÓŻNIK"] = "border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;";
     nameToPath["PODRÓŻNICZKA"] = "border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;";
+
     nameToPath["MENEL"] = "border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;";
+    nameToPath["RYCERZ ORTALIONU"] = "border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["JEZUS CHYTRUS"] = "border-image: url(:/images/images/Level 2 - Pilica River/Jezus.png) 0 0 0 0 stretch stretch;";
+    nameToPath["WŚCIEKŁY PIES"] = "border-image: url(:/images/images/Level 2 - Pilica River/WscieklyPies.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["BYDLĘCE SIŁY ZBROJNE"] = "border-image: url(:/images/images/Level 3 - Kurzelow/BydleceSilyZbrojne.png) 0 0 0 0 stretch stretch;";
+    nameToPath["JAN BROŻEK"] = "border-image: url(:/images/images/Level 3 - Kurzelow/JanBrozek.png) 0 0 0 0 stretch stretch;";
+    nameToPath["ADAM Z KURZELOWA"] = "border-image: url(:/images/images/Level 3 - Kurzelow/AdamZKurzelowa.png) 0 0 0 0 stretch stretch;";
+    nameToPath["ADAM CZARNY"] = "border-image: url(:/images/images/Level 3 - Kurzelow/AdamCzarny.png) 0 0 0 0 stretch stretch;";
+    nameToPath["MR BALLSAMAN"] = "border-image: url(:/images/images/Level 3 - Kurzelow/MrBallsamn.png) 0 0 0 0 stretch stretch;";
+    nameToPath["COOLA MINECRAFT OFFICIAL"] = "border-image: url(:/images/images/Level 3 - Kurzelow/CoolaMinecraftOfficial.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["MIESZKANIEC OGRODOWEJ"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/MieszkaniecOgrodowej.png) 0 0 0 0 stretch stretch;";
+    nameToPath["RZEPON"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/Rzepon.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BORÓWA"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/Borowa.png) 0 0 0 0 stretch stretch;";
+    nameToPath["POTĘŻNA BORÓWA"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/PoteznaBorowa.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["POTĘŻNY MAT-FIZ"] = "border-image: url(:/images/images/Level 5 - Central Square Again/PoteznyMatfiz.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["DUCH ŻYDA"] = "border-image: url(:/images/images/Level 6 - Underworld/DuchZyda.png) 0 0 0 0 stretch stretch;";
+    nameToPath["DUCHY ŻYDÓW"] = "border-image: url(:/images/images/Level 6 - Underworld/DuchyZydow.png) 0 0 0 0 stretch stretch;";
+    nameToPath["JACEK JAWOREK"] = "border-image: url(:/images/images/Level 6 - Underworld/JacekJaworek.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["ALPHA"] = "border-image: url(:/images/images/Level 7 - Wiejska/Alpha.png) 0 0 0 0 stretch stretch;";
+    nameToPath["OMEGA"] = "border-image: url(:/images/images/Level 7 - Wiejska/Omega.png) 0 0 0 0 stretch stretch;";
+    nameToPath["JĘDRZEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/Jedrzej.png) 0 0 0 0 stretch stretch;";
+    nameToPath["SEZY"] = "border-image: url(:/images/images/Level 7 - Wiejska/Sezy.png) 0 0 0 0 stretch stretch;";
+    nameToPath["MIESZKAŃCY WIEJSKIEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej.png) 0 0 0 0 stretch stretch;";
+    nameToPath["REZYDENCI WIEJSKIEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej_2.png) 0 0 0 0 stretch stretch;";
+    nameToPath["SENIOR HISZPANEK"] = "border-image: url(:/images/images/Level 7 - Wiejska/SeniorHiszpanek.png) 0 0 0 0 stretch stretch;";
+
+    nameToPath["DAPO"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Dapo.png) 0 0 0 0 stretch stretch;";
+    nameToPath["KSIĄDZ PAWEŁ"] = "border-image: url(:/images/images/Level 8 - Sikorski High/KsiadzPawel.png) 0 0 0 0 stretch stretch;";
+    nameToPath["FORBIDDEN LOVERS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Monika&Marczu.png) 0 0 0 0 stretch stretch;";
+    nameToPath["PANI DEJA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;";
+    nameToPath["PANI JADZIA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BUSZER"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BUSZ DRAGON"] = "border-image: url(:/images/images/Level 8 - Sikorski High/BuszDragon.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BOŻENKA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BOŻENKUS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;";
 
     if (sex == 0)
     {
@@ -79,9 +121,10 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
         heroHealth = 50;
         heroMaxHealth = 50;
     }
-    heroTemporaryDefense = -1;
-    tempDefenseOn = false;
-    tempDefenseUsed = false;
+    heroShield = 0;
+    heroCritRate = 0;
+    shieldOn = false;
+    shieldBroken = false;
 
     enemyAttack = -1;
     enemyDefense = -1;
@@ -119,6 +162,9 @@ GameScreen::~GameScreen()
 
 void GameScreen::loadVariables()
 {
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 1 - Central Square/Level1Background.png) 0 0 0 0 stretch stretch;"
+                        "}");
     ui->heroAttackPointsLabel->setText(QString::number(heroAttack, 10));
     ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
     ui->heroHealthPointsLabel->setText(QString::number(heroHealth, 10));
@@ -173,6 +219,12 @@ void GameScreen::loadVariables()
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
 
+    ui->firstActionBox->setCheckable(false);
+    ui->secondActionBox->setCheckable(false);
+    ui->thirdActionBox->setCheckable(false);
+    ui->fourthActionBox->setCheckable(false);
+    ui->fifthActionBox->setCheckable(false);
+
     deadEnemy = new DeadEnemyWidget(this);
     deadHero = new DeadHeroWidget(this);
     tutorialWidget = new TutorialInfo(this);
@@ -205,7 +257,8 @@ void GameScreen::level1MainFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         drawEnemy(0);
-        QString *fstScene = new QString[2];
+        fight();
+        /*QString *fstScene = new QString[2];
         if (sex == 0)
             fstScene[0] = "PODRÓŻNICZKA";
         if (sex == 1)
@@ -216,9 +269,9 @@ void GameScreen::level1MainFunction()
         if (sex == 0)
             loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         if (sex == 1)
-            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
+            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);*/
     });
-    connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
+    //connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
 }
 void GameScreen::showTutorial()
 {
@@ -259,6 +312,10 @@ void GameScreen::userWantsToBuyWeapon()
             heroAttack += weaponLevel * 5;
         if (sex == 1)
             heroAttack += weaponLevel * 7;
+        if (weaponLevel * 3 <= 75)
+            heroCritRate = 3 * weaponLevel;
+        else if (weaponLevel * 3 > 75)
+            heroCritRate = 75;
         weaponPrice = 100 * weaponLevel * weaponLevel * cbrt(weaponLevel) + 100;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
@@ -528,47 +585,75 @@ void GameScreen::drawEnemy(int whatToDraw)
 }
 void GameScreen::fight()
 {
+    disconnectShop();
+    ui->continueButton->hide();
     if (numberOfRounds % 2 == 0)
     {
         ui->infoAboutActionLabel->setText("TWOJA TURA");
+        ui->confirmButton->hide();
         ui->attackActionButton->setEnabled(true);
-        ui->defenseActionButton->setEnabled(true);
-        ui->healActionButton->setEnabled(true);
+        ui->defenseActionButton->setEnabled(false);
+        ui->healActionButton->setEnabled(false);
+        if (actionPoints >= 1)
+            ui->defenseActionButton->setEnabled(true);
+        if (actionPoints >= 3)
+            ui->healActionButton->setEnabled(true);
         return;
     }
     if (numberOfRounds % 2 == 1)
     {
+        delay(2000);
         ui->infoAboutActionLabel->setText("TURA PRZECIWNIKA");
+        delay(2000);
         int enemyBaseDamage = 0;
-        if (tempDefenseOn == false)
-        {
-            enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
-                                    (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
-        }
-        if (tempDefenseOn == true)
-        {
-            enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
-                                    (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroTemporaryDefense)));
-            tempDefenseUsed = true;
-            ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
-            ui->heroDefensePointsLabel->setStyleSheet("color: rgb(180,180,180); font-size: 16px;");
-        }
+        enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
+                                (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
+
         int enemyRealDamage = rand() % static_cast<int>(0.4*enemyBaseDamage + 1) + static_cast<int>(0.8*enemyBaseDamage);
-        if (heroHealth >= enemyRealDamage)
+
+        if (shieldOn == true && heroShield >= enemyRealDamage)
+        {
+            heroShield -= enemyRealDamage;
+            ui->heroHealthBar->setValue(heroShield);
+        }
+        else if (shieldOn == true && heroShield < enemyRealDamage)
+        {
+            heroShield = 0;
+            ui->heroHealthBar->setValue(0);
+            shieldBroken = true;
+        }
+        else if (shieldOn == false && heroHealth >= enemyRealDamage)
+        {
             heroHealth -= enemyRealDamage;
-        else if (heroHealth < enemyRealDamage)
+            ui->heroHealthBar->setValue(heroHealth);
+        }
+        else if (shieldOn == false && heroHealth < enemyRealDamage)
+        {
             heroHealth = 0;
-        ui->heroHealthBar -> setValue(heroHealth);
+            ui->heroHealthBar->setValue(heroHealth);
+        }
+
+        ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(enemyRealDamage));
+        delay(2000);
+        ui->dialogLabel->setText("");
         numberOfRounds++;
         fight();
     }
-    if (tempDefenseUsed == true)
+    if (shieldBroken == true)
     {
-        heroTemporaryDefense = -1;
-        tempDefenseOn = false;
-        tempDefenseUsed = false;
-        ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
-        ui->heroDefensePointsLabel->setStyleSheet("color: rgb(180,180,180); font-size: 16px;");
+        shieldOn = false;
+        shieldBroken = false;
+        ui->heroHealthBar->setMaximum(heroMaxHealth);
+        ui->heroHealthBar->setValue(heroHealth);
+        ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                         "color: rgb(180,180,180);"
+                                         "background-color: rgb(100,200,100);"
+                                         "text-align: center;"
+                                         "font-size: 24px;"
+                                         "}"
+                                         "#heroHealthBar::chunk {"
+                                         "background-color: rgb(10,150,0);"
+                                         "}");
         return;
     }
 }
@@ -577,7 +662,6 @@ void GameScreen::heroIsDead()
 {
 
 }
-
 void GameScreen::enemyIsDead()
 {
 
@@ -589,8 +673,16 @@ void GameScreen::on_attackActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
     int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
-    ui->infoAboutActionLabel->setText("Czy wykonać atak? Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
-                                      QString::number(static_cast<int>(1.2 * baseDamage)));
+
+    short percentage = 0;
+    if (weaponLevel * 3 <= 75)
+        percentage = 3 * weaponLevel;
+    else if (weaponLevel * 3 > 75)
+        percentage = 75;
+
+    ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
+                                      QString::number(static_cast<int>(1.2 * baseDamage)) + '\n' + "Szansa na atak krytyczny: " +
+                                      QString::number(percentage) + "%");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
 }
@@ -599,13 +691,8 @@ void GameScreen::on_defenseActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
-    short percentage = 0;
-    if (shieldLevel * 4 <= 100)
-        percentage = shieldLevel * 4;
-    else if (shieldLevel * 4 > 100)
-        percentage = 100;
-
-    ui->infoAboutActionLabel->setText("Czy wykonać akcję obrony? Szansa na odbicie: " + QString::number(percentage) + "%");
+    ui->infoAboutActionLabel->setText("Uzyskiwana tarcza: " + QString::number(heroDefense*1.6) + " - " + QString::number(heroDefense*2.4)
+                                      + "\nSzansa na odbicie: " + QString::number(3*shieldLevel) + "%");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
 }
@@ -616,7 +703,7 @@ void GameScreen::on_healActionButton_clicked()
 
     if (heroHealth < 0.8 * heroMaxHealth)
     {
-        ui->infoAboutActionLabel->setText("Czy chcesz się uleczyć? Odzyskane życie przy leczeniu: " + QString::number(0.2 * heroMaxHealth));
+        ui->infoAboutActionLabel->setText("Odzyskane życie przy leczeniu: " + QString::number(0.2 * heroMaxHealth));
         ui->confirmButton->show();
         connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
     }
@@ -628,46 +715,173 @@ void GameScreen::heroAttacks()
 {
     numberOfRounds++;
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+
     int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
     int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
-    ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10));
+    bool isItCrit = false;
+
+    if (rand() % 100 + 1 < heroCritRate)
+    {
+        isItCrit = true;
+        realDamage *= 1.5;
+    }
+
+    ui->infoAboutActionLabel->setText("");
+    ui->confirmButton->hide();
+    delay(2000);
+    if (isItCrit == false)
+        ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10));
+    else if (isItCrit == true)
+        ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10) + " OBRAŻEŃ KRYTYCZNYCH");
     if (enemyHealth >= realDamage)
         enemyHealth -= realDamage;
     else if (enemyHealth < realDamage)
         enemyHealth = 0;
     ui->enemyHealthBar->setValue(enemyHealth);
+    delay(500);
+    if (actionPoints < 5)
+    {
+        actionPoints++;
+        updateActionPointsButtons();
+    }
 
-    ui->attackActionButton->setEnabled(false);
-    ui->defenseActionButton->setEnabled(false);
-    ui->healActionButton->setEnabled(false);
     fight();
 }
 void GameScreen::heroDefends()
 {
     numberOfRounds++;
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
-    heroTemporaryDefense = heroDefense*4;
-    tempDefenseOn = true;
-    ui->heroDefensePointsLabel->setText(QString::number(heroTemporaryDefense));
-    ui->heroDefensePointsLabel->setStyleSheet("color: rgb(0, 200, 250); font-size: 16px;");
-
     ui->attackActionButton->setEnabled(false);
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
+
+    shieldOn = true;
+    shieldBroken = false;
+    actionPoints--;
+    updateActionPointsButtons();
+
+    heroShield = rand() % static_cast<int>(0.8 * heroDefense + 1) + static_cast<int>(1.6 * heroDefense);
+    ui->heroHealthBar->setMaximum(heroShield);
+    ui->heroHealthBar->setValue(heroShield);
+    ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                     "color: rgb(180,180,180);"
+                                     "background-color: rgb(80, 150, 255);"
+                                     "text-align: center;"
+                                     "font-size: 24px;"
+                                     "}"
+                                     "#heroHealthBar::chunk {"
+                                     "background-color: rgb(0, 90, 210);"
+                                     "}");
     fight();
 }
 void GameScreen::heroHealsHimself()
 {
     numberOfRounds++;
-    connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
-    double healingParameter = static_cast<double>(rand() % 4 + 2) / 10;
-    heroHealth += heroMaxHealth * healingParameter;
-    ui->heroHealthBar->setValue(heroHealth);
-
+    disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
     ui->attackActionButton->setEnabled(false);
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
+
+
     fight();
+}
+
+void GameScreen::updateActionPointsButtons()
+{
+    switch (actionPoints)
+    {
+    case 0:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(false);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(false);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(false);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(false);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(false);
+        break;
+    case 1:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(true);
+        break;
+    case 2:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(true);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(true);
+        break;
+    case 3:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(true);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(true);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(true);
+        break;
+    case 4:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(true);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(true);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(true);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(true);
+        break;
+    case 5:
+        if (!ui->firstActionBox->isCheckable())
+            ui->firstActionBox->setCheckable(true);
+        ui->firstActionBox->setChecked(true);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(true);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(true);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(true);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(true);
+        break;
+    default:
+        qDebug() << "INCORRECT AMOUNT OF ACTION POINTS";
+    }
 }
 
 void GameScreen::delay(int ms)
@@ -697,6 +911,8 @@ void GameScreen::loadScene(QString pathToDialog, int numOfLines)
         qDebug() << "COULD NOT OPEN .TXT FILE!";
         return;
     }
+    if (ui->continueButton->isHidden())
+        ui->continueButton->show();
     ui->continueButton->setEnabled(true);
     connect(ui->continueButton, &QPushButton::clicked, this, [this, dialogs, numOfLines]() { showOneDialog(dialogs, numOfLines); });
 }
