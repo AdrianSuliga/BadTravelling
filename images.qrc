@@ -61,15 +61,28 @@
         <file>images/Shop - Special/Blahaj.png</file>
         <file>images/Shop - Special/DrPieprzer.png</file>
         <file>images/Shop - Special/Manul.png</file>
-        <file>images/Level 0 - Prologue/Pic1.png</file>
-        <file>images/Level 0 - Prologue/Pic2.png</file>
-        <file>images/Level 0 - Prologue/Pic3.png</file>
-        <file>images/Level 0 - Prologue/Pic4.png</file>
-        <file>images/Level 0 - Prologue/Pic5.png</file>
         <file>images/AppScreenArt/Coins.png</file>
         <file>images/AppScreenArt/healingPotion.png</file>
         <file>images/AppScreenArt/healingPotionHover.png</file>
         <file>images/Level 8 - Sikorski High/Dapo.png</file>
         <file>images/Level 8 - Sikorski High/PaniJadzia.png</file>
+        <file>images/Level 1 - Central Square/Level1Background.png</file>
+        <file>images/Level 4 - Ogrodowa/Level4Background_1.png</file>
+        <file>images/Level 4 - Ogrodowa/Level4Background_2.png</file>
+        <file>images/Level 5 - Central Square Again/Level5Background_1.png</file>
+        <file>images/Level 5 - Central Square Again/Level5Background_2.png</file>
+        <file>images/Level 5 - Central Square Again/Level5Background_2_Fixed.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_1.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_1_Fixed.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_2.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_2_Fixed.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_3.png</file>
+        <file>images/Level 7 - Wiejska/Level7Background_3_Fixed.png</file>
+        <file>images/Level 8 - Sikorski High/KsiadzPawel.png</file>
+        <file>images/Level 8 - Sikorski High/Monika&amp;Marczu.png</file>
+        <file>images/Level 8 - Sikorski High/PaniDeja.png</file>
+        <file>images/Level 8 - Sikorski High/Tosia.png</file>
+        <file>images/Level 8 - Sikorski High/Bozenka.png</file>
+        <file>images/Level 8 - Sikorski High/Bozenkus.png</file>
     </qresource>
 </RCC>
