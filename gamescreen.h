@@ -47,6 +47,7 @@ private slots:
     void on_attackActionButton_clicked();
     void on_defenseActionButton_clicked();
     void on_healActionButton_clicked();
+    void updateActionPointsButtons();
     void heroAttacks();
     void heroDefends();
     void heroHealsHimself();
@@ -57,11 +58,11 @@ signals:
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned, tempDefenseOn, tempDefenseUsed;
-    int heroAttack, heroDefense, heroTemporaryDefense, heroHealth, heroMaxHealth,
+    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken;
+    int heroAttack, heroCritRate, heroDefense, heroShield, heroHealth, heroMaxHealth,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
-    short weaponLevel, shieldLevel, healthLevel, gameLevel, numberOfRounds, counterOfLines;
+    short weaponLevel, shieldLevel, healthLevel, gameLevel, actionPoints, numberOfRounds, counterOfLines;
     QHash<QString, QString> nameToPath;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
