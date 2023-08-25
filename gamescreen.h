@@ -59,7 +59,7 @@ private:
     Ui::GameScreen *ui;
     int sex;
     bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken;
-    int heroAttack, heroCritRate, heroDefense, heroShield, heroHealth, heroMaxHealth,
+    int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
     short weaponLevel, shieldLevel, healthLevel, gameLevel, actionPoints, numberOfRounds, counterOfLines;
