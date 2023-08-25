@@ -122,7 +122,9 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
         heroMaxHealth = 50;
     }
     heroShield = 0;
+    heroReflectionRate = 0;
     heroCritRate = 0;
+    heroHealRate = 0;
     shieldOn = false;
     shieldBroken = false;
 
@@ -365,6 +367,10 @@ void GameScreen::userWantsToBuyShield()
         wealth -= shieldPrice;
         shieldLevel++;
         heroDefense += shieldLevel * 5;
+        if (shieldLevel * 3 <= 75)
+            heroReflectionRate = 3 * shieldLevel;
+        else if (shieldLevel * 3 > 75)
+            heroReflectionRate = 75;
         shieldPrice = 90 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 90;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
@@ -418,6 +424,10 @@ void GameScreen::userWantsToBuyHealth()
         if (sex == 1)
             heroMaxHealth += healthLevel * 10;
         heroHealth = heroMaxHealth;
+        if (healthLevel * 3 <= 75)
+            heroHealRate = 3 * healthLevel;
+        else if (healthLevel * 3 > 75)
+            heroHealRate = 75;
         healthPrice = 120 * healthLevel * healthLevel * cbrt(healthLevel) + 120;
 
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
@@ -674,15 +684,9 @@ void GameScreen::on_attackActionButton_clicked()
 
     int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
 
-    short percentage = 0;
-    if (weaponLevel * 3 <= 75)
-        percentage = 3 * weaponLevel;
-    else if (weaponLevel * 3 > 75)
-        percentage = 75;
-
     ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
                                       QString::number(static_cast<int>(1.2 * baseDamage)) + '\n' + "Szansa na atak krytyczny: " +
-                                      QString::number(percentage) + "%");
+                                      QString::number(heroCritRate) + "%");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
 }
@@ -692,7 +696,7 @@ void GameScreen::on_defenseActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
     ui->infoAboutActionLabel->setText("Uzyskiwana tarcza: " + QString::number(heroDefense*1.6) + " - " + QString::number(heroDefense*2.4)
-                                      + "\nSzansa na odbicie: " + QString::number(3*shieldLevel) + "%");
+                                      + "\nSzansa na odbicie: " + QString::number(heroReflectionRate) + "%");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
 }
@@ -701,14 +705,14 @@ void GameScreen::on_healActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
 
-    if (heroHealth < 0.8 * heroMaxHealth)
-    {
-        ui->infoAboutActionLabel->setText("Odzyskane życie przy leczeniu: " + QString::number(0.2 * heroMaxHealth));
-        ui->confirmButton->show();
-        connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
-    }
-    else
-        ui->infoAboutActionLabel->setText("Czy chcesz się uleczyć? Odzyskane życie przy leczeniu: 0");
+    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+
+    ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(1.2*baseDamage)) +
+                                      " - " + QString::number(static_cast<int>(1.8*baseDamage)) + '\n' + "Odzyskane życie: " +
+                                      QString::number(heroHealRate) + "% obrażeń");
+
+    ui->confirmButton->show();
+    connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 }
 
 void GameScreen::heroAttacks()
@@ -785,6 +789,28 @@ void GameScreen::heroHealsHimself()
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
 
+    actionPoints -= 3;
+    updateActionPointsButtons();
+
+    int baseDamage = floor(static_cast<double>(heroAttack) * 1.5 *
+                           (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
+
+    int recoveredHP = (static_cast<double>(heroHealRate) / 100) * realDamage;
+    if (heroHealth + recoveredHP <= heroMaxHealth)
+        heroHealth += recoveredHP;
+    else if (heroHealth + recoveredHP > heroMaxHealth)
+        heroHealth = heroMaxHealth;
+
+    if (shieldOn == false)
+        ui->heroHealthBar->setValue(heroHealth);
+
+    if (enemyHealth >= realDamage)
+        enemyHealth -= realDamage;
+    else if (enemyHealth < realDamage)
+        enemyHealth = 0;
+
+    ui->enemyHealthBar->setValue(enemyHealth);
 
     fight();
 }
@@ -818,6 +844,22 @@ void GameScreen::updateActionPointsButtons()
         if (!ui->firstActionBox->isCheckable())
             ui->firstActionBox->setCheckable(true);
         ui->firstActionBox->setChecked(true);
+
+        if (!ui->secondActionBox->isCheckable())
+            ui->secondActionBox->setCheckable(true);
+        ui->secondActionBox->setChecked(false);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(false);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(false);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(false);
         break;
     case 2:
         if (!ui->firstActionBox->isCheckable())
@@ -827,6 +869,18 @@ void GameScreen::updateActionPointsButtons()
         if (!ui->secondActionBox->isCheckable())
             ui->secondActionBox->setCheckable(true);
         ui->secondActionBox->setChecked(true);
+
+        if (!ui->thirdActionBox->isCheckable())
+            ui->thirdActionBox->setCheckable(true);
+        ui->thirdActionBox->setChecked(false);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(false);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(false);
         break;
     case 3:
         if (!ui->firstActionBox->isCheckable())
@@ -840,6 +894,14 @@ void GameScreen::updateActionPointsButtons()
         if (!ui->thirdActionBox->isCheckable())
             ui->thirdActionBox->setCheckable(true);
         ui->thirdActionBox->setChecked(true);
+
+        if (!ui->fourthActionBox->isCheckable())
+            ui->fourthActionBox->setCheckable(true);
+        ui->fourthActionBox->setChecked(false);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(false);
         break;
     case 4:
         if (!ui->firstActionBox->isCheckable())
@@ -857,6 +919,10 @@ void GameScreen::updateActionPointsButtons()
         if (!ui->fourthActionBox->isCheckable())
             ui->fourthActionBox->setCheckable(true);
         ui->fourthActionBox->setChecked(true);
+
+        if (!ui->fifthActionBox->isCheckable())
+            ui->fifthActionBox->setCheckable(true);
+        ui->fifthActionBox->setChecked(false);
         break;
     case 5:
         if (!ui->firstActionBox->isCheckable())
