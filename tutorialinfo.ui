@@ -81,7 +81,7 @@ font-size: 20px;
      <item>
       <widget class="QLabel" name="attackActionLabel">
        <property name="text">
-        <string>atak - zadaje przeciwnikowi obrażenia bazując na twoich punktach ataku</string>
+        <string>atak - zadaje przeciwnikowi obrażenia bazując na twoich punktach ataku. Każde użycie daje ci +1 punkt akcji.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -118,7 +118,7 @@ font-size: 20px;
      <item>
       <widget class="QLabel" name="defenseActionLabel">
        <property name="text">
-        <string>obrona - zmniejsza otrzymywane w następnej turze obrażenia i zapewnia szansę na odbicie części obrażeń w stronę wroga</string>
+        <string>tarcza - nakłada na ciebie tarczę bazując na troich punktach obrony i zapewnia szansę na odbicie części obrażeń następnego ataku wroga w jego stronę. Każde użycie kosztuje 1 punkt akcji.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
@@ -155,7 +155,7 @@ font-size: 20px;
      <item>
       <widget class="QLabel" name="healActionLabel">
        <property name="text">
-        <string>leczenie - odzyskujesz część utraconego przez ciebie życia</string>
+        <string>leczenie - zadaje przeciwnikowi atak krytyczny i leczy cię o część zadanych wrogowi obrażeń. Każde użycie kosztuje 3 punkty akcji.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
