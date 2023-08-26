@@ -38,7 +38,8 @@ private slots:
     //OTHER
     void delay(int ms);
     void loadScene(QString pathToDialog, int numOfLines);
-    void showOneDialog(QString* dialogs, int totalNumOfLines);
+    void showOneDialog(int totalNumOfLines);
+    void connectionHub(bool cORd, int numOfLines);
     //FIGHT
     void drawEnemy(int whatToDraw);
     void fight();
@@ -62,7 +63,8 @@ private:
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
-    short weaponLevel, shieldLevel, healthLevel, gameLevel, actionPoints, numberOfRounds, counterOfLines;
+    short weaponLevel, shieldLevel, healthLevel, gameLevel, enemyType, actionPoints, numberOfRounds, counterOfLines;
+    QString* dialogs;
     QHash<QString, QString> nameToPath;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
