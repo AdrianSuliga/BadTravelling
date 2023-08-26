@@ -84,5 +84,7 @@
         <file>images/Level 8 - Sikorski High/Tosia.png</file>
         <file>images/Level 8 - Sikorski High/Bozenka.png</file>
         <file>images/Level 8 - Sikorski High/Bozenkus.png</file>
+        <file>images/AppScreenArt/actionPoint.png</file>
+        <file>images/AppScreenArt/rightArrow.png</file>
     </qresource>
 </RCC>
