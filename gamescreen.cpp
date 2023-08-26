@@ -53,6 +53,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->confirmButton->setFont(Girassol);
 
     gameLevel = 1;
+    enemyType = -1;
     numberOfRounds = 0;
     counterOfLines = 0;
     actionPoints = 0;
@@ -221,11 +222,11 @@ void GameScreen::loadVariables()
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
 
-    ui->firstActionBox->setCheckable(false);
-    ui->secondActionBox->setCheckable(false);
-    ui->thirdActionBox->setCheckable(false);
-    ui->fourthActionBox->setCheckable(false);
-    ui->fifthActionBox->setCheckable(false);
+    ui->firstActionBox->setEnabled(false);
+    ui->secondActionBox->setEnabled(false);
+    ui->thirdActionBox->setEnabled(false);
+    ui->fourthActionBox->setEnabled(false);
+    ui->fifthActionBox->setEnabled(false);
 
     deadEnemy = new DeadEnemyWidget(this);
     deadHero = new DeadHeroWidget(this);
@@ -258,25 +259,57 @@ void GameScreen::level1MainFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
-        drawEnemy(0);
-        fight();
-        /*QString *fstScene = new QString[2];
+        enemyType = 0;
+        drawEnemy(enemyType);
+        dialogs = new QString[2];
         if (sex == 0)
-            fstScene[0] = "PODRÓŻNICZKA";
+            dialogs[0] = "PODRÓŻNICZKA";
         if (sex == 1)
-            fstScene[0] = "PODRÓŻNIK";
-        fstScene[1] = "???";
-        showOneDialog(fstScene, 2);
-        delete[] fstScene;
+            dialogs[0] = "PODRÓŻNIK";
+        dialogs[1] = "???";
+        showOneDialog(2);
+        delete[] dialogs;
         if (sex == 0)
             loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         if (sex == 1)
-            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);*/
+            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
+        connectionHub(true, 10);
     });
-    //connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
+    connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        drawEnemy(enemyType);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        enemyType++;
+        drawEnemy(enemyType);
+        qDebug() << "PRZERWA";
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem.txt", 12);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt", 12);
+        connectionHub(true, 12);
+    });
 }
 void GameScreen::showTutorial()
 {
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+    ui->continueButton->setEnabled(false);
+    ui->infoAboutActionLabel->setText("");
     ui->enemyLabel->hide();
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
@@ -600,6 +633,9 @@ void GameScreen::fight()
     if (numberOfRounds % 2 == 0)
     {
         ui->infoAboutActionLabel->setText("TWOJA TURA");
+        ui->infoAboutActionLabel->setAlignment(Qt::AlignCenter);
+        ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
+                                                "font-size: 36px;");
         ui->confirmButton->hide();
         ui->attackActionButton->setEnabled(true);
         ui->defenseActionButton->setEnabled(false);
@@ -612,25 +648,53 @@ void GameScreen::fight()
     }
     if (numberOfRounds % 2 == 1)
     {
-        delay(2000);
+        delay(200);
         ui->infoAboutActionLabel->setText("TURA PRZECIWNIKA");
-        delay(2000);
+        ui->infoAboutActionLabel->setAlignment(Qt::AlignCenter);
+        ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
+                                                "font-size: 36px;");
+        delay(200);
         int enemyBaseDamage = 0;
         enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
                                 (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
 
         int enemyRealDamage = rand() % static_cast<int>(0.4*enemyBaseDamage + 1) + static_cast<int>(0.8*enemyBaseDamage);
 
-        if (shieldOn == true && heroShield >= enemyRealDamage)
+        if (shieldOn == true && heroShield > enemyRealDamage)
         {
             heroShield -= enemyRealDamage;
             ui->heroHealthBar->setValue(heroShield);
         }
-        else if (shieldOn == true && heroShield < enemyRealDamage)
+        else if (shieldOn == true && heroShield <= enemyRealDamage)
         {
+            int remnants = enemyRealDamage - heroShield;
             heroShield = 0;
             ui->heroHealthBar->setValue(0);
             shieldBroken = true;
+            delay(150);
+            ui->heroHealthBar->setMaximum(heroMaxHealth);
+            ui->heroHealthBar->setValue(heroHealth);
+            ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                             "color: rgb(180,180,180);"
+                                             "background-color: rgb(100,200,100);"
+                                             "text-align: center;"
+                                             "font-size: 24px;"
+                                             "}"
+                                             "#heroHealthBar::chunk {"
+                                             "background-color: rgb(10,150,0);"
+                                             "}");
+            delay(150);
+            if (heroHealth >= remnants)
+            {
+                heroHealth -= remnants;
+                ui->heroHealthBar->setValue(heroHealth);
+            }
+            else if (heroHealth < remnants)
+            {
+                heroHealth = 0;
+                ui->heroHealthBar->setValue(0);
+                heroIsDead();
+            }
         }
         else if (shieldOn == false && heroHealth >= enemyRealDamage)
         {
@@ -641,10 +705,11 @@ void GameScreen::fight()
         {
             heroHealth = 0;
             ui->heroHealthBar->setValue(heroHealth);
+            heroIsDead();
         }
 
         ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(enemyRealDamage));
-        delay(2000);
+        delay(200);
         ui->dialogLabel->setText("");
         numberOfRounds++;
         fight();
@@ -670,11 +735,21 @@ void GameScreen::fight()
 
 void GameScreen::heroIsDead()
 {
-
+    ui->enemyLabel->hide();
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
+    deadHero->show();
+    connectShop();
+    emit heroKilled();
 }
 void GameScreen::enemyIsDead()
 {
-
+    ui->enemyLabel->hide();
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
+    deadEnemy->show();
+    connectShop();
+    emit enemyKilled();
 }
 
 void GameScreen::on_attackActionButton_clicked()
@@ -687,6 +762,9 @@ void GameScreen::on_attackActionButton_clicked()
     ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
                                       QString::number(static_cast<int>(1.2 * baseDamage)) + '\n' + "Szansa na atak krytyczny: " +
                                       QString::number(heroCritRate) + "%");
+    ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
+                                            "font-size: 20px;");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
 }
@@ -697,6 +775,9 @@ void GameScreen::on_defenseActionButton_clicked()
 
     ui->infoAboutActionLabel->setText("Uzyskiwana tarcza: " + QString::number(heroDefense*1.6) + " - " + QString::number(heroDefense*2.4)
                                       + "\nSzansa na odbicie: " + QString::number(heroReflectionRate) + "%");
+    ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
+                                            "font-size: 20px;");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
 }
@@ -710,7 +791,9 @@ void GameScreen::on_healActionButton_clicked()
     ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(1.2*baseDamage)) +
                                       " - " + QString::number(static_cast<int>(1.8*baseDamage)) + '\n' + "Odzyskane życie: " +
                                       QString::number(heroHealRate) + "% obrażeń");
-
+    ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
+                                            "font-size: 20px;");
     ui->confirmButton->show();
     connect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 }
@@ -735,7 +818,7 @@ void GameScreen::heroAttacks()
 
     ui->infoAboutActionLabel->setText("");
     ui->confirmButton->hide();
-    delay(2000);
+    delay(150);
     if (isItCrit == false)
         ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10));
     else if (isItCrit == true)
@@ -745,13 +828,17 @@ void GameScreen::heroAttacks()
     else if (enemyHealth < realDamage)
         enemyHealth = 0;
     ui->enemyHealthBar->setValue(enemyHealth);
-    delay(500);
+    delay(50);
     if (actionPoints < 5)
     {
         actionPoints++;
         updateActionPointsButtons();
     }
-
+    if (enemyHealth == 0)
+    {
+        enemyIsDead();
+        return;
+    }
     fight();
 }
 void GameScreen::heroDefends()
@@ -767,7 +854,12 @@ void GameScreen::heroDefends()
     actionPoints--;
     updateActionPointsButtons();
 
+    ui->infoAboutActionLabel->setText("");
+    ui->confirmButton->hide();
+    delay(1500);
+
     heroShield = rand() % static_cast<int>(0.8 * heroDefense + 1) + static_cast<int>(1.6 * heroDefense);
+    ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(heroShield) + " punktów tarczy.");
     ui->heroHealthBar->setMaximum(heroShield);
     ui->heroHealthBar->setValue(heroShield);
     ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
@@ -779,6 +871,7 @@ void GameScreen::heroDefends()
                                      "#heroHealthBar::chunk {"
                                      "background-color: rgb(0, 90, 210);"
                                      "}");
+    delay(500);
     fight();
 }
 void GameScreen::heroHealsHimself()
@@ -791,6 +884,10 @@ void GameScreen::heroHealsHimself()
 
     actionPoints -= 3;
     updateActionPointsButtons();
+
+    ui->infoAboutActionLabel->setText("");
+    ui->confirmButton->hide();
+    delay(1500);
 
     int baseDamage = floor(static_cast<double>(heroAttack) * 1.5 *
                            (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
@@ -811,7 +908,8 @@ void GameScreen::heroHealsHimself()
         enemyHealth = 0;
 
     ui->enemyHealthBar->setValue(enemyHealth);
-
+    ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage) + " obrażeń krytycznych");
+    delay(500);
     fight();
 }
 
@@ -948,6 +1046,11 @@ void GameScreen::updateActionPointsButtons()
     default:
         qDebug() << "INCORRECT AMOUNT OF ACTION POINTS";
     }
+    ui->firstActionBox->setEnabled(false);
+    ui->secondActionBox->setEnabled(false);
+    ui->thirdActionBox->setEnabled(false);
+    ui->fourthActionBox->setEnabled(false);
+    ui->fifthActionBox->setEnabled(false);
 }
 
 void GameScreen::delay(int ms)
@@ -960,7 +1063,7 @@ void GameScreen::delay(int ms)
 void GameScreen::loadScene(QString pathToDialog, int numOfLines)
 {
     QFile dialogFile(pathToDialog);
-    QString* dialogs = new QString[numOfLines];
+    dialogs = new QString[numOfLines];
     counterOfLines = 0;
     if (dialogFile.open(QIODevice::ReadOnly))
     {
@@ -980,9 +1083,8 @@ void GameScreen::loadScene(QString pathToDialog, int numOfLines)
     if (ui->continueButton->isHidden())
         ui->continueButton->show();
     ui->continueButton->setEnabled(true);
-    connect(ui->continueButton, &QPushButton::clicked, this, [this, dialogs, numOfLines]() { showOneDialog(dialogs, numOfLines); });
 }
-void GameScreen::showOneDialog(QString *dialogs, int totalNumOfLines)
+void GameScreen::showOneDialog(int totalNumOfLines)
 {
     ui->continueButton->setEnabled(false);
     QString name = dialogs[counterOfLines];
@@ -997,6 +1099,7 @@ void GameScreen::showOneDialog(QString *dialogs, int totalNumOfLines)
         delay(50);
     }
     counterOfLines += 2;
+    qDebug() << name << " " << text << " " << counterOfLines;
 
     if (totalNumOfLines == 2)
     {
@@ -1008,8 +1111,18 @@ void GameScreen::showOneDialog(QString *dialogs, int totalNumOfLines)
     {
         counterOfLines = 0;
         ui->continueButton->setEnabled(false);
-        emit sceneEnded();
+        if (enemyType == 0)
+            emit sceneEnded();
+        connectionHub(false, 0);
         return;
     }
     ui->continueButton->setEnabled(true);
+}
+
+void GameScreen::connectionHub(bool cORd, int numOfLines)
+{
+    if (cORd == true)
+        connect(ui->continueButton, &QPushButton::clicked, this, [this, numOfLines]() {showOneDialog(numOfLines);});
+    else if (cORd == false)
+        disconnect(ui->continueButton, &QPushButton::clicked, nullptr, nullptr);
 }
