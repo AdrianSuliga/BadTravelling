@@ -26,6 +26,9 @@ private slots:
     //LEVEL 1
     void level1MainFunction();
     void showTutorial();
+    void endSceneAndPostLevelCleanup();
+    //LEVEL 2
+    void level2MainFunction();
     //SHOP
     void connectShop();
     void disconnectShop();
@@ -37,6 +40,9 @@ private slots:
     void userWantsToBuyDrPieprzer();
     //OTHER
     void delay(int ms);
+    void fadeAwayAnimation(QWidget* widget, int ms);
+    void fadeInAnimation(QWidget* widget, int ms);
+    //DIALOGS
     void loadScene(QString pathToDialog, int numOfLines);
     void showOneDialog(int totalNumOfLines);
     void connectionHub(bool cORd, int numOfLines);
@@ -53,7 +59,6 @@ private slots:
     void heroDefends();
     void heroHealsHimself();
 signals:
-    void enemyKilled();
     void heroKilled();
     void sceneEnded();
 private:
