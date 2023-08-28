@@ -8,5 +8,7 @@
         <file>dialogs/male/Level 0 - Prologue/PrologWstep.txt</file>
         <file>dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt</file>
         <file>dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt</file>
+        <file>dialogs/male/Level 1 - Central Square/RozmowaZDresem_2.txt</file>
+        <file>dialogs/female/Level 1 - Central Square/RozmowaZDresem_2.txt</file>
     </qresource>
 </RCC>
