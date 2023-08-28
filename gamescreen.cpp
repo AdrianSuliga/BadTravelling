@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <QDebug>
 #include <QBoxLayout>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
 
 GameScreen::GameScreen(QWidget *parent, int gender) :
     QWidget(parent),
@@ -269,14 +271,21 @@ void GameScreen::level1MainFunction()
         dialogs[1] = "???";
         showOneDialog(2);
         delete[] dialogs;
+        dialogs = nullptr;
         if (sex == 0)
             loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         connectionHub(true, 10);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            fight();
+            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        });
     });
-    connect(this, &GameScreen::sceneEnded, this, &GameScreen::fight);
+
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
         deadHero->hide();
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
@@ -286,7 +295,9 @@ void GameScreen::level1MainFunction()
         drawEnemy(enemyType);
         fight();
     });
+
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        numberOfRounds = 0;
         deadEnemy->hide();
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
@@ -295,14 +306,28 @@ void GameScreen::level1MainFunction()
         ui->heroHealthBar->setValue(heroMaxHealth);
         enemyType++;
         drawEnemy(enemyType);
-        qDebug() << "PRZERWA";
+        dialogs = new QString[2];
         if (sex == 0)
-            loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem.txt", 12);
+            dialogs[0] = "PODRÓŻNICZKA";
         if (sex == 1)
-            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt", 12);
-        connectionHub(true, 12);
+            dialogs[0] = "PODRÓŻNIK";
+        dialogs[1] = "Hm? Powietrze dziwnie pachnie. Czy to...";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem.txt", 16);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt", 16);
+        connectionHub(true, 16);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            fight();
+            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        });
+        connect(this, &GameScreen::heroKilled, this, &GameScreen::endSceneAndPostLevelCleanup);
     });
 }
+
 void GameScreen::showTutorial()
 {
     ui->attackActionButton->setEnabled(false);
@@ -314,6 +339,44 @@ void GameScreen::showTutorial()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     tutorialWidget->show();
+}
+
+void GameScreen::endSceneAndPostLevelCleanup()
+{
+    //DISCONNECTIONS
+    disconnect(tutorialWidget, &TutorialInfo::endTutorial, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
+
+    //LOAD END SCENE
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "AAAAA!!!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem_2.txt", 16);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem_2.txt", 16);
+    connectionHub(true, 16);
+
+    //TRANSITION TO LEVEL 2
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        qDebug() << "CALLED";
+        fadeAwayAnimation(this, 2000);
+        gameLevel++;
+        level2MainFunction();
+    });
+}
+
+void GameScreen::level2MainFunction()
+{
+    //fadeInAnimation(this, 2000);
 }
 
 //SHOP
@@ -328,12 +391,12 @@ void GameScreen::connectShop()
 }
 void GameScreen::disconnectShop()
 {
-    disconnect(ui->weaponShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyWeapon);
-    disconnect(ui->shieldShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyShield);
-    disconnect(ui->healthShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyHealth);
-    disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyBlahaj);
-    disconnect(ui->manulShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyManul);
-    disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, this, &GameScreen::userWantsToBuyDrPieprzer);
+    disconnect(ui->weaponShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
+    disconnect(ui->shieldShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
+    disconnect(ui->healthShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
+    disconnect(ui->blahajShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
+    disconnect(ui->manulShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
+    disconnect(ui->drPieprzerShopWidget, &QClickableWidget::clicked, nullptr, nullptr);
 }
 
 void GameScreen::userWantsToBuyWeapon()
@@ -572,7 +635,6 @@ void GameScreen::userWantsToBuyDrPieprzer()
 //FIGHT
 void GameScreen::drawEnemy(int whatToDraw)
 {
-    int enemyType = -1;
     switch (gameLevel)
     {
     case 1:
@@ -589,25 +651,15 @@ void GameScreen::drawEnemy(int whatToDraw)
             enemyAttack = 10;
             enemyDefense = 40;
             enemyHealth = 80;
-            ui->enemyAttackPointsLabel->setText("10");
-            ui->enemyDefensePointsLabel->setText("40");
-            ui->enemyHealthPointsLabel->setText("80");
-            ui->enemyHealthBar->setMinimum(0);
-            ui->enemyHealthBar->setMaximum(80);
-            ui->enemyHealthBar->setValue(80);
+            enemyMaxHealth = 80;
         }
         if (enemyType == 1)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 20;
-            enemyDefense = 20;
-            enemyHealth = 50;
-            ui->enemyAttackPointsLabel->setText("20");
-            ui->enemyDefensePointsLabel->setText("20");
-            ui->enemyHealthPointsLabel->setText("50");
-            ui->enemyHealthBar->setMinimum(0);
-            ui->enemyHealthBar->setMaximum(50);
-            ui->enemyHealthBar->setValue(50);
+            enemyAttack = 30;
+            enemyDefense = 40;
+            enemyHealth = 100;
+            enemyMaxHealth = 100;
         }
         break;
     /*case 2:
@@ -625,6 +677,12 @@ void GameScreen::drawEnemy(int whatToDraw)
     case 8:
         break;*/
     }
+    ui->enemyAttackPointsLabel->setText(QString::number(enemyAttack));
+    ui->enemyDefensePointsLabel->setText(QString::number(enemyDefense));
+    ui->enemyHealthPointsLabel->setText(QString::number(enemyMaxHealth));
+    ui->enemyHealthBar->setMinimum(0);
+    ui->enemyHealthBar->setMaximum(enemyMaxHealth);
+    ui->enemyHealthBar->setValue(enemyHealth);
 }
 void GameScreen::fight()
 {
@@ -684,52 +742,54 @@ void GameScreen::fight()
                                              "background-color: rgb(10,150,0);"
                                              "}");
             delay(150);
-            if (heroHealth >= remnants)
+            if (heroHealth > remnants)
             {
                 heroHealth -= remnants;
                 ui->heroHealthBar->setValue(heroHealth);
             }
-            else if (heroHealth < remnants)
+            else if (heroHealth <= remnants)
             {
                 heroHealth = 0;
                 ui->heroHealthBar->setValue(0);
                 heroIsDead();
+                emit heroKilled();
             }
         }
-        else if (shieldOn == false && heroHealth >= enemyRealDamage)
+        else if (shieldOn == false && heroHealth > enemyRealDamage)
         {
             heroHealth -= enemyRealDamage;
             ui->heroHealthBar->setValue(heroHealth);
         }
-        else if (shieldOn == false && heroHealth < enemyRealDamage)
+        else if (shieldOn == false && heroHealth <= enemyRealDamage)
         {
             heroHealth = 0;
             ui->heroHealthBar->setValue(heroHealth);
             heroIsDead();
+            emit heroKilled();
+            return;
         }
-
         ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(enemyRealDamage));
         delay(200);
         ui->dialogLabel->setText("");
         numberOfRounds++;
+        if (shieldBroken == true && heroHealth == 0)
+        {
+            shieldOn = false;
+            shieldBroken = false;
+            ui->heroHealthBar->setMaximum(heroMaxHealth);
+            ui->heroHealthBar->setValue(heroHealth);
+            ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                             "color: rgb(180,180,180);"
+                                             "background-color: rgb(100,200,100);"
+                                             "text-align: center;"
+                                             "font-size: 24px;"
+                                             "}"
+                                             "#heroHealthBar::chunk {"
+                                             "background-color: rgb(10,150,0);"
+                                             "}");
+            return;
+        }
         fight();
-    }
-    if (shieldBroken == true)
-    {
-        shieldOn = false;
-        shieldBroken = false;
-        ui->heroHealthBar->setMaximum(heroMaxHealth);
-        ui->heroHealthBar->setValue(heroHealth);
-        ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
-                                         "color: rgb(180,180,180);"
-                                         "background-color: rgb(100,200,100);"
-                                         "text-align: center;"
-                                         "font-size: 24px;"
-                                         "}"
-                                         "#heroHealthBar::chunk {"
-                                         "background-color: rgb(10,150,0);"
-                                         "}");
-        return;
     }
 }
 
@@ -740,7 +800,6 @@ void GameScreen::heroIsDead()
     ui->enemyHealthBar->hide();
     deadHero->show();
     connectShop();
-    emit heroKilled();
 }
 void GameScreen::enemyIsDead()
 {
@@ -749,7 +808,6 @@ void GameScreen::enemyIsDead()
     ui->enemyHealthBar->hide();
     deadEnemy->show();
     connectShop();
-    emit enemyKilled();
 }
 
 void GameScreen::on_attackActionButton_clicked()
@@ -1060,6 +1118,32 @@ void GameScreen::delay(int ms)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
+void GameScreen::fadeAwayAnimation(QWidget *widget, int ms)
+{
+    QGraphicsOpacityEffect *fadeAwayEffect = new QGraphicsOpacityEffect(widget);
+    widget->setGraphicsEffect(fadeAwayEffect);
+    QPropertyAnimation *fadeAwayAnimation = new QPropertyAnimation(fadeAwayEffect, "opacity");
+    fadeAwayAnimation -> setDuration(ms);
+    fadeAwayAnimation -> setStartValue(1);
+    fadeAwayAnimation -> setEndValue(0);
+    fadeAwayAnimation -> setEasingCurve(QEasingCurve::OutBack);
+    fadeAwayAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
+    delay(ms);
+}
+
+void GameScreen::fadeInAnimation(QWidget *widget, int ms)
+{
+    QGraphicsOpacityEffect *fadeInEffect = new QGraphicsOpacityEffect(widget);
+    widget -> setGraphicsEffect(fadeInEffect);
+    QPropertyAnimation *fadeInAnimation = new QPropertyAnimation(fadeInEffect, "opacity");
+    fadeInAnimation -> setDuration(ms);
+    fadeInAnimation -> setStartValue(0);
+    fadeInAnimation -> setEndValue(1);
+    fadeInAnimation -> setEasingCurve(QEasingCurve::InBack);
+    fadeInAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
+    delay(ms);
+}
+
 void GameScreen::loadScene(QString pathToDialog, int numOfLines)
 {
     QFile dialogFile(pathToDialog);
@@ -1096,29 +1180,20 @@ void GameScreen::showOneDialog(int totalNumOfLines)
     {
         toShow += text[i];
         ui->dialogLabel->setText(toShow);
-        delay(50);
+        delay(5);
     }
     counterOfLines += 2;
-    qDebug() << name << " " << text << " " << counterOfLines;
 
-    if (totalNumOfLines == 2)
-    {
-        counterOfLines = 0;
-        ui->continueButton->setEnabled(false);
-        return;
-    }
     if (counterOfLines == totalNumOfLines)
     {
         counterOfLines = 0;
         ui->continueButton->setEnabled(false);
-        if (enemyType == 0)
-            emit sceneEnded();
+        emit sceneEnded();
         connectionHub(false, 0);
         return;
     }
     ui->continueButton->setEnabled(true);
 }
-
 void GameScreen::connectionHub(bool cORd, int numOfLines)
 {
     if (cORd == true)
@@ -1126,3 +1201,4 @@ void GameScreen::connectionHub(bool cORd, int numOfLines)
     else if (cORd == false)
         disconnect(ui->continueButton, &QPushButton::clicked, nullptr, nullptr);
 }
+
