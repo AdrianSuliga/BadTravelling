@@ -86,5 +86,10 @@
         <file>images/Level 8 - Sikorski High/Bozenkus.png</file>
         <file>images/AppScreenArt/actionPoint.png</file>
         <file>images/AppScreenArt/rightArrow.png</file>
+        <file>images/AppScreenArt/id.png</file>
+        <file>images/AppScreenArt/kays.png</file>
+        <file>images/AppScreenArt/keychain.png</file>
+        <file>images/AppScreenArt/wallet.png</file>
+        <file>images/AppScreenArt/blankActionPoint.png</file>
     </qresource>
 </RCC>
