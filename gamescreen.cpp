@@ -136,7 +136,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 21000000;
+    wealth = 0;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -223,6 +223,15 @@ void GameScreen::loadVariables()
     ui->drPieprzerShopPriceLabel->setText(QString::number(drPieprzerPrice));
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
+
+    ui->keychainLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                     "border-image: url(:/images/images/AppScreenArt/keychain.png) 0 0 0 0 stretch stretch;");
+    ui->keyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                "border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
+    ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                               "border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
+    ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                  "border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
 
     ui->firstActionBox->setEnabled(false);
     ui->secondActionBox->setEnabled(false);
@@ -367,7 +376,11 @@ void GameScreen::endSceneAndPostLevelCleanup()
 
     //TRANSITION TO LEVEL 2
     connect(this, &GameScreen::sceneEnded, this, [this]() {
-        qDebug() << "CALLED";
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->keychainLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
+        ui->keyLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
+        ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
+        ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
         fadeAwayAnimation(this, 2000);
         gameLevel++;
         level2MainFunction();
@@ -768,7 +781,6 @@ void GameScreen::fight()
             emit heroKilled();
             return;
         }
-        ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(enemyRealDamage));
         delay(200);
         ui->dialogLabel->setText("");
         numberOfRounds++;
@@ -791,6 +803,22 @@ void GameScreen::fight()
         }
         fight();
     }
+    if (shieldBroken == true)
+    {
+        shieldOn = false;
+        ui->heroHealthBar->setMaximum(heroMaxHealth);
+        ui->heroHealthBar->setValue(heroHealth);
+        ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                         "color: rgb(180,180,180);"
+                                         "background-color: rgb(100,200,100);"
+                                         "text-align: center;"
+                                         "font-size: 24px;"
+                                         "}"
+                                         "#heroHealthBar::chunk {"
+                                         "background-color: rgb(10,150,0);"
+                                         "}");
+        return;
+    }
 }
 
 void GameScreen::heroIsDead()
@@ -807,6 +835,12 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
+    int loot = gameLevel * (enemyType + 1) * 25;
+    wealth += loot;
+    ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
+    ui->amountOfMoneyLabel->setStyleSheet("color: rgb(10,150,0); font-size: 20px;");
+    delay(500);
+    ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     connectShop();
 }
 
@@ -1130,7 +1164,6 @@ void GameScreen::fadeAwayAnimation(QWidget *widget, int ms)
     fadeAwayAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
     delay(ms);
 }
-
 void GameScreen::fadeInAnimation(QWidget *widget, int ms)
 {
     QGraphicsOpacityEffect *fadeInEffect = new QGraphicsOpacityEffect(widget);
@@ -1180,7 +1213,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
     {
         toShow += text[i];
         ui->dialogLabel->setText(toShow);
-        delay(5);
+        delay(50);
     }
     counterOfLines += 2;
 
