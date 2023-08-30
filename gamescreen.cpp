@@ -59,6 +59,8 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     numberOfRounds = 0;
     counterOfLines = 0;
     actionPoints = 0;
+    nameToPath["..."] = "";
+    nameToPath["???"] = "";
     nameToPath["PODRÓŻNIK"] = "border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;";
     nameToPath["PODRÓŻNICZKA"] = "border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;";
 
@@ -267,6 +269,7 @@ void GameScreen::level1MainFunction()
     connect(tutorialWidget, &TutorialInfo::endTutorial, this, [this]() {
         tutorialWidget->hide();
         delete tutorialWidget;
+        tutorialWidget = nullptr;
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
@@ -336,7 +339,6 @@ void GameScreen::level1MainFunction()
         connect(this, &GameScreen::heroKilled, this, &GameScreen::endSceneAndPostLevelCleanup);
     });
 }
-
 void GameScreen::showTutorial()
 {
     ui->attackActionButton->setEnabled(false);
@@ -349,11 +351,9 @@ void GameScreen::showTutorial()
     ui->enemyHealthBar->hide();
     tutorialWidget->show();
 }
-
 void GameScreen::endSceneAndPostLevelCleanup()
 {
     //DISCONNECTIONS
-    disconnect(tutorialWidget, &TutorialInfo::endTutorial, nullptr, nullptr);
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
@@ -382,14 +382,56 @@ void GameScreen::endSceneAndPostLevelCleanup()
         ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
         ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
         fadeAwayAnimation(this, 2000);
-        gameLevel++;
         level2MainFunction();
     });
 }
 
+//LEVEL 2 - PILICA RIVER
 void GameScreen::level2MainFunction()
 {
-    //fadeInAnimation(this, 2000);
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 2 - Pilica River/Level3Background1.png) 0 0 0 0 stretch stretch;"
+                          "}");
+    deadHero->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    ui->enemyLabel->setStyleSheet("");
+    spawnEnemy(0, 0, 1, 1);
+    gameLevel = 2;
+    fadeInAnimation(this, 2000);
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Jezuuu... ała...";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 12);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 12);
+    connectionHub(true, 12);
+    /*connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        drawEnemy(-1);
+        fight();
+    });
+
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        drawEnemy(enemyType);
+        fight();
+    });*/
 }
 
 //SHOP
@@ -675,8 +717,27 @@ void GameScreen::drawEnemy(int whatToDraw)
             enemyMaxHealth = 100;
         }
         break;
-    /*case 2:
+    case 2:
+        enemyType = rand() % 2;
+
+        if (enemyType == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 2 - Pilica River/WscieklyPies.png) 0 0 0 0 stretch stretch;");
+            enemyAttack = 10;
+            enemyDefense = 20;
+            enemyHealth = 125;
+            enemyMaxHealth = 125;
+        }
+        if (enemyType == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 2 - Pilica River/WscieklyOgar.png) 0 0 0 0 stretch stretch;");
+            enemyAttack = 15;
+            enemyDefense = 20;
+            enemyHealth = 100;
+            enemyMaxHealth = 100;
+        }
         break;
+        /*
     case 3:
         break;
     case 4:
@@ -690,12 +751,16 @@ void GameScreen::drawEnemy(int whatToDraw)
     case 8:
         break;*/
     }
-    ui->enemyAttackPointsLabel->setText(QString::number(enemyAttack));
-    ui->enemyDefensePointsLabel->setText(QString::number(enemyDefense));
-    ui->enemyHealthPointsLabel->setText(QString::number(enemyMaxHealth));
+    spawnEnemy(enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth);
+}
+void GameScreen::spawnEnemy(int att, int def, int hp, int mhp)
+{
+    ui->enemyAttackPointsLabel->setText(QString::number(att));
+    ui->enemyDefensePointsLabel->setText(QString::number(def));
+    ui->enemyHealthPointsLabel->setText(QString::number(mhp));
     ui->enemyHealthBar->setMinimum(0);
-    ui->enemyHealthBar->setMaximum(enemyMaxHealth);
-    ui->enemyHealthBar->setValue(enemyHealth);
+    ui->enemyHealthBar->setMaximum(mhp);
+    ui->enemyHealthBar->setValue(hp);
 }
 void GameScreen::fight()
 {
@@ -1204,6 +1269,9 @@ void GameScreen::loadScene(QString pathToDialog, int numOfLines)
 void GameScreen::showOneDialog(int totalNumOfLines)
 {
     ui->continueButton->setEnabled(false);
+    qDebug() << gameLevel;
+    qDebug() << dialogs[counterOfLines];
+    qDebug() << dialogs[counterOfLines + 1];
     QString name = dialogs[counterOfLines];
     QString text = dialogs[counterOfLines + 1];
     QString toShow = "";
@@ -1213,7 +1281,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
     {
         toShow += text[i];
         ui->dialogLabel->setText(toShow);
-        delay(50);
+        delay(10);
     }
     counterOfLines += 2;
 
@@ -1229,8 +1297,9 @@ void GameScreen::showOneDialog(int totalNumOfLines)
 }
 void GameScreen::connectionHub(bool cORd, int numOfLines)
 {
+    qDebug() << cORd << " " << numOfLines;
     if (cORd == true)
-        connect(ui->continueButton, &QPushButton::clicked, this, [this, numOfLines]() {showOneDialog(numOfLines);});
+        connect(ui->continueButton, &QPushButton::clicked, this, [this, numOfLines]() {showOneDialog(numOfLines); qDebug() << "CLICKED";});
     else if (cORd == false)
         disconnect(ui->continueButton, &QPushButton::clicked, nullptr, nullptr);
 }
