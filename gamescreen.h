@@ -48,6 +48,7 @@ private slots:
     void connectionHub(bool cORd, int numOfLines);
     //FIGHT
     void drawEnemy(int whatToDraw);
+    void spawnEnemy(int att, int def, int hp, int mhp);
     void fight();
     void heroIsDead();
     void enemyIsDead();
