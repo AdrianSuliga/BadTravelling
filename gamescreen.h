@@ -29,6 +29,7 @@ private slots:
     void endSceneAndPostLevelCleanup();
     //LEVEL 2
     void level2MainFunction();
+    void level2HelperFunction();
     //SHOP
     void connectShop();
     void disconnectShop();
@@ -52,6 +53,8 @@ private slots:
     void fight();
     void heroIsDead();
     void enemyIsDead();
+    int calculateLoot(int level, int enemyType);
+    int drawStat(int base);
     void on_attackActionButton_clicked();
     void on_defenseActionButton_clicked();
     void on_healActionButton_clicked();
@@ -61,6 +64,7 @@ private slots:
     void heroHealsHimself();
 signals:
     void heroKilled();
+    void enemyKilled();
     void sceneEnded();
 private:
     Ui::GameScreen *ui;
@@ -69,7 +73,7 @@ private:
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
-    short weaponLevel, shieldLevel, healthLevel, gameLevel, enemyType, actionPoints, numberOfRounds, counterOfLines;
+    short weaponLevel, shieldLevel, healthLevel, gameLevel, gameProgress, enemyType, actionPoints, numberOfRounds, counterOfLines;
     QString* dialogs;
     QHash<QString, QString> nameToPath;
     DeadEnemyWidget *deadEnemy;
