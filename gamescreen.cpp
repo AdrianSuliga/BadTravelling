@@ -55,6 +55,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->confirmButton->setFont(Girassol);
 
     gameLevel = 1;
+    gameProgress = 1;
     enemyType = -1;
     numberOfRounds = 0;
     counterOfLines = 0;
@@ -138,7 +139,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 0;
+    wealth = 1000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -159,7 +160,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level1MainFunction();
+    level2MainFunction();
 }
 
 GameScreen::~GameScreen()
@@ -288,7 +289,6 @@ void GameScreen::level1MainFunction()
             loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
-        connectionHub(true, 10);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -331,7 +331,6 @@ void GameScreen::level1MainFunction()
             loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem.txt", 16);
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt", 16);
-        connectionHub(true, 16);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -372,8 +371,6 @@ void GameScreen::endSceneAndPostLevelCleanup()
         loadScene(":/dialogs/dialogs/female/Level 1 - Central Square/RozmowaZDresem_2.txt", 16);
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem_2.txt", 16);
-    connectionHub(true, 16);
-
     //TRANSITION TO LEVEL 2
     connect(this, &GameScreen::sceneEnded, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -394,12 +391,18 @@ void GameScreen::level2MainFunction()
                           "}");
     deadHero->hide();
     ui->enemyLabel->show();
-    ui->enemyStatWidget->show();
-    ui->enemyHealthBar->show();
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
     ui->enemyLabel->setStyleSheet("");
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroMaxHealth);
+    ui->infoAboutActionLabel->setText("");
+    ui->dialogLabel->setText("");
+    numberOfRounds = 0;
     spawnEnemy(0, 0, 1, 1);
     gameLevel = 2;
-    fadeInAnimation(this, 2000);
+    //fadeInAnimation(this, 2000);
+
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -410,16 +413,33 @@ void GameScreen::level2MainFunction()
     delete[] dialogs;
     dialogs = nullptr;
     if (sex == 0)
-        loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 12);
+        loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 16);
     if (sex == 1)
-        loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 12);
-    connectionHub(true, 12);
-    /*connect(this, &GameScreen::sceneEnded, this, [this]() {
+        loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/MonologPoPrzebudzeniu.txt", 16);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
         drawEnemy(-1);
         fight();
     });
 
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        if (gameProgress == 2)
+        {
+            level2HelperFunction();
+            return;
+        }
+        drawEnemy(-1);
+        fight();
+    });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         numberOfRounds = 0;
@@ -431,7 +451,58 @@ void GameScreen::level2MainFunction()
         ui->heroHealthBar->setValue(heroMaxHealth);
         drawEnemy(enemyType);
         fight();
-    });*/
+    });
+}
+void GameScreen::level2HelperFunction()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+
+    deadEnemy->showBossButton();
+
+    ui->enemyLabel->setStyleSheet("");
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/MonologWTrakcieWalk.txt", 8);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/MonologWTrakcieWalk.txt", 8);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(-1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(-1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        numberOfRounds = 0;
+        ui->enemyLabel->setStyleSheet("");
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            drawEnemy(0);
+            fight();
+        });
+    });
 }
 
 //SHOP
@@ -690,6 +761,7 @@ void GameScreen::userWantsToBuyDrPieprzer()
 //FIGHT
 void GameScreen::drawEnemy(int whatToDraw)
 {
+    int eBaseAtt = 0, eBaseDef = 0, eBaseHp = 0;
     switch (gameLevel)
     {
     case 1:
@@ -703,38 +775,46 @@ void GameScreen::drawEnemy(int whatToDraw)
         if (enemyType == 0)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 10;
-            enemyDefense = 40;
-            enemyHealth = 80;
-            enemyMaxHealth = 80;
+            eBaseAtt = drawStat(10);
+            eBaseDef = drawStat(40);
+            eBaseHp = drawStat(80);
         }
         if (enemyType == 1)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 30;
-            enemyDefense = 40;
-            enemyHealth = 100;
-            enemyMaxHealth = 100;
+            eBaseAtt = drawStat(30);
+            eBaseDef = drawStat(40);
+            eBaseHp = drawStat(100);
         }
         break;
     case 2:
-        enemyType = rand() % 2;
+        if (whatToDraw == 0)
+            enemyType = 2;
+        else
+            enemyType = rand() % 2;
 
         if (enemyType == 0)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 2 - Pilica River/WscieklyPies.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 10;
-            enemyDefense = 20;
-            enemyHealth = 125;
-            enemyMaxHealth = 125;
+            eBaseAtt = drawStat(10);
+            eBaseDef = drawStat(20);
+            eBaseHp = drawStat(150);
         }
         if (enemyType == 1)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 2 - Pilica River/WscieklyOgar.png) 0 0 0 0 stretch stretch;");
-            enemyAttack = 15;
-            enemyDefense = 20;
-            enemyHealth = 100;
-            enemyMaxHealth = 100;
+            eBaseAtt = drawStat(15);
+            eBaseDef = drawStat(25);
+            eBaseHp = drawStat(100);
+        }
+        if (enemyType == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 2 - Pilica River/Jezus.png) 0 0 0 0 stretch stretch;");
+            enemyAttack = 20;
+            enemyDefense = 30;
+            enemyHealth = 300;
+            spawnEnemy(enemyAttack, enemyDefense, enemyHealth, enemyHealth);
+            return;
         }
         break;
         /*
@@ -751,6 +831,10 @@ void GameScreen::drawEnemy(int whatToDraw)
     case 8:
         break;*/
     }
+    enemyAttack = eBaseAtt;
+    enemyDefense = eBaseDef;
+    enemyMaxHealth = eBaseHp;
+    enemyHealth = enemyMaxHealth;
     spawnEnemy(enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth);
 }
 void GameScreen::spawnEnemy(int att, int def, int hp, int mhp)
@@ -791,7 +875,7 @@ void GameScreen::fight()
                                                 "font-size: 36px;");
         delay(200);
         int enemyBaseDamage = 0;
-        enemyBaseDamage = floor(static_cast<double>(enemyAttack) *
+        enemyBaseDamage = floor(0.5 * static_cast<double>(enemyAttack) *
                                 (1 + static_cast<double>(enemyAttack) / static_cast<double>(heroDefense)));
 
         int enemyRealDamage = rand() % static_cast<int>(0.4*enemyBaseDamage + 1) + static_cast<int>(0.8*enemyBaseDamage);
@@ -885,6 +969,11 @@ void GameScreen::fight()
         return;
     }
 }
+int GameScreen::drawStat(int base)
+{
+    int result = rand() % static_cast<int>(0.4*base + 1) + static_cast<int>(0.8*base);
+    return result;
+}
 
 void GameScreen::heroIsDead()
 {
@@ -892,6 +981,12 @@ void GameScreen::heroIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadHero->show();
+    double loss = 0.1 * static_cast<double>(wealth);
+    wealth -= static_cast<int>(loss);
+    ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
+    ui->amountOfMoneyLabel->setStyleSheet("color: rgb(170,0,0); font-size: 20px;");
+    delay(500);
+    ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     connectShop();
 }
 void GameScreen::enemyIsDead()
@@ -900,7 +995,8 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
-    int loot = gameLevel * (enemyType + 1) * 25;
+    gameProgress++;
+    int loot = calculateLoot(gameLevel, enemyType);
     wealth += loot;
     ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
     ui->amountOfMoneyLabel->setStyleSheet("color: rgb(10,150,0); font-size: 20px;");
@@ -908,15 +1004,33 @@ void GameScreen::enemyIsDead()
     ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     connectShop();
 }
+int GameScreen::calculateLoot(int level, int enemyType)
+{
+    int loot = 0;
+    switch(level)
+    {
+    case 1:
+        loot = (enemyType + 1) * 25;
+        break;
+    case 2:
+        loot = 35;
+        break;
+    default:
+        loot = 0;
+        qDebug() << "WTF DUDE?!";
+    }
+    return loot;
+}
 
 void GameScreen::on_attackActionButton_clicked()
 {
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
-    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    int baseDamage = floor(0.5 * static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
 
-    ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
+    ui->infoAboutActionLabel->setText("Atak (poz. " + QString::number(weaponLevel) + ")\nObrażenia: " +
+                                      QString::number(static_cast<int>(0.8 * baseDamage)) + " - " +
                                       QString::number(static_cast<int>(1.2 * baseDamage)) + '\n' + "Szansa na atak krytyczny: " +
                                       QString::number(heroCritRate) + "%");
     ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -930,8 +1044,9 @@ void GameScreen::on_defenseActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroHealsHimself);
 
-    ui->infoAboutActionLabel->setText("Uzyskiwana tarcza: " + QString::number(heroDefense*1.6) + " - " + QString::number(heroDefense*2.4)
-                                      + "\nSzansa na odbicie: " + QString::number(heroReflectionRate) + "%");
+    ui->infoAboutActionLabel->setText("Tarcza (poz. " + QString::number(shieldLevel) + ")\nUzyskiwana tarcza: " +
+                                      QString::number(heroDefense) + " - " + QString::number(heroDefense*2) + "\nSzansa na odbicie: " +
+                                      QString::number(heroReflectionRate) + "%");
     ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
                                             "font-size: 20px;");
@@ -943,10 +1058,11 @@ void GameScreen::on_healActionButton_clicked()
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroAttacks);
     disconnect(ui->confirmButton, &QPushButton::clicked, this, &GameScreen::heroDefends);
 
-    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    int baseDamage = floor(0.5 * static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
 
-    ui->infoAboutActionLabel->setText("Obrażenia: " + QString::number(static_cast<int>(1.2*baseDamage)) +
-                                      " - " + QString::number(static_cast<int>(1.8*baseDamage)) + '\n' + "Odzyskane życie: " +
+    ui->infoAboutActionLabel->setText("Leczenie (poz. " + QString::number(healthLevel) + ")\nObrażenia: " +
+                                      QString::number(static_cast<int>(1.2*baseDamage)) + " - " +
+                                      QString::number(static_cast<int>(1.8*baseDamage)) + '\n' + "Odzyskane życie: " +
                                       QString::number(heroHealRate) + "% obrażeń");
     ui->infoAboutActionLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     ui->infoAboutActionLabel->setStyleSheet("color: rgb(180,180,180);"
@@ -963,7 +1079,7 @@ void GameScreen::heroAttacks()
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
 
-    int baseDamage = floor(static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
+    int baseDamage = floor(0.5 * static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
     int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
     bool isItCrit = false;
 
@@ -1015,7 +1131,7 @@ void GameScreen::heroDefends()
     ui->confirmButton->hide();
     delay(1500);
 
-    heroShield = rand() % static_cast<int>(0.8 * heroDefense + 1) + static_cast<int>(1.6 * heroDefense);
+    heroShield = rand() % static_cast<int>(0.8 * heroDefense + 1) + static_cast<int>(heroDefense);
     ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(heroShield) + " punktów tarczy.");
     ui->heroHealthBar->setMaximum(heroShield);
     ui->heroHealthBar->setValue(heroShield);
@@ -1046,7 +1162,7 @@ void GameScreen::heroHealsHimself()
     ui->confirmButton->hide();
     delay(1500);
 
-    int baseDamage = floor(static_cast<double>(heroAttack) * 1.5 *
+    int baseDamage = floor(0.5 * static_cast<double>(heroAttack) * 1.5 *
                            (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
     int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
 
@@ -1067,6 +1183,11 @@ void GameScreen::heroHealsHimself()
     ui->enemyHealthBar->setValue(enemyHealth);
     ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage) + " obrażeń krytycznych");
     delay(500);
+    if (enemyHealth == 0)
+    {
+        enemyIsDead();
+        return;
+    }
     fight();
 }
 
@@ -1210,6 +1331,7 @@ void GameScreen::updateActionPointsButtons()
     ui->fifthActionBox->setEnabled(false);
 }
 
+//OTHER
 void GameScreen::delay(int ms)
 {
     QTime dieTime = QTime::currentTime().addMSecs(ms);
@@ -1242,6 +1364,7 @@ void GameScreen::fadeInAnimation(QWidget *widget, int ms)
     delay(ms);
 }
 
+//DIALOGS
 void GameScreen::loadScene(QString pathToDialog, int numOfLines)
 {
     QFile dialogFile(pathToDialog);
@@ -1265,13 +1388,11 @@ void GameScreen::loadScene(QString pathToDialog, int numOfLines)
     if (ui->continueButton->isHidden())
         ui->continueButton->show();
     ui->continueButton->setEnabled(true);
+    connectionHub(true, numOfLines);
 }
 void GameScreen::showOneDialog(int totalNumOfLines)
 {
     ui->continueButton->setEnabled(false);
-    qDebug() << gameLevel;
-    qDebug() << dialogs[counterOfLines];
-    qDebug() << dialogs[counterOfLines + 1];
     QString name = dialogs[counterOfLines];
     QString text = dialogs[counterOfLines + 1];
     QString toShow = "";
@@ -1284,23 +1405,21 @@ void GameScreen::showOneDialog(int totalNumOfLines)
         delay(10);
     }
     counterOfLines += 2;
-
     if (counterOfLines == totalNumOfLines)
     {
         counterOfLines = 0;
         ui->continueButton->setEnabled(false);
+        if (totalNumOfLines != 2)
+            connectionHub(false, 0);
         emit sceneEnded();
-        connectionHub(false, 0);
         return;
     }
     ui->continueButton->setEnabled(true);
 }
 void GameScreen::connectionHub(bool cORd, int numOfLines)
 {
-    qDebug() << cORd << " " << numOfLines;
     if (cORd == true)
-        connect(ui->continueButton, &QPushButton::clicked, this, [this, numOfLines]() {showOneDialog(numOfLines); qDebug() << "CLICKED";});
+        connect(ui->continueButton, &QPushButton::clicked, this, [this, numOfLines]() {showOneDialog(numOfLines);});
     else if (cORd == false)
         disconnect(ui->continueButton, &QPushButton::clicked, nullptr, nullptr);
 }
-
