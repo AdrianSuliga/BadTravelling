@@ -296,7 +296,6 @@ void GameScreen::level1MainFunction()
     });
 
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
-        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         numberOfRounds = 0;
         deadHero->hide();
         ui->enemyLabel->show();
@@ -441,7 +440,6 @@ void GameScreen::level2MainFunction()
         fight();
     });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
-        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         numberOfRounds = 0;
         deadHero->hide();
         ui->enemyLabel->show();
@@ -449,6 +447,7 @@ void GameScreen::level2MainFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
+        qDebug() << enemyType;
         drawEnemy(enemyType);
         fight();
     });
@@ -466,6 +465,16 @@ void GameScreen::level2HelperFunction()
     ui->attackActionButton->setEnabled(false);
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Okej";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
     if (sex == 0)
         loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/MonologWTrakcieWalk.txt", 8);
     if (sex == 1)
@@ -475,6 +484,7 @@ void GameScreen::level2HelperFunction()
         ui->enemyHealthBar->show();
         drawEnemy(-1);
         fight();
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     });
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
         numberOfRounds = 0;
@@ -487,20 +497,65 @@ void GameScreen::level2HelperFunction()
         drawEnemy(-1);
         fight();
     });
-    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this]() {
         numberOfRounds = 0;
-        ui->enemyLabel->setStyleSheet("");
-        deadEnemy->hide();
+        deadHero->hide();
         ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(-1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        deadHero->showGoBackButton();
+        ui->enemyLabel->show();
+        ui->enemyLabel->setStyleSheet("");
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        dialogs = new QString[2];
+        if (sex == 0)
+            dialogs[0] = "PODRÓŻNICZKA";
+        if (sex == 1)
+            dialogs[0] = "PODRÓŻNIK";
+        dialogs[1] = "*odgłosy intensywnego przedzierania się przez busz*";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
         if (sex == 0)
             loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
-            drawEnemy(0);
+            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(2);
             fight();
+            connect(this, &GameScreen::enemyKilled, this, [this]() {
+                disconnect(deadEnemy, nullptr, nullptr, nullptr);
+                ui->enemyStatWidget->hide();
+                ui->enemyHealthBar->hide();
+                deadEnemy->hide();
+                ui->enemyLabel->show();
+                ui->enemyLabel->setStyleSheet("");
+                dialogs = new QString[2];
+                if (sex == 0)
+                    dialogs[0] = "PODRÓŻNICZKA";
+                if (sex == 1)
+                    dialogs[0] = "PODRÓŻNIK";
+                dialogs[1] = "Haha! Takiego!";
+                showOneDialog(2);
+                delete[] dialogs;
+                dialogs = nullptr;
+                if (sex == 0)
+                    loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
+                if (sex == 1)
+                    loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
+            });
         });
     });
 }
@@ -788,10 +843,10 @@ void GameScreen::drawEnemy(int whatToDraw)
         }
         break;
     case 2:
-        if (whatToDraw == 0)
-            enemyType = 2;
-        else
+        if (whatToDraw == -1)
             enemyType = rand() % 2;
+        else if (whatToDraw == 2)
+            enemyType = 2;
 
         if (enemyType == 0)
         {
@@ -1110,6 +1165,7 @@ void GameScreen::heroAttacks()
     if (enemyHealth == 0)
     {
         enemyIsDead();
+        emit enemyKilled();
         return;
     }
     fight();
