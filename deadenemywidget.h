@@ -14,13 +14,13 @@ public:
     explicit DeadEnemyWidget(QWidget *parent = nullptr);
     ~DeadEnemyWidget();
     void showBossButton();
+    void hideBossButton();
+    void hideTransitionButton();
 protected:
     void paintEvent(QPaintEvent *event);
 signals:
     void transitionToNextPhase();
     void fightBoss();
-private slots:
-    void on_pushButton_clicked();
 private:
     Ui::DeadEnemyWidget *ui;
 };
