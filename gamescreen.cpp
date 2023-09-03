@@ -447,7 +447,6 @@ void GameScreen::level2MainFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
-        qDebug() << enemyType;
         drawEnemy(enemyType);
         fight();
     });
@@ -498,6 +497,8 @@ void GameScreen::level2HelperFunction()
         fight();
     });
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
         numberOfRounds = 0;
         deadHero->hide();
         ui->enemyLabel->show();
@@ -537,11 +538,12 @@ void GameScreen::level2HelperFunction()
             fight();
             connect(this, &GameScreen::enemyKilled, this, [this]() {
                 disconnect(deadEnemy, nullptr, nullptr, nullptr);
+                deadEnemy->hideBossButton();
+                deadEnemy->hideTransitionButton();
+                ui->enemyLabel->hide();
                 ui->enemyStatWidget->hide();
                 ui->enemyHealthBar->hide();
-                deadEnemy->hide();
-                ui->enemyLabel->show();
-                ui->enemyLabel->setStyleSheet("");
+                deadEnemy->show();
                 dialogs = new QString[2];
                 if (sex == 0)
                     dialogs[0] = "PODRÓŻNICZKA";
@@ -555,9 +557,52 @@ void GameScreen::level2HelperFunction()
                     loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
                 if (sex == 1)
                     loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
+                connect(this, &GameScreen::sceneEnded, this, &GameScreen::level2PostLevelCleanup);
             });
         });
     });
+}
+void GameScreen::level2PostLevelCleanup()
+{
+    fadeAwayAnimation(this, 2000);
+
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::fightBoss, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
+
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url() 0 0 0 0 stretch stretch;"
+                          "}");
+    deadEnemy->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
+    ui->enemyLabel->setStyleSheet("");
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroMaxHealth);
+    ui->infoAboutActionLabel->setText("");
+    ui->dialogLabel->setText("");
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    numberOfRounds = 0;
+    spawnEnemy(0, 0, 1, 1);
+    actionPoints = 0;
+    updateActionPointsButtons();
+    gameLevel = 3;
+
+    fadeInAnimation(this, 2000);
+
+    level3MainFunction();
+}
+
+//LEVEL 3 - KURZELÓW
+void GameScreen::level3MainFunction()
+{
+
 }
 
 //SHOP
