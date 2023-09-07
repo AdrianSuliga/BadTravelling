@@ -75,7 +75,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     nameToPath["JAN BROŻEK"] = "border-image: url(:/images/images/Level 3 - Kurzelow/JanBrozek.png) 0 0 0 0 stretch stretch;";
     nameToPath["ADAM Z KURZELOWA"] = "border-image: url(:/images/images/Level 3 - Kurzelow/AdamZKurzelowa.png) 0 0 0 0 stretch stretch;";
     nameToPath["ADAM CZARNY"] = "border-image: url(:/images/images/Level 3 - Kurzelow/AdamCzarny.png) 0 0 0 0 stretch stretch;";
-    nameToPath["MR BALLSAMAN"] = "border-image: url(:/images/images/Level 3 - Kurzelow/MrBallsamn.png) 0 0 0 0 stretch stretch;";
+    nameToPath["MR BALLSMAN"] = "border-image: url(:/images/images/Level 3 - Kurzelow/MrBallsamn.png) 0 0 0 0 stretch stretch;";
     nameToPath["COOLA MINECRAFT OFFICIAL"] = "border-image: url(:/images/images/Level 3 - Kurzelow/CoolaMinecraftOfficial.png) 0 0 0 0 stretch stretch;";
 
     nameToPath["MIESZKANIEC OGRODOWEJ"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/MieszkaniecOgrodowej.png) 0 0 0 0 stretch stretch;";
@@ -160,7 +160,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level2MainFunction();
+    level3MainFunction();
 }
 
 GameScreen::~GameScreen()
@@ -397,6 +397,7 @@ void GameScreen::level2MainFunction()
     ui->heroHealthBar->setValue(heroMaxHealth);
     ui->infoAboutActionLabel->setText("");
     ui->dialogLabel->setText("");
+    gameProgress = 0;
     numberOfRounds = 0;
     spawnEnemy(0, 0, 1, 1);
     gameLevel = 2;
@@ -447,7 +448,10 @@ void GameScreen::level2MainFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
-        drawEnemy(enemyType);
+        if (enemyType == 2)
+            drawEnemy(2);
+        else
+            drawEnemy(-1);
         fight();
     });
 }
@@ -588,13 +592,12 @@ void GameScreen::level2PostLevelCleanup()
     ui->dialogLabel->setText("");
     ui->speakerLabel->setStyleSheet("");
     ui->nameLabel->setText("");
+    gameProgress = 0;
     numberOfRounds = 0;
     spawnEnemy(0, 0, 1, 1);
     actionPoints = 0;
     updateActionPointsButtons();
     gameLevel = 3;
-
-    fadeInAnimation(this, 2000);
 
     level3MainFunction();
 }
@@ -602,7 +605,40 @@ void GameScreen::level2PostLevelCleanup()
 //LEVEL 3 - KURZELÓW
 void GameScreen::level3MainFunction()
 {
+    gameLevel = 3;
+    gameProgress = 0;
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 3 - Kurzelow/Background.png) 0 0 0 0 stretch stretch;"
+                          "}");
+    fadeInAnimation(this, 2000);
 
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "WOW!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu.txt", 12);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu.txt", 12);
+
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu_2.txt", 16);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu_2.txt", 16);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(0);
+            fight();
+        });
+    });
 }
 
 //SHOP
@@ -917,10 +953,16 @@ void GameScreen::drawEnemy(int whatToDraw)
             return;
         }
         break;
-        /*
     case 3:
+        if (whatToDraw == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/BydleceSilyZbrojne.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(30);
+            eBaseDef = drawStat(35);
+            eBaseHp = drawStat(200);
+        }
         break;
-    case 4:
+    /*case 4:
         break;
     case 5:
         break;
@@ -1287,6 +1329,7 @@ void GameScreen::heroHealsHimself()
     if (enemyHealth == 0)
     {
         enemyIsDead();
+        emit enemyKilled();
         return;
     }
     fight();
@@ -1439,7 +1482,6 @@ void GameScreen::delay(int ms)
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
-
 void GameScreen::fadeAwayAnimation(QWidget *widget, int ms)
 {
     QGraphicsOpacityEffect *fadeAwayEffect = new QGraphicsOpacityEffect(widget);
