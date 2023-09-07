@@ -91,5 +91,9 @@
         <file>images/AppScreenArt/keychain.png</file>
         <file>images/AppScreenArt/wallet.png</file>
         <file>images/AppScreenArt/blankActionPoint.png</file>
+        <file>images/Level 2 - Pilica River/Level3Background1.png</file>
+        <file>images/Level 2 - Pilica River/WscieklyOgar.png</file>
+        <file>images/AppScreenArt/skull.png</file>
+        <file>images/Level 3 - Kurzelow/Background.png</file>
     </qresource>
 </RCC>
