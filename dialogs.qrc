@@ -18,5 +18,21 @@
         <file>dialogs/female/Level 2 - Pilica River/MonologWTrakcieWalk.txt</file>
         <file>dialogs/female/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt</file>
         <file>dialogs/female/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/RozmowaZAdamemPoWalce.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/RozmowaZBrozkiemPoZabiciuKrow.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPoWalce.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/RozmowaZBrozkiemPoZabiciuKrow.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu_2.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu_2.txt</file>
+        <file>dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu.txt</file>
     </qresource>
 </RCC>
