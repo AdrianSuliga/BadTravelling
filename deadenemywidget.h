@@ -16,6 +16,7 @@ public:
     void showBossButton();
     void hideBossButton();
     void hideTransitionButton();
+    void showTransitionButton();
 protected:
     void paintEvent(QPaintEvent *event);
 signals:
