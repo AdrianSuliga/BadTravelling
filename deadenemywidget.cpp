@@ -46,6 +46,8 @@ void DeadEnemyWidget::hideBossButton() {ui->bossButton->hide();}
 
 void DeadEnemyWidget::hideTransitionButton() {ui->pushButton->hide();}
 
+void DeadEnemyWidget::showTransitionButton() {ui->pushButton->show();}
+
 void DeadEnemyWidget::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;
