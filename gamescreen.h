@@ -33,6 +33,10 @@ private slots:
     void level2PostLevelCleanup();
     //LEVEL 3
     void level3MainFunction();
+    void level3HelperFunction();
+    void level3BossFight();
+    void level3RetreatFromBossFunction();
+    void level3PostLevelCleanup();
     //SHOP
     void connectShop();
     void disconnectShop();
