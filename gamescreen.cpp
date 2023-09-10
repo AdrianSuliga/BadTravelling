@@ -605,8 +605,8 @@ void GameScreen::level2PostLevelCleanup()
 //LEVEL 3 - KURZELÓW
 void GameScreen::level3MainFunction()
 {
-    gameLevel = 3;
-    gameProgress = 0;
+    gameLevel = 3; //delete this as well
+    gameProgress = 0; //Delete when you finish level 3
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 3 - Kurzelow/Background.png) 0 0 0 0 stretch stretch;"
                           "}");
@@ -626,6 +626,18 @@ void GameScreen::level3MainFunction()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu.txt", 12);
 
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        numberOfRounds = 0;
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(0);
+        fight();
+    });
+
     connect(this, &GameScreen::sceneEnded, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         if (sex == 0)
@@ -637,8 +649,220 @@ void GameScreen::level3MainFunction()
             ui->enemyHealthBar->show();
             drawEnemy(0);
             fight();
+            connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+                numberOfRounds = 0;
+                heroHealth = heroMaxHealth;
+                ui->heroHealthBar->setValue(heroHealth);
+                deadEnemy->hide();
+                ui->enemyLabel->show();
+                ui->enemyStatWidget->show();
+                ui->enemyHealthBar->show();
+                drawEnemy(0);
+                fight();
+            });
+            connect(this, &GameScreen::enemyKilled, this, [this]() {
+                if (gameProgress == 2)
+                {
+                    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+                    deadEnemy->hideTransitionButton();
+                    level3HelperFunction();
+                    return;
+                }
+            });
         });
     });
+}
+void GameScreen::level3HelperFunction()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Ile tu bydła...";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZBrozkiemPoZabiciuKrow.txt", 54);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/RozmowaZBrozkiemPoZabiciuKrow.txt", 54);
+
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            dialogs = new QString[2];
+            dialogs[0] = "JAN BROŻEK";
+            dialogs[1] = "Nareszcie... spokój... jebać Kurzelów";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt", 22);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt", 22);
+            connect(this, &GameScreen::sceneEnded, this, &GameScreen::level3BossFight);
+        });
+    });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+}
+void GameScreen::level3BossFight()
+{
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    gameProgress = 2;
+
+    deadHero->showGoBackButton();
+    deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
+
+    deadEnemy->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    numberOfRounds = 0;
+    drawEnemy(2);
+    fight();
+
+    connect(this, &GameScreen::enemyKilled, this, [this] {
+        switch(gameProgress)
+        {
+        case 3:
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt", 8);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt", 8);
+            break;
+        case 4:
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt", 12);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt", 12);
+            break;
+        case 5:
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt", 8);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt", 8);
+            break;
+        case 6:
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPoWalce.txt", 40);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/RozmowaZAdamemPoWalce.txt", 40);
+        }
+    });
+    connect(this, &GameScreen::sceneEnded, this, [this] {
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        switch(gameProgress)
+        {
+        case 3:
+            drawEnemy(3);
+            break;
+        case 4:
+            drawEnemy(4);
+            break;
+        case 5:
+            drawEnemy(5);
+            break;
+        case 6:
+            level3PostLevelCleanup();
+            return;
+        }
+        fight();
+    });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this] {
+        numberOfRounds = 0;
+        gameProgress = 2;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(gameProgress);
+        fight();
+    });
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level3RetreatFromBossFunction);
+}
+void GameScreen::level3RetreatFromBossFunction()
+{
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+
+    numberOfRounds = 0;
+    deadHero->hide();
+    deadEnemy->showBossButton();
+    deadEnemy->showTransitionButton();
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    drawEnemy(0);
+    fight();
+
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level3BossFight);
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+}
+void GameScreen::level3PostLevelCleanup()
+{
+
 }
 
 //SHOP
@@ -957,10 +1181,46 @@ void GameScreen::drawEnemy(int whatToDraw)
         if (whatToDraw == 0)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/BydleceSilyZbrojne.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = drawStat(30);
+            eBaseAtt = drawStat(20);
             eBaseDef = drawStat(35);
             eBaseHp = drawStat(200);
         }
+        if (whatToDraw == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/JanBrozek.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 24;
+            eBaseDef = 30;
+            eBaseHp = 240;
+        }
+        if (whatToDraw == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/AdamZKurzelowa.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 26;
+            eBaseDef = 30;
+            eBaseHp = 250;
+        }
+        if (whatToDraw == 3)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/AdamCzarny.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 24;
+            eBaseDef = 35;
+            eBaseHp = 300;
+        }
+        if (whatToDraw == 4)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/MrBallsamn.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 40;
+            eBaseDef = 20;
+            eBaseHp = 150;
+        }
+        if (whatToDraw == 5)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 3 - Kurzelow/CoolaMinecraftOfficial.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 10;
+            eBaseDef = 30;
+            eBaseHp = 1000;
+        }
+        enemyType = whatToDraw;
         break;
     /*case 4:
         break;
@@ -1156,6 +1416,14 @@ int GameScreen::calculateLoot(int level, int enemyType)
         break;
     case 2:
         loot = 35;
+        break;
+    case 3:
+        if (enemyType == 1)
+            loot = 400;
+        else if (enemyType == 5)
+            loot = 2000;
+        else
+            loot = 150;
         break;
     default:
         loot = 0;
