@@ -386,7 +386,7 @@ void GameScreen::endSceneAndPostLevelCleanup()
 void GameScreen::level2MainFunction()
 {
     this -> setStyleSheet("#GameScreen {"
-                          "border-image: url(:/images/images/Level 2 - Pilica River/Level3Background1.png) 0 0 0 0 stretch stretch;"
+                          "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
     deadHero->hide();
     ui->enemyLabel->show();
@@ -434,6 +434,7 @@ void GameScreen::level2MainFunction()
         ui->heroHealthBar->setValue(heroHealth);
         if (gameProgress == 2)
         {
+            fadeAwayAnimation(this, 1000);
             level2HelperFunction();
             return;
         }
@@ -469,6 +470,11 @@ void GameScreen::level2HelperFunction()
     ui->defenseActionButton->setEnabled(false);
     ui->healActionButton->setEnabled(false);
 
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background2.png) 0 0 0 0 stretch stretch;"
+                          "}");
+    fadeInAnimation(this, 1000);
+
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -503,6 +509,11 @@ void GameScreen::level2HelperFunction()
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+        fadeAwayAnimation(this, 1000);
+        this -> setStyleSheet("#GameScreen {"
+                              "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background2.png) 0 0 0 0 stretch stretch;"
+                              "}");
+        fadeInAnimation(this, 1000);
         numberOfRounds = 0;
         deadHero->hide();
         ui->enemyLabel->show();
@@ -514,6 +525,11 @@ void GameScreen::level2HelperFunction()
         fight();
     });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        fadeAwayAnimation(this, 1000);
+        this -> setStyleSheet("#GameScreen {"
+                              "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background3.png) 0 0 0 0 stretch stretch;"
+                              "}");
+        fadeInAnimation(this, 1000);
         numberOfRounds = 0;
         deadEnemy->hide();
         deadHero->showGoBackButton();
@@ -608,7 +624,7 @@ void GameScreen::level3MainFunction()
     gameLevel = 3; //delete this as well
     gameProgress = 0; //Delete when you finish level 3
     this -> setStyleSheet("#GameScreen {"
-                          "border-image: url(:/images/images/Level 3 - Kurzelow/Background.png) 0 0 0 0 stretch stretch;"
+                          "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
     fadeInAnimation(this, 2000);
 
@@ -661,7 +677,16 @@ void GameScreen::level3MainFunction()
                 fight();
             });
             connect(this, &GameScreen::enemyKilled, this, [this]() {
-                if (gameProgress == 2)
+                if (gameProgress == 3)
+                {
+                    fadeAwayAnimation(this, 1000);
+                    this->setStyleSheet("#GameScreen {"
+                                        "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background2.png) 0 0 0 0 stretch stretch;"
+                                        "}");
+                    fadeInAnimation(this, 1000);
+                    ui->dialogLabel->setText("Nie ma im końca...");
+                }
+                if (gameProgress == 6)
                 {
                     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
                     deadEnemy->hideTransitionButton();
@@ -710,6 +735,11 @@ void GameScreen::level3HelperFunction()
             showOneDialog(2);
             delete[] dialogs;
             dialogs = nullptr;
+            fadeAwayAnimation(this, 1000);
+            this->setStyleSheet("#GameScreen {"
+                                "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background3.png) 0 0 0 0 stretch stretch;"
+                                "}");
+            fadeInAnimation(this, 1000);
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt", 22);
             if (sex == 1)
@@ -822,8 +852,15 @@ void GameScreen::level3RetreatFromBossFunction()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
 
-    numberOfRounds = 0;
+    fadeAwayAnimation(this, 1000);
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"
+                        "}");
+    ui->enemyLabel->setStyleSheet("");
+    ui->enemyHealthBar->setValue(enemyMaxHealth);
     deadHero->hide();
+    fadeInAnimation(this, 1000);
+    numberOfRounds = 0;
     deadEnemy->showBossButton();
     deadEnemy->showTransitionButton();
     ui->speakerLabel->setStyleSheet("");
@@ -847,7 +884,15 @@ void GameScreen::level3RetreatFromBossFunction()
         drawEnemy(0);
         fight();
     });
-    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level3BossFight);
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        fadeAwayAnimation(this, 1000);
+        this->setStyleSheet("#GameScreen {"
+                            "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background3.png) 0 0 0 0 stretch stretch;"
+                            "}");
+        deadEnemy->hide();
+        fadeInAnimation(this, 1000);
+        level3BossFight();
+    });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
         numberOfRounds = 0;
         deadHero->hide();
