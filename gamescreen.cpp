@@ -245,6 +245,8 @@ void GameScreen::loadVariables()
     deadEnemy = new DeadEnemyWidget(this);
     deadHero = new DeadHeroWidget(this);
     tutorialWidget = new TutorialInfo(this);
+    riDialog = new RecoveredItemDialog(this);
+    riDialog->setModal(true);
     QVBoxLayout *vertical = qobject_cast<QVBoxLayout*>(ui->enemyWidget->layout());
     vertical->insertWidget(0,deadEnemy,6);
     vertical->insertWidget(1,deadHero,6);
@@ -785,24 +787,57 @@ void GameScreen::level3BossFight()
         switch(gameProgress)
         {
         case 3:
+            dialogs = new QString[2];
+            if (sex == 0)
+                dialogs[0] = "PODRÓŻNICZKA";
+            if (sex == 1)
+                dialogs[0] = "PODRÓŻNIK";
+            dialogs[1] = "Załatwiony!";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt", 8);
             if (sex == 1)
                 loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoAdamaCzarnego.txt", 8);
             break;
         case 4:
+            dialogs = new QString[2];
+            dialogs[0] = "ADAM CZARNY";
+            dialogs[1] = "Czymże jest życie bez odrobiny ryzyka... *umiera*";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt", 12);
             if (sex == 1)
                 loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoMrBallsmana.txt", 12);
             break;
         case 5:
+            dialogs = new QString[2];
+            if (sex == 0)
+                dialogs[0] = "PODRÓŻNICZKA";
+            if (sex == 1)
+                dialogs[0] = "PODRÓŻNIK";
+            dialogs[1] = "To jeszcze nie koniec... czuję to";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt", 8);
             if (sex == 1)
                 loadScene(":/dialogs/dialogs/male/Level 3 - Kurzelow/PrzejscieDoCoolaMinecraftOfficial.txt", 8);
             break;
         case 6:
+            dialogs = new QString[2];
+            if (sex == 0)
+                dialogs[0] = "PODRÓŻNICZKA";
+            if (sex == 1)
+                dialogs[0] = "PODRÓŻNIK";
+            dialogs[1] = "Nie wierzę...";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPoWalce.txt", 40);
             if (sex == 1)
@@ -818,16 +853,17 @@ void GameScreen::level3BossFight()
         switch(gameProgress)
         {
         case 3:
-            drawEnemy(3);
-            break;
         case 4:
-            drawEnemy(4);
-            break;
         case 5:
-            drawEnemy(5);
+            drawEnemy(gameProgress);
             break;
         case 6:
-            level3PostLevelCleanup();
+            riDialog->show();
+            riDialog->setIcon(":/images/images/AppScreenArt/keychain.png");
+            ui->enemyLabel->setStyleSheet("");
+            ui->enemyStatWidget->hide();
+            ui->enemyHealthBar->hide();
+            connect(riDialog, &RecoveredItemDialog::acceptMessage, this, &GameScreen::level3PostLevelCleanup);
             return;
         }
         fight();
@@ -907,7 +943,8 @@ void GameScreen::level3RetreatFromBossFunction()
 }
 void GameScreen::level3PostLevelCleanup()
 {
-
+    riDialog->hide();
+    fadeAwayAnimation(this, 2000);
 }
 
 //SHOP
@@ -1463,12 +1500,12 @@ int GameScreen::calculateLoot(int level, int enemyType)
         loot = 35;
         break;
     case 3:
-        if (enemyType == 1)
+        if (enemyType == 0)
+            loot = 150;
+        else if (enemyType == 1)
             loot = 400;
         else if (enemyType == 5)
             loot = 2000;
-        else
-            loot = 150;
         break;
     default:
         loot = 0;
@@ -1867,6 +1904,8 @@ void GameScreen::showOneDialog(int totalNumOfLines)
         ui->continueButton->setEnabled(false);
         if (totalNumOfLines != 2)
             connectionHub(false, 0);
+        if (gameLevel == 3 && totalNumOfLines == 2)
+            return;
         emit sceneEnded();
         return;
     }
