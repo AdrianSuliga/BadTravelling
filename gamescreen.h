@@ -6,6 +6,7 @@
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
 #include <tutorialinfo.h>
+#include <recovereditemdialog.h>
 
 namespace Ui {
 class GameScreen;
@@ -37,6 +38,8 @@ private slots:
     void level3BossFight();
     void level3RetreatFromBossFunction();
     void level3PostLevelCleanup();
+    //LEVEL 4
+    void level4FirstFunction();
     //SHOP
     void connectShop();
     void disconnectShop();
@@ -86,6 +89,7 @@ private:
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
     TutorialInfo *tutorialWidget;
+    RecoveredItemDialog *riDialog;
 };
 
 #endif // GAMESCREEN_H
