@@ -596,9 +596,6 @@ void GameScreen::level2PostLevelCleanup()
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
 
-    this -> setStyleSheet("#GameScreen {"
-                          "border-image: url() 0 0 0 0 stretch stretch;"
-                          "}");
     deadEnemy->hide();
     ui->enemyLabel->show();
     ui->enemyStatWidget->hide();
@@ -623,8 +620,8 @@ void GameScreen::level2PostLevelCleanup()
 //LEVEL 3 - KURZELÓW
 void GameScreen::level3MainFunction()
 {
-    gameLevel = 3; //delete this as well
-    gameProgress = 0; //Delete when you finish level 3
+    gameLevel = 3;
+    gameProgress = 0;
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
@@ -665,6 +662,8 @@ void GameScreen::level3MainFunction()
         connect(this, &GameScreen::sceneEnded, this, [this]() {
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
             drawEnemy(0);
             fight();
             connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
@@ -686,7 +685,14 @@ void GameScreen::level3MainFunction()
                                         "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background2.png) 0 0 0 0 stretch stretch;"
                                         "}");
                     fadeInAnimation(this, 1000);
-                    ui->dialogLabel->setText("Nie ma im końca...");
+                    QString toShow = "Nie ma im końca...";
+                    QString buff = "";
+                    for (int i=0; i<toShow.length(); i++)
+                    {
+                        buff += toShow[i];
+                        ui->dialogLabel->setText(buff);
+                        delay(50);
+                    }
                 }
                 if (gameProgress == 6)
                 {
@@ -859,10 +865,11 @@ void GameScreen::level3BossFight()
             break;
         case 6:
             riDialog->show();
-            riDialog->setIcon(":/images/images/AppScreenArt/keychain.png");
+            riDialog->setIcon(0);
             ui->enemyLabel->setStyleSheet("");
             ui->enemyStatWidget->hide();
             ui->enemyHealthBar->hide();
+            ui->keychainLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/keychain.png) 0 0 0 0 stretch stretch;");
             connect(riDialog, &RecoveredItemDialog::acceptMessage, this, &GameScreen::level3PostLevelCleanup);
             return;
         }
@@ -945,6 +952,38 @@ void GameScreen::level3PostLevelCleanup()
 {
     riDialog->hide();
     fadeAwayAnimation(this, 2000);
+
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::fightBoss, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
+    deadEnemy->hideBossButton();
+    deadHero->hideGoBackButton();
+
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url() 0 0 0 0 stretch stretch;"
+                        "}");
+
+    gameProgress = 0;
+    gameLevel = 4;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->dialogLabel->setText("");
+
+    fadeInAnimation(this, 2000);
+
+    level4FirstFunction();
+}
+
+//LEVEL 4 - OGRODOWA
+void GameScreen::level4FirstFunction()
+{
+
 }
 
 //SHOP
@@ -1087,7 +1126,6 @@ void GameScreen::userWantsToBuyHealth()
             heroMaxHealth += healthLevel * 12;
         if (sex == 1)
             heroMaxHealth += healthLevel * 10;
-        heroHealth = heroMaxHealth;
         if (healthLevel * 3 <= 75)
             heroHealRate = 3 * healthLevel;
         else if (healthLevel * 3 > 75)
@@ -1120,7 +1158,6 @@ void GameScreen::userWantsToBuyHealth()
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroHealthBar->setMaximum(heroMaxHealth);
-        ui->heroHealthBar->setValue(heroMaxHealth);
 
         ui->heroHealthPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
 
