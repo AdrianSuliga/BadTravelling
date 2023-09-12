@@ -22,7 +22,21 @@ RecoveredItemDialog::~RecoveredItemDialog()
     delete ui;
 }
 
-void RecoveredItemDialog::setIcon(QString path)
+void RecoveredItemDialog::setIcon(int icon)
 {
-    ui->label_2->setStyleSheet("border-image: url("+path+") 0 0 0 0 stretch stretch;");
+    switch (icon)
+    {
+    case 0:
+        ui->label_2->setStyleSheet("border-image: url(:/images/images/AppScreenArt/keychain.png) 0 0 0 0 stretch stretch;");
+        break;
+    case 1:
+        ui->label_2->setStyleSheet("border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
+        break;
+    case 2:
+        ui->label_2->setStyleSheet("border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
+        break;
+    case 3:
+        ui->label_2->setStyleSheet("border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
+        break;
+    }
 }
