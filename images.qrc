@@ -25,7 +25,6 @@
         <file>images/Level 3 - Kurzelow/CoolaMinecraftOfficial.png</file>
         <file>images/Level 3 - Kurzelow/JanBrozek.png</file>
         <file>images/Level 3 - Kurzelow/MrBallsamn.png</file>
-        <file>images/Level 4 - Ogrodowa/Borowa.png</file>
         <file>images/Level 4 - Ogrodowa/MieszkaniecOgrodowej.png</file>
         <file>images/Level 4 - Ogrodowa/PoteznaBorowa.png</file>
         <file>images/Level 4 - Ogrodowa/Rzepon.png</file>
@@ -99,5 +98,6 @@
         <file>images/Level 3 - Kurzelow/Level3Background1.png</file>
         <file>images/Level 3 - Kurzelow/Level3Background2.png</file>
         <file>images/Level 3 - Kurzelow/Level3Background3.png</file>
+        <file>images/Level 4 - Ogrodowa/Borowa.png</file>
     </qresource>
 </RCC>
