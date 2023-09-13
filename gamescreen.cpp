@@ -139,7 +139,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 1000;
+    wealth = 5000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -160,7 +160,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level3MainFunction();
+    level4FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -185,37 +185,37 @@ void GameScreen::loadVariables()
     ui->enemyHealthBar->setMaximum(1);
     ui->enemyHealthBar->setValue(0);
 
-    if (weaponLevel >= 0 && weaponLevel <= 4)
+    if (weaponLevel >= 0 && weaponLevel <= 2)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
-    if (weaponLevel >= 5 && weaponLevel <= 9)
+    if (weaponLevel >= 3 && weaponLevel <= 5)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
-    if (weaponLevel >= 10 && weaponLevel <= 14)
+    if (weaponLevel >= 6 && weaponLevel <= 8)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
-    if (weaponLevel >= 15 && weaponLevel <= 19)
+    if (weaponLevel >= 9 && weaponLevel <= 11)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
-    if (weaponLevel >= 20 && weaponLevel <= 24)
+    if (weaponLevel >= 12)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
 
-    if (shieldLevel >= 0 && shieldLevel <= 4)
+    if (shieldLevel >= 0 && shieldLevel <= 2)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
-    if (shieldLevel >= 5 && shieldLevel <= 9)
+    if (shieldLevel >= 3 && shieldLevel <= 5)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
-    if (shieldLevel >= 10 && shieldLevel <= 14)
+    if (shieldLevel >= 6 && shieldLevel <= 8)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
-    if (shieldLevel >= 15 && shieldLevel <= 19)
+    if (shieldLevel >= 9 && shieldLevel <= 11)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
-    if (shieldLevel >= 20 && shieldLevel <= 24)
+    if (shieldLevel >= 12)
         ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
-    if (healthLevel >= 0 && healthLevel <= 4)
+    if (healthLevel >= 0 && healthLevel <= 2)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
-    if (healthLevel >= 5 && healthLevel <= 9)
+    if (healthLevel >= 3 && healthLevel <= 5)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
-    if (healthLevel >= 10 && healthLevel <= 14)
+    if (healthLevel >= 6 && healthLevel <= 8)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
-    if (healthLevel >= 15 && healthLevel <= 19)
+    if (healthLevel >= 9 && healthLevel <= 11)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
-    if (healthLevel >= 20 && healthLevel <= 24)
+    if (healthLevel >= 12)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
     ui->weaponShopPriceLabel->setText(QString::number(weaponPrice));
@@ -620,8 +620,6 @@ void GameScreen::level2PostLevelCleanup()
 //LEVEL 3 - KURZELÓW
 void GameScreen::level3MainFunction()
 {
-    gameLevel = 3;
-    gameProgress = 0;
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
@@ -983,7 +981,128 @@ void GameScreen::level3PostLevelCleanup()
 //LEVEL 4 - OGRODOWA
 void GameScreen::level4FirstFunction()
 {
+    gameLevel = 4;
+    gameProgress = 0;
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_1.png) 0 0 0 0 stretch stretch;"
+                        "}");
 
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "*odgłosy przedzierania się przez las*";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 4 - Ogrodowa/MonologPoPrzybyciu.txt", 34);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 4 - Ogrodowa/MonologPoPrzybyciu.txt", 34);
+
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        numberOfRounds = 0;
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]{
+        if (gameProgress == 4)
+        {
+            disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+            disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+            disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+            level4SecondFunction();
+        }
+    });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+}
+void GameScreen::level4SecondFunction()
+{
+    fadeAwayAnimation(this, 2000);
+
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_2.png) 0 0 0 0 stretch stretch;"
+                          "}");
+
+    fadeInAnimation(this, 2000);
+
+    dialogs = new QString[2];
+    dialogs[0] = "MIESZKANIEC OGRODOWEJ";
+    dialogs[1] = "Wracaj tu! Młodzież jebana, zdegenerowana!!!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 4 - Ogrodowa/MonologPoPokonaniuOgrodowian.txt", 20);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 4 - Ogrodowa/MonologPoPokonaniuOgrodowian.txt", 20);
+
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(1);
+            fight();
+
+        connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(1);
+            fight();
+        });
+
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 5)
+                return;
+        });
+
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(1);
+            fight();
+        });
+    });
 }
 
 //SHOP
@@ -1026,26 +1145,26 @@ void GameScreen::userWantsToBuyWeapon()
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
         ui->heroAttackPointsLabel->setText(QString::number(heroAttack));
         ui->weaponShopPriceLabel->setText(QString::number(weaponPrice));
-        if (weaponLevel >= 0 && weaponLevel <= 4)
+        if (weaponLevel >= 0 && weaponLevel <= 2)
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 5 && weaponLevel <= 9)
+        if (weaponLevel >= 3 && weaponLevel <= 5)
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 10 && weaponLevel <= 14)
+        if (weaponLevel >= 6 && weaponLevel <= 8)
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass3.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 15 && weaponLevel <= 19)
+        if (weaponLevel >= 9 && weaponLevel <= 11)
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass4.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 20 && weaponLevel <= 24)
+        if (weaponLevel >= 12)
             ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass5.png) 0 0 0 0 stretch stretch;");
 
-        if (weaponLevel > 0 && weaponLevel <= 5)
+        if (weaponLevel > 0 && weaponLevel <= 3)
             ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 6 && weaponLevel <= 10)
+        if (weaponLevel >= 4 && weaponLevel <= 6)
             ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 11 && weaponLevel <= 15)
+        if (weaponLevel >= 7 && weaponLevel <= 9)
             ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass3.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 16 && weaponLevel <= 20)
+        if (weaponLevel >= 10 && weaponLevel <= 12)
             ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass4.png) 0 0 0 0 stretch stretch;");
-        if (weaponLevel >= 21 && weaponLevel <= 25)
+        if (weaponLevel >= 13)
             ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroAttackPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
@@ -1079,26 +1198,26 @@ void GameScreen::userWantsToBuyShield()
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
         ui->heroDefensePointsLabel->setText(QString::number(heroDefense));
         ui->shieldShopPriceLabel->setText(QString::number(shieldPrice));
-        if (shieldLevel >= 0 && shieldLevel <= 4)
+        if (shieldLevel >= 0 && shieldLevel <= 2)
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 5 && shieldLevel <= 9)
+        if (shieldLevel >= 3 && shieldLevel <= 5)
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 10 && shieldLevel <= 14)
+        if (shieldLevel >= 6 && shieldLevel <= 8)
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 15 && shieldLevel <= 19)
+        if (shieldLevel >= 9 && shieldLevel <= 11)
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 20 && shieldLevel <= 24)
+        if (shieldLevel >= 12)
             ui->shieldShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
-        if (shieldLevel > 0 && shieldLevel <= 5)
+        if (shieldLevel > 0 && shieldLevel <= 3)
             ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 6 && shieldLevel <= 10)
+        if (shieldLevel >= 4 && shieldLevel <= 6)
             ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 11 && shieldLevel <= 15)
+        if (shieldLevel >= 7 && shieldLevel <= 9)
             ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 16 && shieldLevel <= 20)
+        if (shieldLevel >= 10 && shieldLevel <= 12)
             ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
-        if (shieldLevel >= 21 && shieldLevel <= 25)
+        if (shieldLevel >= 13)
             ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroDefensePointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
@@ -1135,26 +1254,26 @@ void GameScreen::userWantsToBuyHealth()
         ui->amountOfMoneyLabel->setText(QString::number(wealth));
         ui->heroHealthPointsLabel->setText(QString::number(heroMaxHealth));
         ui->healthShopPriceLabel->setText(QString::number(healthPrice));
-        if (healthLevel >= 0 && healthLevel <= 4)
+        if (healthLevel >= 0 && healthLevel <= 2)
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 5 && healthLevel <= 9)
+        if (healthLevel >= 3 && healthLevel <= 5)
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 10 && healthLevel <= 14)
+        if (healthLevel >= 6 && healthLevel <= 8)
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 15 && healthLevel <= 19)
+        if (healthLevel >= 9 && healthLevel <= 11)
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 20 && healthLevel <= 24)
+        if (healthLevel >= 12)
             ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
-        if (healthLevel > 0 && healthLevel <= 5)
+        if (healthLevel > 0 && healthLevel <= 3)
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 6 && healthLevel <= 10)
+        if (healthLevel >= 4 && healthLevel <= 6)
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 11 && healthLevel <= 15)
+        if (healthLevel >= 7 && healthLevel <= 9)
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 16 && healthLevel <= 20)
+        if (healthLevel >= 10 && healthLevel <= 12)
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
-        if (healthLevel >= 21 && healthLevel <= 25)
+        if (healthLevel >= 13)
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroHealthBar->setMaximum(heroMaxHealth);
@@ -1341,9 +1460,24 @@ void GameScreen::drawEnemy(int whatToDraw)
         }
         enemyType = whatToDraw;
         break;
-    /*case 4:
+    case 4:
+        if (whatToDraw == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 4 - Ogrodowa/MieszkaniecOgrodowej.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(35);
+            eBaseDef = drawStat(40);
+            eBaseHp = drawStat(500);
+            enemyType = 0;
+        }
+        if (whatToDraw == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 4 - Ogrodowa/Rzepon.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(35);
+            eBaseDef = drawStat(50);
+            eBaseHp = drawStat(800);
+        }
         break;
-    case 5:
+    /*case 5:
         break;
     case 6:
         break;
@@ -1543,6 +1677,10 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 400;
         else if (enemyType == 5)
             loot = 2000;
+        break;
+    case 4:
+        if (enemyType == 0)
+            loot = 500;
         break;
     default:
         loot = 0;
