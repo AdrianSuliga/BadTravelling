@@ -34,5 +34,15 @@
         <file>dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu_2.txt</file>
         <file>dialogs/male/Level 3 - Kurzelow/MonologPoPrzybyciu.txt</file>
         <file>dialogs/female/Level 3 - Kurzelow/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/male/Level 4 - Ogrodowa/MonologPoPokonaniuOgrodowian.txt</file>
+        <file>dialogs/male/Level 4 - Ogrodowa/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/male/Level 4 - Ogrodowa/PrzejscieDoPoteznejBorowy.txt</file>
+        <file>dialogs/male/Level 4 - Ogrodowa/RozmowaKoncowa.txt</file>
+        <file>dialogs/male/Level 4 - Ogrodowa/RozmowaZBorowaPrzedWalka.txt</file>
+        <file>dialogs/female/Level 4 - Ogrodowa/MonologPoPokonaniuOgrodowian.txt</file>
+        <file>dialogs/female/Level 4 - Ogrodowa/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/female/Level 4 - Ogrodowa/PrzejscieDoPoteznejBorowy.txt</file>
+        <file>dialogs/female/Level 4 - Ogrodowa/RozmowaKoncowa.txt</file>
+        <file>dialogs/female/Level 4 - Ogrodowa/RozmowaZBorowaPrzedWalka.txt</file>
     </qresource>
 </RCC>
