@@ -954,6 +954,7 @@ void GameScreen::level3PostLevelCleanup()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(riDialog, &RecoveredItemDialog::acceptMessage, nullptr, nullptr);
     disconnect(deadEnemy, &DeadEnemyWidget::fightBoss, nullptr, nullptr);
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
@@ -1049,6 +1050,7 @@ void GameScreen::level4SecondFunction()
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_2.png) 0 0 0 0 stretch stretch;"
                           "}");
+    gameProgress = 0;
 
     fadeInAnimation(this, 2000);
 
@@ -1088,14 +1090,27 @@ void GameScreen::level4SecondFunction()
 
         connect(this, &GameScreen::enemyKilled, this, [this]{
             if (gameProgress == 5)
-                return;
+            {
+                deadEnemy->showBossButton();
+                connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]{
+                    fadeAwayAnimation(this, 1000);
+                    this -> setStyleSheet("#GameScreen {"
+                                          "border-image: url(:/images/images/Level 4 - Ogrodowa/Level3Background_3.png) 0 0 0 0 stretch stretch;"
+                                          "}");
+                    deadEnemy->hideBossButton();
+                    deadEnemy->hideTransitionButton();
+                    deadHero->showGoBackButton();
+                    fadeInAnimation(this, 1000);
+                    level4BossFight();
+                });
+            }
         });
 
         connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
             numberOfRounds = 0;
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
-            deadEnemy->hide();
+            deadHero->hide();
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
@@ -1103,6 +1118,202 @@ void GameScreen::level4SecondFunction()
             fight();
         });
     });
+}
+void GameScreen::level4BossFight()
+{
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    gameProgress = 0;
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Jakie zajadłe bestie!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 4 - Ogrodowa/RozmowaZBorowaPrzedWalka.txt", 34);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 4 - Ogrodowa/RozmowaZBorowaPrzedWalka.txt", 34);
+
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        switch(gameProgress)
+        {
+        case 0:
+            numberOfRounds = 0;
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            drawEnemy(2);
+            fight();
+            break;
+        case 1:
+            numberOfRounds = 0;
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            deadEnemy->hide();
+            drawEnemy(3);
+            fight();
+            break;
+        case 2:
+            delay(1000);
+            riDialog->setIcon(1);
+            riDialog->show();
+            connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
+                riDialog->hide();
+                level4PostLevelCleanup();
+            });
+            break;
+        }
+    });
+
+    connect(this, &GameScreen::enemyKilled, this, [this]{
+        switch(gameProgress)
+        {
+        case 1:
+            dialogs = new QString[2];
+            if (sex == 0)
+                dialogs[0] = "PODRÓŻNICZKA";
+            if (sex == 1)
+                dialogs[0] = "PODRÓŻNIK";
+            dialogs[1] = "*dyszy*";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 4 - Ogrodowa/PrzejscieDoPoteznejBorowy.txt", 12);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 4 - Ogrodowa/PrzejscieDoPoteznejBorowy.txt", 12);
+            break;
+        case 2:
+            dialogs = new QString[2];
+            dialogs[0] = "BORÓWA";
+            dialogs[1] = "Aaaa!";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 4 - Ogrodowa/RozmowaKoncowa.txt", 50);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 4 - Ogrodowa/RozmowaKoncowa.txt", 50);
+            break;
+        }
+    });
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level4RetreatFunction);
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        gameProgress = 0;
+        numberOfRounds = 0;
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        deadHero->hide();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(2);
+        fight();
+    });
+}
+void GameScreen::level4RetreatFunction()
+{
+    deadHero->hide();
+    deadHero->hideGoBackButton();
+    deadEnemy->showTransitionButton();
+    deadEnemy->showBossButton();
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+
+    fadeAwayAnimation(this, 1000);
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_2.png) 0 0 0 0 stretch stretch;"
+                        "}");
+
+    numberOfRounds = 0;
+    ui->enemyLabel->show();
+    ui->enemyHealthBar->show();
+    ui->enemyStatWidget->show();
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    drawEnemy(1);
+    fadeInAnimation(this, 1000);
+    fight();
+
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]{
+        fadeAwayAnimation(this, 1000);
+        this->setStyleSheet("#GameScreen {"
+                            "border-image: url(:/images/images/Level 4 - Ogrodowa/Level3Background_3.png) 0 0 0 0 stretch stretch;"
+                            "}");
+        deadEnemy->hideBossButton();
+        deadEnemy->hideTransitionButton();
+        deadHero->showGoBackButton();
+        fadeInAnimation(this, 1000);
+        level4BossFight();
+    });
+
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+}
+void GameScreen::level4PostLevelCleanup()
+{
+    fadeAwayAnimation(this, 1000);
+
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(riDialog, &RecoveredItemDialog::acceptMessage, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    deadHero->hideGoBackButton();
+    deadEnemy->showTransitionButton();
+
+    this -> setStyleSheet("#GameScreen {}");
+
+    gameLevel = 5;
+    gameProgress = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->dialogLabel->setText("");
+
+    fadeInAnimation(this, 1000);
+
+    level5FirstFunction();
+}
+
+//LEVEL 5 - CENTRAL SQUARE AGAIN
+void GameScreen::level5FirstFunction()
+{
+
 }
 
 //SHOP
@@ -1475,6 +1686,23 @@ void GameScreen::drawEnemy(int whatToDraw)
             eBaseAtt = drawStat(35);
             eBaseDef = drawStat(50);
             eBaseHp = drawStat(800);
+            enemyType = 1;
+        }
+        if (whatToDraw == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 4 - Ogrodowa/Borowa.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 45;
+            eBaseDef = 50;
+            eBaseHp = 1000;
+            enemyType = 2;
+        }
+        if (whatToDraw == 3)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 4 - Ogrodowa/PoteznaBorowa.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 50;
+            eBaseDef = 60;
+            eBaseHp = 1250;
+            enemyType = 3;
         }
         break;
     /*case 5:
@@ -1681,6 +1909,10 @@ int GameScreen::calculateLoot(int level, int enemyType)
     case 4:
         if (enemyType == 0)
             loot = 500;
+        if (enemyType == 1)
+            loot = 750;
+        if (enemyType == 3)
+            loot = 5000;
         break;
     default:
         loot = 0;
@@ -2079,7 +2311,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
         ui->continueButton->setEnabled(false);
         if (totalNumOfLines != 2)
             connectionHub(false, 0);
-        if (gameLevel == 3 && totalNumOfLines == 2)
+        if ((gameLevel == 3 || gameLevel == 4) && totalNumOfLines == 2)
             return;
         emit sceneEnded();
         return;
