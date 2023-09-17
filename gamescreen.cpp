@@ -1767,6 +1767,24 @@ void GameScreen::fight()
         {
             heroShield -= enemyRealDamage;
             ui->heroHealthBar->setValue(heroShield);
+            int rVal = rand() % 100 + 1;
+            if (rVal <= heroReflectionRate)
+            {
+                if (enemyHealth >= enemyRealDamage * 0.25)
+                {
+                    enemyHealth -= enemyRealDamage * 0.25;
+                    ui->enemyHealthBar->setValue(enemyHealth);
+                    ui->dialogLabel->setText("ODBIJASZ: " + QString::number(enemyRealDamage*0.25));
+                }
+                else
+                {
+                    enemyHealth = 0;
+                    ui->enemyHealthBar->setValue(0);
+                    enemyIsDead();
+                    emit enemyKilled();
+                    return;
+                }
+            }
         }
         else if (shieldOn == true && heroShield <= enemyRealDamage)
         {
