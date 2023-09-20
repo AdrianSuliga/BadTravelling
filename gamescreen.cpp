@@ -83,7 +83,8 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     nameToPath["BORÓWA"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/Borowa.png) 0 0 0 0 stretch stretch;";
     nameToPath["POTĘŻNA BORÓWA"] = "border-image: url(:/images/images/Level 4 - Ogrodowa/PoteznaBorowa.png) 0 0 0 0 stretch stretch;";
 
-    nameToPath["POTĘŻNY MAT-FIZ"] = "border-image: url(:/images/images/Level 5 - Central Square Again/PoteznyMatfiz.png) 0 0 0 0 stretch stretch;";
+    nameToPath["POTĘŻNY MATFIZ"] = "border-image: url(:/images/images/Level 5 - Central Square Again/PoteznyMatfiz.png) 0 0 0 0 stretch stretch;";
+    nameToPath["TRZECI"] = "border-image: url(:/images/images/Level 5 - Central Square Again/Trzeci.png) 0 0 0 0 stretch stretch;";
 
     nameToPath["DUCH ŻYDA"] = "border-image: url(:/images/images/Level 6 - Underworld/DuchZyda.png) 0 0 0 0 stretch stretch;";
     nameToPath["DUCHY ŻYDÓW"] = "border-image: url(:/images/images/Level 6 - Underworld/DuchyZydow.png) 0 0 0 0 stretch stretch;";
@@ -139,7 +140,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 5000;
+    wealth = 10000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -148,9 +149,9 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     weaponPrice = 100 * weaponLevel * weaponLevel * cbrt(weaponLevel) + 100;
     shieldPrice = 90 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 90;
     healthPrice = 120 * healthLevel * healthLevel * cbrt(healthLevel) + 120;
-    blahajPrice = 10000;
-    manulPrice = 50000;
-    drPieprzerPrice = 100000;
+    blahajPrice = 5000;
+    manulPrice = 10000;
+    drPieprzerPrice = 20000;
 
     blahajOwned = false;
     manulOwned = false;
@@ -160,7 +161,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level4FirstFunction();
+    level5FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -982,8 +983,6 @@ void GameScreen::level3PostLevelCleanup()
 //LEVEL 4 - OGRODOWA
 void GameScreen::level4FirstFunction()
 {
-    gameLevel = 4;
-    gameProgress = 0;
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_1.png) 0 0 0 0 stretch stretch;"
                         "}");
@@ -1170,6 +1169,7 @@ void GameScreen::level4BossFight()
             riDialog->show();
             connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
                 riDialog->hide();
+                ui->keyLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
                 level4PostLevelCleanup();
             });
             break;
@@ -1312,6 +1312,270 @@ void GameScreen::level4PostLevelCleanup()
 
 //LEVEL 5 - CENTRAL SQUARE AGAIN
 void GameScreen::level5FirstFunction()
+{
+    gameLevel = 5;
+    gameProgress = 0;
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_1.png) 0 0 0 0 stretch stretch;"
+                          "}");
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Podróżowanie po Włoszczowie idzie mi coraz lepiej";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 5 - Central Square Again/MonologPoPrzybyciu.txt", 22);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/MonologPoPrzybyciu.txt", 22);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 4)
+                level5SecondFunction();
+        });
+        connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+            numberOfRounds = 0;
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(0);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(0);
+            fight();
+        });
+    });
+}
+void GameScreen::level5SecondFunction()
+{
+    fadeAwayAnimation(this, 1000);
+
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2.png) 0 0 0 0 stretch stretch;"
+                        "}");
+    gameProgress = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+
+    fadeInAnimation(this, 1000);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "HAHAHAHAHAHA";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 5 - Central Square Again/PrzejscieDoDresow.txt", 42);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/PrzejscieDoDresow.txt", 42);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(1);
+        fight();
+
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 5)
+            {
+                deadEnemy->showBossButton();
+                connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level5BossFight);
+            }
+        });
+        connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+            numberOfRounds = 0;
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(1);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(1);
+            fight();
+        });
+    });
+}
+void GameScreen::level5BossFight()
+{
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
+    deadHero->showGoBackButton();
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Nawet nie wiecie jakie to satysfakcjonujące!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 5 - Central Square Again/PrzejscieDoKacpra.txt", 56);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/PrzejscieDoKacpra.txt", 56);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(2);
+        fight();
+
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            deadHero->hide();
+            drawEnemy(2);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level5RetreatFunction);
+
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            dialogs = new QString[2];
+            dialogs[0] = "POTĘŻNY MATFIZ";
+            dialogs[1] = "Jebać Legnicęęęęę...ęęęę...";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (manulOwned == true && sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 5 - Central Square Again/RozmowaGdyMaszManula.txt", 44);
+            if (manulOwned == true && sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/RozmowaGdyMaszManula.txt", 44);
+            if (manulOwned == false && sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 5 - Central Square Again/RozmowaGdyNieMaszManula.txt", 20);
+            if (manulOwned == false && sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/RozmowaGdyNieMaszManula.txt", 20);
+            connect(this, &GameScreen::sceneEnded, this, [this]{
+                level5PostLevelCleanup();
+                if (manulOwned == true)
+                    level6FirstFunction();
+                if (manulOwned == false)
+                    level7FirstFunction();
+            });
+        });
+    });
+}
+void GameScreen::level5RetreatFunction()
+{
+    fadeAwayAnimation(this, 1000);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    deadEnemy->showBossButton();
+    deadEnemy->showTransitionButton();
+    deadHero->hideGoBackButton();
+    gameProgress = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    deadHero->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    fadeInAnimation(this, 1000);
+
+    drawEnemy(1);
+    fight();
+
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level5BossFight);
+
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+
+}
+void GameScreen::level5PostLevelCleanup()
+{
+
+}
+
+//LEVEL 6 - UNDERWORLD
+void GameScreen::level6FirstFunction()
+{
+
+}
+
+//LEVEL 7 - WIEJSKA
+void GameScreen::level7FirstFunction()
 {
 
 }
@@ -1705,9 +1969,31 @@ void GameScreen::drawEnemy(int whatToDraw)
             enemyType = 3;
         }
         break;
-    /*case 5:
+    case 5:
+        if (whatToDraw == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Bezdomny.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(40);
+            eBaseDef = drawStat(40);
+            eBaseHp = drawStat(1000);
+        }
+        if (whatToDraw == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 1 - Central Square/Dresiarz.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(50);
+            eBaseDef = drawStat(50);
+            eBaseHp = drawStat(1500);
+        }
+        if (whatToDraw == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 5 - Central Square Again/PoteznyMatfiz.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(60);
+            eBaseDef = drawStat(60);
+            eBaseHp = drawStat(2000);
+        }
+        enemyType = whatToDraw;
         break;
-    case 6:
+    /*case 6:
         break;
     case 7:
         break;
@@ -1768,22 +2054,11 @@ void GameScreen::fight()
             heroShield -= enemyRealDamage;
             ui->heroHealthBar->setValue(heroShield);
             int rVal = rand() % 100 + 1;
-            if (rVal <= heroReflectionRate)
+            if (rVal <= heroReflectionRate && enemyHealth >= enemyRealDamage * 0.25)
             {
-                if (enemyHealth >= enemyRealDamage * 0.25)
-                {
-                    enemyHealth -= enemyRealDamage * 0.25;
-                    ui->enemyHealthBar->setValue(enemyHealth);
-                    ui->dialogLabel->setText("ODBIJASZ: " + QString::number(enemyRealDamage*0.25));
-                }
-                else
-                {
-                    enemyHealth = 0;
-                    ui->enemyHealthBar->setValue(0);
-                    enemyIsDead();
-                    emit enemyKilled();
-                    return;
-                }
+                enemyHealth -= enemyRealDamage * 0.25;
+                ui->enemyHealthBar->setValue(enemyHealth);
+                ui->dialogLabel->setText("ODBIJASZ: " + QString::number(enemyRealDamage*0.25));
             }
         }
         else if (shieldOn == true && heroShield <= enemyRealDamage)
@@ -1814,8 +2089,25 @@ void GameScreen::fight()
             {
                 heroHealth = 0;
                 ui->heroHealthBar->setValue(0);
-                heroIsDead();
-                emit heroKilled();
+                if (blahajOwned == true)
+                {
+                    delay(500);
+                    heroHealth += heroMaxHealth / 2;
+                    ui->heroHealthBar->setValue(heroHealth);
+                    blahajOwned = false;
+                    ui->blahajSlotLabel->setStyleSheet("");
+                    ui->blahajShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Special/Blahaj.png) 0 0 0 0 stretch stretch;");
+                    ui->blahajShopPriceLabel->setText("5000");
+                    ui->blahajShopLabel->setText("");
+                    numberOfRounds++;
+                    fight();
+                    return;
+                }
+                else
+                {
+                    heroIsDead();
+                    emit heroKilled();
+                }
             }
         }
         else if (shieldOn == false && heroHealth > enemyRealDamage)
@@ -1827,9 +2119,26 @@ void GameScreen::fight()
         {
             heroHealth = 0;
             ui->heroHealthBar->setValue(heroHealth);
-            heroIsDead();
-            emit heroKilled();
-            return;
+            if (blahajOwned == true)
+            {
+                delay(500);
+                heroHealth += heroMaxHealth / 2;
+                ui->heroHealthBar->setValue(heroHealth);
+                blahajOwned = false;
+                ui->blahajSlotLabel->setStyleSheet("");
+                ui->blahajShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Special/Blahaj.png) 0 0 0 0 stretch stretch;");
+                ui->blahajShopPriceLabel->setText("5000");
+                ui->blahajShopLabel->setText("");
+                numberOfRounds++;
+                fight();
+                return;
+            }
+            else
+            {
+                heroIsDead();
+                emit heroKilled();
+                return;
+            }
         }
         delay(200);
         ui->dialogLabel->setText("");
@@ -1931,6 +2240,14 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 750;
         if (enemyType == 3)
             loot = 5000;
+        break;
+    case 5:
+        if (enemyType == 0)
+            loot = 1000;
+        if (enemyType == 1)
+            loot = 1250;
+        if (enemyType == 2)
+            loot = 7500;
         break;
     default:
         loot = 0;
@@ -2329,7 +2646,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
         ui->continueButton->setEnabled(false);
         if (totalNumOfLines != 2)
             connectionHub(false, 0);
-        if ((gameLevel == 3 || gameLevel == 4) && totalNumOfLines == 2)
+        if ((gameLevel == 3 || gameLevel == 4 || gameLevel == 5) && totalNumOfLines == 2)
             return;
         emit sceneEnded();
         return;
