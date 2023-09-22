@@ -52,6 +52,9 @@ private slots:
     void level5PostLevelCleanup();
     //LEVEL 6
     void level6FirstFunction();
+    void level6SecondFunction();
+    void level6BossFight();
+    void level6RetreatFunction();
     //LEVEL 7
     void level7FirstFunction();
     //SHOP
@@ -93,7 +96,7 @@ signals:
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken;
+    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved;
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
