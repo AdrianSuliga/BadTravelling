@@ -135,12 +135,14 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     shieldOn = false;
     shieldBroken = false;
 
+    curseRemoved = false;
+
     enemyAttack = -1;
     enemyDefense = -1;
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 10000;
+    wealth = 20000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -161,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level5FirstFunction();
+    level6FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -1565,11 +1567,225 @@ void GameScreen::level5RetreatFunction()
 }
 void GameScreen::level5PostLevelCleanup()
 {
+    fadeAwayAnimation(this, 1000);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    deadEnemy->hideBossButton();
+    deadEnemy->showTransitionButton();
+    deadHero->hideGoBackButton();
 
+    gameProgress = 0;
+    numberOfRounds = 0;
+
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->dialogLabel->setText("");
 }
 
 //LEVEL 6 - UNDERWORLD
 void GameScreen::level6FirstFunction()
+{
+    gameLevel = 6;
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 6 - Underworld/Level6Background.png) 0 0 0 0 stretch stretch;"
+                        "}");
+    fadeInAnimation(this, 1000);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Brrrrr!!!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/MonologPoczatkowy.txt", 18);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/MonologPoczatkowy.txt", 18);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        deadEnemy -> hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 4)
+                level6SecondFunction();
+        });
+    });
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(0);
+        fight();
+    });
+}
+void GameScreen::level6SecondFunction()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+
+    gameProgress = 0;
+    numberOfRounds = 0;
+
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Zaraza!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/DialogZWyjasnieniem.txt", 86);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/DialogZWyjasnieniem.txt", 86);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        deadEnemy -> hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(0);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 5)
+            {
+                deadEnemy->showBossButton();
+                connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level6BossFight);
+            }
+        });
+        connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+            numberOfRounds = 0;
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(1);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(1);
+            fight();
+        });
+    });
+}
+void GameScreen::level6BossFight()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    deadHero->showGoBackButton();
+    deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
+
+    dialogs = new QString[2];
+    dialogs[0] = "DUCHY ŻYDÓW";
+    dialogs[1] = "AAAAAAAAAAA!!!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(2);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            dialogs = new QString[2];
+            if (sex == 0)
+                dialogs[0] = "PODRÓŻNICZKA";
+            if (sex == 1)
+                dialogs[0] = "PODRÓŻNIK";
+            dialogs[1] = "Wow!";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (sex == 0)
+                loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/MonologPoPokonaniuJaworka.txt", 8);
+            if (sex == 1)
+                loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/MonologPoPokonaniuJaworka.txt", 8);
+            connect(this, &GameScreen::sceneEnded, this, [this]{
+                disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+                fadeAwayAnimation(this, 1000);
+                this->setStyleSheet("#GameScreen {"
+                                    "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
+                                    "}");
+                fadeInAnimation(this, 1000);
+                if (sex == 0)
+                    loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt", 14);
+                if (sex == 1)
+                    loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt", 14);
+                connect(this, &GameScreen::sceneEnded, this, &GameScreen::level7FirstFunction);
+            });
+        });
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            drawEnemy(2);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level6RetreatFunction);
+    });
+}
+
+void GameScreen::level6RetreatFunction()
 {
 
 }
@@ -1993,9 +2209,34 @@ void GameScreen::drawEnemy(int whatToDraw)
         }
         enemyType = whatToDraw;
         break;
-    /*case 6:
+    case 6:
+        enemyType = rand() % 2;
+        if (whatToDraw == 2)
+            enemyType = 2;
+
+        if (enemyType == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 6 - Underworld/DuchZyda.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(60);
+            eBaseDef = drawStat(60);
+            eBaseHp = drawStat(1700);
+        }
+        if (enemyType == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 6 - Underworld/DuchyZydow.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(55);
+            eBaseDef = drawStat(55);
+            eBaseHp = drawStat(1800);
+        }
+        if (enemyType == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 6 - Underworld/JacekJaworek.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(60);
+            eBaseDef = drawStat(60);
+            eBaseHp = drawStat(2500);
+        }
         break;
-    case 7:
+    /*case 7:
         break;
     case 8:
         break;*/
@@ -2248,6 +2489,12 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 1250;
         if (enemyType == 2)
             loot = 7500;
+        break;
+    case 6:
+        if (enemyType == 0 || enemyType == 1)
+            loot = 200;
+        if (enemyType == 2)
+            loot = 10000;
         break;
     default:
         loot = 0;
