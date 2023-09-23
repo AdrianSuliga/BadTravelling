@@ -1744,11 +1744,8 @@ void GameScreen::level6BossFight()
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
             dialogs = new QString[2];
-            if (sex == 0)
-                dialogs[0] = "PODRÓŻNICZKA";
-            if (sex == 1)
-                dialogs[0] = "PODRÓŻNIK";
-            dialogs[1] = "Wow!";
+            dialogs[0] = "JACEK JAWOREK";
+            dialogs[1] = "Nieeeeeeee!!!";
             showOneDialog(2);
             delete[] dialogs;
             dialogs = nullptr;
@@ -1763,11 +1760,23 @@ void GameScreen::level6BossFight()
                                     "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
                                     "}");
                 fadeInAnimation(this, 1000);
+                dialogs = new QString[2];
+                if (sex == 0)
+                    dialogs[0] = "PODRÓŻNICZKA";
+                if (sex == 1)
+                    dialogs[0] = "PODRÓŻNIK";
+                dialogs[1] = "Wow!";
+                showOneDialog(2);
+                delete[] dialogs;
+                dialogs = nullptr;
                 if (sex == 0)
                     loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt", 14);
                 if (sex == 1)
                     loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt", 14);
-                connect(this, &GameScreen::sceneEnded, this, &GameScreen::level7FirstFunction);
+                connect(this, &GameScreen::sceneEnded, this, [this]{
+                    level6PostLevelCleanup();
+                    level7FirstFunction();
+                });
             });
         });
         connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
@@ -1784,16 +1793,76 @@ void GameScreen::level6BossFight()
         connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level6RetreatFunction);
     });
 }
-
 void GameScreen::level6RetreatFunction()
 {
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    deadEnemy->showBossButton();
+    deadEnemy->showTransitionButton();
+    deadHero->hideGoBackButton();
+    gameProgress = 0;
+    numberOfRounds = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    deadHero->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    drawEnemy(1);
+    fight();
 
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level6BossFight);
+
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(1);
+        fight();
+    });
+}
+void GameScreen::level6PostLevelCleanup()
+{
+    fadeAwayAnimation(this, 1000);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    deadEnemy->hideBossButton();
+    deadEnemy->showTransitionButton();
+    deadHero->hideGoBackButton();
+
+    gameProgress = 0;
+    numberOfRounds = 0;
+
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->dialogLabel->setText("");
 }
 
 //LEVEL 7 - WIEJSKA
 void GameScreen::level7FirstFunction()
 {
-
+    gameLevel = 7;
 }
 
 //SHOP
@@ -2893,7 +2962,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
         ui->continueButton->setEnabled(false);
         if (totalNumOfLines != 2)
             connectionHub(false, 0);
-        if ((gameLevel == 3 || gameLevel == 4 || gameLevel == 5) && totalNumOfLines == 2)
+        if ((gameLevel >= 3 && gameLevel <= 8) && totalNumOfLines == 2)
             return;
         emit sceneEnded();
         return;
