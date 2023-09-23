@@ -55,6 +55,7 @@ private slots:
     void level6SecondFunction();
     void level6BossFight();
     void level6RetreatFunction();
+    void level6PostLevelCleanup();
     //LEVEL 7
     void level7FirstFunction();
     //SHOP
