@@ -90,9 +90,8 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     nameToPath["DUCHY ŻYDÓW"] = "border-image: url(:/images/images/Level 6 - Underworld/DuchyZydow.png) 0 0 0 0 stretch stretch;";
     nameToPath["JACEK JAWOREK"] = "border-image: url(:/images/images/Level 6 - Underworld/JacekJaworek.png) 0 0 0 0 stretch stretch;";
 
-    nameToPath["ALPHA"] = "border-image: url(:/images/images/Level 7 - Wiejska/Alpha.png) 0 0 0 0 stretch stretch;";
+    nameToPath["ALFA"] = "border-image: url(:/images/images/Level 7 - Wiejska/Alpha.png) 0 0 0 0 stretch stretch;";
     nameToPath["OMEGA"] = "border-image: url(:/images/images/Level 7 - Wiejska/Omega.png) 0 0 0 0 stretch stretch;";
-    nameToPath["JĘDRZEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/Jedrzej.png) 0 0 0 0 stretch stretch;";
     nameToPath["SEZY"] = "border-image: url(:/images/images/Level 7 - Wiejska/Sezy.png) 0 0 0 0 stretch stretch;";
     nameToPath["MIESZKAŃCY WIEJSKIEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej.png) 0 0 0 0 stretch stretch;";
     nameToPath["REZYDENCI WIEJSKIEJ"] = "border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej_2.png) 0 0 0 0 stretch stretch;";
@@ -142,7 +141,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 20000;
+    wealth = 35000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +162,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level6FirstFunction();
+    level7FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -1619,7 +1618,7 @@ void GameScreen::level6FirstFunction()
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
-            if (gameProgress == 4)
+            if (gameProgress == 2)
                 level6SecondFunction();
         });
     });
@@ -1681,7 +1680,7 @@ void GameScreen::level6SecondFunction()
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
-            if (gameProgress == 5)
+            if (gameProgress == 2)
             {
                 deadEnemy->showBossButton();
                 connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level6BossFight);
@@ -1715,8 +1714,8 @@ void GameScreen::level6BossFight()
 {
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
-    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
-    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
     deadHero->showGoBackButton();
     deadEnemy->hideBossButton();
     deadEnemy->hideTransitionButton();
@@ -1728,7 +1727,10 @@ void GameScreen::level6BossFight()
     delete[] dialogs;
     dialogs = nullptr;
     if (sex == 0)
+    {
         loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
+        qDebug() << "CALLED";
+    }
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
     connect(this, &GameScreen::sceneEnded, this, [this]{
@@ -1851,6 +1853,7 @@ void GameScreen::level6PostLevelCleanup()
 
     gameProgress = 0;
     numberOfRounds = 0;
+    curseRemoved = true;
 
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
@@ -1863,6 +1866,83 @@ void GameScreen::level6PostLevelCleanup()
 void GameScreen::level7FirstFunction()
 {
     gameLevel = 7;
+    if (curseRemoved)
+    {
+        this -> setStyleSheet("#GameScreen {"
+                              "border-image: url(:/images/images/Level 7 - Wiejska/Level7Background_1_Fixed.png) 0 0 0 0 stretch stretch;"
+                              "}");
+    }
+    else
+    {
+        this -> setStyleSheet("#GameScreen {"
+                              "border-image: url(:/images/images/Level 7 - Wiejska/Level7Background_1.png) 0 0 0 0 stretch stretch;"
+                              "}");
+    }
+    fadeInAnimation(this, 1000);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Ach Wiejska";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 7 - Wiejska/Dialog_01.txt", 12);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialog_01.txt", 12);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        numberOfRounds = 0;
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(0);
+        fight();
+        connect(this, &GameScreen::enemyKilled, this, [this]{
+            if (gameProgress == 8)
+                level7SecondFunction();
+        });
+        connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(0);
+            fight();
+        });
+        connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            drawEnemy(0);
+            fight();
+        });
+    });
+}
+void GameScreen::level7SecondFunction()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    gameProgress = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    numberOfRounds = 0;
+
 }
 
 //SHOP
@@ -2002,9 +2082,9 @@ void GameScreen::userWantsToBuyHealth()
         wealth -= healthPrice;
         healthLevel++;
         if (sex == 0)
-            heroMaxHealth += healthLevel * 12;
+            heroMaxHealth += healthLevel * 15;
         if (sex == 1)
-            heroMaxHealth += healthLevel * 10;
+            heroMaxHealth += healthLevel * 18;
         if (healthLevel * 3 <= 75)
             heroHealRate = 3 * healthLevel;
         else if (healthLevel * 3 > 75)
@@ -2300,14 +2380,61 @@ void GameScreen::drawEnemy(int whatToDraw)
         if (enemyType == 2)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 6 - Underworld/JacekJaworek.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = drawStat(60);
+            eBaseAtt = drawStat(80);
             eBaseDef = drawStat(60);
             eBaseHp = drawStat(2500);
         }
         break;
-    /*case 7:
+    case 7:
+        if (whatToDraw == 0)
+            enemyType = rand() % 2;
+        else
+            enemyType = whatToDraw;
+
+        if (enemyType == 0)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(90);
+            eBaseDef = drawStat(120);
+            eBaseHp = drawStat(2000);
+        }
+        if (enemyType == 1)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/MieszkancyWiejskiej_2.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(90);
+            eBaseDef = drawStat(130);
+            eBaseHp = drawStat(2000);
+        }
+        if (enemyType == 2)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/Omega.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 100;
+            eBaseDef = 150;
+            eBaseHp = 3000;
+        }
+        if (enemyType == 3)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/Sezy.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = drawStat(100);
+            eBaseDef = drawStat(140);
+            eBaseHp = drawStat(2750);
+        }
+        if (enemyType == 4)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/Alpha.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 160;
+            eBaseDef = 175;
+            eBaseHp = 4000;
+        }
+        if (enemyType == 5)
+        {
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/SeniorHiszpanek.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 175;
+            eBaseDef = 180;
+            eBaseHp = 4500;
+        }
         break;
-    case 8:
+    /*case 8:
         break;*/
     }
     enemyAttack = eBaseAtt;
@@ -2492,6 +2619,8 @@ void GameScreen::fight()
 int GameScreen::drawStat(int base)
 {
     int result = rand() % static_cast<int>(0.4*base + 1) + static_cast<int>(0.8*base);
+    if (gameLevel == 7)
+        result = rand() % static_cast<int>(0.2*base + 1) + static_cast<int>(0.9*base);
     return result;
 }
 
@@ -2561,9 +2690,19 @@ int GameScreen::calculateLoot(int level, int enemyType)
         break;
     case 6:
         if (enemyType == 0 || enemyType == 1)
-            loot = 200;
+            loot = 500;
         if (enemyType == 2)
             loot = 10000;
+        break;
+    case 7:
+        if (enemyType == 0 || enemyType == 1)
+            loot = 2000;
+        if (enemyType == 2)
+            loot = 10000;
+        if (enemyType == 3)
+            loot = 10000;
+        if (enemyType == 5)
+            loot = 25000;
         break;
     default:
         loot = 0;
