@@ -59,6 +59,9 @@ private slots:
     //LEVEL 7
     void level7FirstFunction();
     void level7SecondFunction();
+    void level7ThirdFunction();
+    void level7BossFight();
+    void level7RetreatFunction();
     //SHOP
     void connectShop();
     void disconnectShop();
