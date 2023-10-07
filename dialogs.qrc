@@ -44,5 +44,51 @@
         <file>dialogs/female/Level 4 - Ogrodowa/PrzejscieDoPoteznejBorowy.txt</file>
         <file>dialogs/female/Level 4 - Ogrodowa/RozmowaKoncowa.txt</file>
         <file>dialogs/female/Level 4 - Ogrodowa/RozmowaZBorowaPrzedWalka.txt</file>
+        <file>dialogs/male/Level 5 - Central Square Again/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/male/Level 5 - Central Square Again/PrzejscieDoDresow.txt</file>
+        <file>dialogs/male/Level 5 - Central Square Again/PrzejscieDoKacpra.txt</file>
+        <file>dialogs/male/Level 5 - Central Square Again/RozmowaGdyMaszManula.txt</file>
+        <file>dialogs/male/Level 5 - Central Square Again/RozmowaGdyNieMaszManula.txt</file>
+        <file>dialogs/female/Level 5 - Central Square Again/MonologPoPrzybyciu.txt</file>
+        <file>dialogs/female/Level 5 - Central Square Again/PrzejscieDoDresow.txt</file>
+        <file>dialogs/female/Level 5 - Central Square Again/PrzejscieDoKacpra.txt</file>
+        <file>dialogs/female/Level 5 - Central Square Again/RozmowaGdyMaszManula.txt</file>
+        <file>dialogs/female/Level 5 - Central Square Again/RozmowaGdyNieMaszManula.txt</file>
+        <file>dialogs/female/Level 6 - Underworld/DialogZWyjasnieniem.txt</file>
+        <file>dialogs/female/Level 6 - Underworld/MonologPoczatkowy.txt</file>
+        <file>dialogs/male/Level 6 - Underworld/DialogZWyjasnieniem.txt</file>
+        <file>dialogs/male/Level 6 - Underworld/MonologPoczatkowy.txt</file>
+        <file>dialogs/female/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt</file>
+        <file>dialogs/male/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt</file>
+        <file>dialogs/male/Level 6 - Underworld/MonologPoPokonaniuJaworka.txt</file>
+        <file>dialogs/male/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt</file>
+        <file>dialogs/female/Level 6 - Underworld/MonologPoPokonaniuJaworka.txt</file>
+        <file>dialogs/female/Level 6 - Underworld/MonologPoWyjsciuNaPowierzchnie.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialog_01.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialog_02.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialog_03.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialog_04.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_05_AfterSezyFight.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_05_DrNotOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_05_DrOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_06_DrNotOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_06_DrOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_07_DrNotOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_07_DrOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt</file>
+        <file>dialogs/female/Level 7 - Wiejska/Dialogs_08_DrOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialog_01.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialog_02.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialog_03.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialog_04.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_05_AfterSezyFight.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_05_DrNotOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_05_DrOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_06_DrNotOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_06_DrOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_07_DrNotOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_07_DrOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt</file>
+        <file>dialogs/male/Level 7 - Wiejska/Dialogs_08_DrOwned.txt</file>
     </qresource>
 </RCC>
