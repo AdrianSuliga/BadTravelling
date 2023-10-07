@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 45000;
+    wealth = 75000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -1994,7 +1994,6 @@ void GameScreen::level7SecondFunction()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialog_03.txt", 22);
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this]{
-        fadeAwayAnimation(this, 1000);
         level7RetreatFunction();
     });
     connect(this, &GameScreen::sceneEnded, this, [this]{
@@ -2128,6 +2127,10 @@ void GameScreen::level7BossFight()
     numberOfRounds = 0;
     gameProgress = 0;
     heroHealth = heroMaxHealth;
+    if (deadEnemy->isVisible())
+        deadEnemy->hide();
+    if (deadHero->isVisible())
+        deadHero->hide();
     ui->heroHealthBar->setValue(heroHealth);
     ui->dialogLabel->setText("");
     fadeInAnimation(this, 1000);
@@ -2150,6 +2153,7 @@ void GameScreen::level7BossFight()
     if (sex == 1 && drPieprzerOwned == false)
         loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_06_DrNotOwned.txt", 32);
     connect(this, &GameScreen::sceneEnded, this, [this]{
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         numberOfRounds = 0;
         deadEnemy->hide();
         ui->enemyLabel->show();
@@ -2158,7 +2162,22 @@ void GameScreen::level7BossFight()
         drawEnemy(4);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
-
+            disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+            dialogs = new QString[2];
+            dialogs[0] = "ALFA";
+            dialogs[1] = "Nie mam na was czasu!";
+            showOneDialog(2);
+            delete[] dialogs;
+            dialogs = nullptr;
+            if (sex == 0 && drPieprzerOwned == true)
+                loadScene(":/dialogs/dialogs/female/Level 7 - Wiejska/Dialogs_07_DrOwned.txt", 52);
+            if (sex == 0 && drPieprzerOwned == false)
+                loadScene(":/dialogs/dialogs/female/Level 7 - Wiejska/Dialogs_07_DrNotOwned.txt", 52);
+            if (sex == 1 && drPieprzerOwned == true)
+                loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_07_DrOwned.txt", 52);
+            if (sex == 1 && drPieprzerOwned == false)
+                loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_07_DrNotOwned.txt", 52);
+            connect(this, &GameScreen::sceneEnded, this, &GameScreen::level7AlfaFight);
         });
         connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]{
             numberOfRounds = 0;
@@ -2174,12 +2193,52 @@ void GameScreen::level7BossFight()
         connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level7RetreatFunction);
     });
 }
+void GameScreen::level7AlfaFight()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    numberOfRounds = 0;
+    gameProgress = 0;
+    deadEnemy->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+
+    drawEnemy(5);
+    fight();
+
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, &GameScreen::level7BossFight);
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level7RetreatFunction);
+    connect(this, &GameScreen::enemyKilled, this, [this]{
+        dialogs = new QString[2];
+        dialogs[0] = "SENIOR HISZPANEK";
+        dialogs[1] = "Nieeee!!!";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0 && drPieprzerOwned == true)
+            loadScene(":/dialogs/dialogs/female/Level 7 - Wiejska/Dialogs_08_DrOwned.txt", 52);
+        if (sex == 0 && drPieprzerOwned == false)
+            loadScene(":/dialogs/dialogs/female/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt", 36);
+        if (sex == 1 && drPieprzerOwned == true)
+            loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_08_DrOwned.txt", 52);
+        if (sex == 1 && drPieprzerOwned == false)
+            loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt", 36);
+        riDialog->show();
+        riDialog->setIcon(3);
+        connect(riDialog, &RecoveredItemDialog::acceptMessage, this, &GameScreen::level7PostLevelCleanup);
+    });
+}
 void GameScreen::level7RetreatFunction()
 {
+    fadeAwayAnimation(this, 1000);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+
     deadEnemy->showBossButton();
     deadEnemy->showTransitionButton();
     deadHero->hideGoBackButton();
@@ -2192,6 +2251,8 @@ void GameScreen::level7RetreatFunction()
     ui->enemyStatWidget->show();
     ui->enemyHealthBar->show();
     ui->enemyLabel->setStyleSheet("");
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
     if (curseRemoved)
     {
         this->setStyleSheet("#GameScreen {"
@@ -2234,6 +2295,36 @@ void GameScreen::level7RetreatFunction()
         deadEnemy->hideBossButton();
         level7SecondFunction();
     });
+}
+void GameScreen::level7PostLevelCleanup()
+{
+    riDialog->hide();
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(riDialog, nullptr, nullptr, nullptr);
+
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+
+    numberOfRounds = 0;
+    gameProgress = 0;
+    gameLevel = 8;
+
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
+    ui->dialogLabel->setText("");
+
+    level8FirstFunction();
+}
+
+//LEVEL 8 - SIKORSKI HIGH
+void GameScreen::level8FirstFunction()
+{
+    fadeAwayAnimation(this, 1000);
+    this -> setStyleSheet("");
+    fadeInAnimation(this, 1000);
 }
 
 //SHOP
@@ -2713,20 +2804,20 @@ void GameScreen::drawEnemy(int whatToDraw)
         if (enemyType == 4)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/Alpha.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 160;
-            eBaseDef = 175;
-            eBaseHp = 4000;
+            eBaseAtt = 140;
+            eBaseDef = 150;
+            eBaseHp = 3500;
         }
         if (enemyType == 5)
         {
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 7 - Wiejska/SeniorHiszpanek.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 175;
-            eBaseDef = 180;
-            eBaseHp = 4500;
+            eBaseAtt = 150;
+            eBaseDef = 150;
+            eBaseHp = 4000;
         }
         break;
-    /*case 8:
-        break;*/
+    case 8:
+        break;
     }
     enemyAttack = eBaseAtt;
     enemyDefense = eBaseDef;
@@ -2987,13 +3078,15 @@ int GameScreen::calculateLoot(int level, int enemyType)
         break;
     case 7:
         if (enemyType == 0 || enemyType == 1)
-            loot = 2000;
+            loot = 2500;
         if (enemyType == 2)
             loot = 10000;
         if (enemyType == 3)
             loot = 10000;
         if (enemyType == 5)
             loot = 25000;
+        break;
+    case 8:
         break;
     default:
         loot = 0;
