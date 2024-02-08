@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 75000;
+    wealth = 1000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level7FirstFunction();
+    level1MainFunction();
 }
 
 GameScreen::~GameScreen()
@@ -406,7 +406,7 @@ void GameScreen::level2MainFunction()
     numberOfRounds = 0;
     spawnEnemy(0, 0, 1, 1);
     gameLevel = 2;
-    //fadeInAnimation(this, 2000);
+    fadeInAnimation(this, 2000);
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -626,6 +626,7 @@ void GameScreen::level3MainFunction()
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
+    deadEnemy->showTransitionButton();
     fadeInAnimation(this, 2000);
 
     dialogs = new QString[2];
@@ -977,8 +978,6 @@ void GameScreen::level3PostLevelCleanup()
     ui->nameLabel->setText("");
     ui->dialogLabel->setText("");
 
-    fadeInAnimation(this, 2000);
-
     level4FirstFunction();
 }
 
@@ -988,7 +987,7 @@ void GameScreen::level4FirstFunction()
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_1.png) 0 0 0 0 stretch stretch;"
                         "}");
-
+    fadeInAnimation(this, 2000);
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -1006,6 +1005,8 @@ void GameScreen::level4FirstFunction()
     connect(this, &GameScreen::sceneEnded, this, [this]{
         numberOfRounds = 0;
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->enemyHealthBar->show();
+        ui->enemyStatWidget->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(0);

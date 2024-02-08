@@ -10,7 +10,7 @@ TitleScreen::TitleScreen(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int id = QFontDatabase::addApplicationFont(":/other/other/Girassol-Regular.ttf");
+    int id = QFontDatabase::addApplicationFont(":/other/other/Fonts/Girassol-Regular.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont Girassol(family);
 

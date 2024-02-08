@@ -1,0 +1,34 @@
+PODRÓŻNICZKA
+Dłużej nie wytrzymam!
+PODRÓŻNICZKA
+Muszę odpocząć
+PODRÓŻNICZKA
+Znaleźć jakieś bezpieczne miejsce
+PODRÓŻNICZKA
+Ten dom wygląda ładnie
+PODRÓŻNICZKA
+Może uda mi się tam przeczekać
+...
+Rozpoczynasz z zapałem próby dostania się do środka
+...
+Okazują się one jednak dość... nieporadne
+...
+A co gorsza
+...
+Przyciągają uwagę...
+...
+KOGOŚ
+PODRÓŻNICZKA
+Hm? Kim jesteś?
+BORÓWA
+Brachu wolisz nie wiedzieć
+BORÓWA
+Tak cię zapytam
+BORÓWA
+Lubisz jagodzianki?
+PODRÓŻNICZKA
+Pewnie! W końcu ktoś gościnny
+BORÓWA
+Jaka niewinna... ona jeszcze nie wie
+PODRÓŻNICZKA
+CO TO ZA SPOJRZENIE?!

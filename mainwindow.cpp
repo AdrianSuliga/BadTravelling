@@ -44,7 +44,7 @@ void MainWindow::unmaximizeIt()
 void MainWindow::setTitleScreen()
 {
     tS = new TitleScreen();
-    tB = new TitleBar();
+    tB = new TitleBar(this);
     tB -> setFixedHeight(30);
 
     mainLayout = new QVBoxLayout(ui->centralwidget);

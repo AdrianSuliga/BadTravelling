@@ -15,6 +15,9 @@ class TitleBar : public QWidget
 public:
     explicit TitleBar(QWidget *parent = nullptr);
     ~TitleBar();
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
 signals:
     void minimise();
@@ -24,10 +27,11 @@ private slots:
     void on_minimiseButton_clicked();
     void on_maximiseButton_clicked();
     void on_exitButton_clicked();
-
 private:
     Ui::TitleBar *ui;
     QFont Garissol;
+    QWidget *m_parent;
+    QPoint mousePos;
 };
 
 #endif // TITLEBAR_H

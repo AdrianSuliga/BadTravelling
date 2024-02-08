@@ -53,11 +53,7 @@ border-width: 5px;
      <item>
       <widget class="QLabel" name="label_2">
        <property name="styleSheet">
-        <string notr="true">background-color: rgba(150,150,150,50);
-border-radius: 10px;
-border-style: solid;
-border-color: rgb(180,180,180);
-border-width: 3px;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>

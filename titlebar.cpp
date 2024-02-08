@@ -3,6 +3,8 @@
 #include <QStyleOption>
 #include <QFontDatabase>
 #include <QPainter>
+#include <QMouseEvent>
+#include <QDebug>
 
 TitleBar::TitleBar(QWidget *parent) :
     QWidget(parent),
@@ -10,16 +12,34 @@ TitleBar::TitleBar(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    int id = QFontDatabase::addApplicationFont(":/other/other/Girassol-Regular.ttf");
+    int id = QFontDatabase::addApplicationFont(":/other/other/Fonts/Girassol-Regular.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont Girassol(family);
 
     ui->titleLabel->setFont(Girassol);
+    m_parent = parent;
 }
 
 TitleBar::~TitleBar()
 {
     delete ui;
+}
+
+void TitleBar::mousePressEvent(QMouseEvent *event)
+{
+    if (m_parent->isFullScreen())
+    {
+        m_parent->setWindowState(Qt::WindowNoState);
+        mousePos = event->globalPosition().toPoint() - m_parent->geometry().topLeft();
+    }
+    else if (event->buttons() & Qt::LeftButton)
+            mousePos = event->globalPosition().toPoint() - m_parent->geometry().topLeft();
+}
+
+void TitleBar::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton)
+            m_parent -> move(event->globalPosition().toPoint() - mousePos);
 }
 
 void TitleBar::paintEvent(QPaintEvent *event)

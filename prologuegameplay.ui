@@ -21,7 +21,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#PrologueGameplay {
-border-image: url(:/images/images/Level 0 - Prologue/WloszczowaPolnoc.png) 0 0 0 0 stretch stretch;
+border-image: url(:/images/images/Level 0 - Prologue/Pic1.png) 0 0 0 0 stretch stretch;
 }
 #mainWidget {
 border-style: solid;
@@ -31,7 +31,7 @@ background-color: rgba(40,40,40,150);
 padding-left: 18px;
 }
 #dialogLabel {
-font-size: 20px;
+font-size: 28px;
 color: rgb(180,180,180);
 }
 #nextPageButton {
@@ -83,6 +83,9 @@ background-color: rgba(60,60,60, 150);
            <widget class="QLabel" name="dialogLabel">
             <property name="text">
              <string/>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

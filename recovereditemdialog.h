@@ -14,7 +14,7 @@ class RecoveredItemDialog : public QDialog
 public:
     explicit RecoveredItemDialog(QWidget *parent = nullptr);
     ~RecoveredItemDialog();
-    void setIcon(QString path);
+    void setIcon(int icon);
 signals:
     void acceptMessage();
 private:
