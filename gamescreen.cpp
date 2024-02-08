@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 5000;
+    wealth = 45000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level3PostLevelCleanup();
+    level1FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -975,6 +975,7 @@ void GameScreen::level3PostLevelCleanup()
     heroHealth = heroMaxHealth;
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
+    deadEnemy->hide();
     ui->heroHealthBar->setValue(heroHealth);
     ui->speakerLabel->setStyleSheet("");
     ui->nameLabel->setText("");
@@ -1102,7 +1103,7 @@ void GameScreen::level4SecondFunction()
                     this -> setStyleSheet("#GameScreen {"
                                           "border-image: url(:/images/images/Level 4 - Ogrodowa/Level3Background_3.png) 0 0 0 0 stretch stretch;"
                                           "}");
-                    deadEnemy->hideBossButton();
+                    deadEnemy->hide();
                     deadEnemy->hideTransitionButton();
                     deadHero->showGoBackButton();
                     fadeInAnimation(this, 1000);
@@ -1131,6 +1132,8 @@ void GameScreen::level4BossFight()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     gameProgress = 0;
+    deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -1183,7 +1186,6 @@ void GameScreen::level4BossFight()
     });
 
     connect(this, &GameScreen::enemyKilled, this, [this]{
-        deadEnemy->hide();
         switch(gameProgress)
         {
         case 1:
@@ -1309,6 +1311,7 @@ void GameScreen::level4PostLevelCleanup()
     numberOfRounds = 0;
     heroHealth = heroMaxHealth;
     deadEnemy->hide();
+    deadEnemy->hideBossButton();
     ui->heroHealthBar->setValue(heroHealth);
     ui->speakerLabel->setStyleSheet("");
     ui->nameLabel->setText("");
@@ -1379,13 +1382,14 @@ void GameScreen::level5FirstFunction()
 }
 void GameScreen::level5SecondFunction()
 {
-    fadeAwayAnimation(this, 1000);
 
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     deadEnemy->hide();
+
+    fadeAwayAnimation(this, 1000);
 
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2.png) 0 0 0 0 stretch stretch;"
@@ -1457,6 +1461,7 @@ void GameScreen::level5BossFight()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
     deadEnemy->hide();
     deadHero->showGoBackButton();
 
@@ -1580,6 +1585,7 @@ void GameScreen::level5PostLevelCleanup()
     disconnect(deadHero, nullptr, nullptr, nullptr);
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
+    deadEnemy->hide();
     deadHero->hideGoBackButton();
 
     gameProgress = 0;
@@ -1626,7 +1632,10 @@ void GameScreen::level6FirstFunction()
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
             if (gameProgress == 2)
+            {
+                deadEnemy->hideTransitionButton();
                 level6SecondFunction();
+            }
         });
     });
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
@@ -1681,6 +1690,7 @@ void GameScreen::level6SecondFunction()
     connect(this, &GameScreen::sceneEnded, this, [this]{
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         deadEnemy -> hide();
+        deadEnemy->showTransitionButton();
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
@@ -1723,6 +1733,7 @@ void GameScreen::level6BossFight()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    deadEnemy->hide();
     deadHero->showGoBackButton();
     deadEnemy->hideBossButton();
     deadEnemy->hideTransitionButton();
@@ -1734,10 +1745,7 @@ void GameScreen::level6BossFight()
     delete[] dialogs;
     dialogs = nullptr;
     if (sex == 0)
-    {
         loadScene(":/dialogs/dialogs/female/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
-        qDebug() << "CALLED";
-    }
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 6 - Underworld/PrzejscieDoJackaJaworka.txt", 24);
     connect(this, &GameScreen::sceneEnded, this, [this]{
@@ -1768,6 +1776,7 @@ void GameScreen::level6BossFight()
                 this->setStyleSheet("#GameScreen {"
                                     "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
                                     "}");
+                deadEnemy->hide();
                 fadeInAnimation(this, 1000);
                 dialogs = new QString[2];
                 if (sex == 0)
@@ -1855,7 +1864,7 @@ void GameScreen::level6PostLevelCleanup()
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
     deadEnemy->hideBossButton();
-    deadEnemy->showTransitionButton();
+    deadEnemy->hideTransitionButton();
     deadHero->hideGoBackButton();
 
     gameProgress = 0;
