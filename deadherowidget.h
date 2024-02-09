@@ -14,7 +14,9 @@ public:
     explicit DeadHeroWidget(QWidget *parent = nullptr);
     ~DeadHeroWidget();
     void showGoBackButton();
+    void showResurectButton();
     void hideGoBackButton();
+    void hideResurectButton();
 protected:
     void paintEvent(QPaintEvent *event);
 signals:

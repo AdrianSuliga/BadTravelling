@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level1FirstFunction();
+    level2FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -276,9 +276,6 @@ void GameScreen::level1FirstFunction()
         tutorialWidget->hide();
         delete tutorialWidget;
         tutorialWidget = nullptr;
-        ui->enemyLabel->show();
-        ui->enemyStatWidget->show();
-        ui->enemyHealthBar->show();
         enemyType = 0;
         drawEnemy(enemyType);
         dialogs = new QString[2];
@@ -295,6 +292,9 @@ void GameScreen::level1FirstFunction()
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZMenelem.txt", 10);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         });
@@ -315,12 +315,9 @@ void GameScreen::level1FirstFunction()
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
         numberOfRounds = 0;
         deadEnemy->hide();
-        ui->enemyLabel->show();
-        ui->enemyStatWidget->show();
-        ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
-        enemyType++;
+        ++enemyType;
         drawEnemy(enemyType);
         dialogs = new QString[2];
         if (sex == 0)
@@ -336,6 +333,10 @@ void GameScreen::level1FirstFunction()
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 1 - Central Square/RozmowaZDresem.txt", 16);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            deadHero->hideResurectButton();
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         });
@@ -390,10 +391,15 @@ void GameScreen::endSceneAndPostLevelCleanup()
 //LEVEL 2 - PILICA RIVER
 void GameScreen::level2FirstFunction()
 {
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
     deadHero->hide();
+    deadHero->showResurectButton();
     ui->enemyLabel->show();
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
@@ -437,14 +443,14 @@ void GameScreen::level2FirstFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(-1);
+        fight();
         if (gameProgress == 2)
         {
             fadeAwayAnimation(this, 1000);
             level2HelperFunction();
             return;
         }
-        drawEnemy(-1);
-        fight();
     });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
         numberOfRounds = 0;
@@ -463,10 +469,13 @@ void GameScreen::level2FirstFunction()
 }
 void GameScreen::level2HelperFunction()
 {
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
-    disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
 
     deadEnemy->showBossButton();
+    deadEnemy->hide();
 
     ui->enemyLabel->setStyleSheet("");
     ui->enemyStatWidget->hide();
@@ -511,81 +520,36 @@ void GameScreen::level2HelperFunction()
         drawEnemy(-1);
         fight();
     });
-    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this]() {
-        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
-        disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
-        fadeAwayAnimation(this, 1000);
-        this -> setStyleSheet("#GameScreen {"
-                              "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background2.png) 0 0 0 0 stretch stretch;"
-                              "}");
-        fadeInAnimation(this, 1000);
-        numberOfRounds = 0;
-        deadHero->hide();
-        ui->enemyLabel->show();
-        ui->enemyStatWidget->show();
-        ui->enemyHealthBar->show();
-        heroHealth = heroMaxHealth;
-        ui->heroHealthBar->setValue(heroHealth);
-        drawEnemy(-1);
-        fight();
-    });
-    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
-        fadeAwayAnimation(this, 1000);
-        this -> setStyleSheet("#GameScreen {"
-                              "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background3.png) 0 0 0 0 stretch stretch;"
-                              "}");
-        fadeInAnimation(this, 1000);
-        numberOfRounds = 0;
-        deadEnemy->hide();
-        deadHero->showGoBackButton();
-        ui->enemyLabel->show();
-        ui->enemyLabel->setStyleSheet("");
-        heroHealth = heroMaxHealth;
-        ui->heroHealthBar->setValue(heroHealth);
-        dialogs = new QString[2];
-        if (sex == 0)
-            dialogs[0] = "PODRÓŻNICZKA";
-        if (sex == 1)
-            dialogs[0] = "PODRÓŻNIK";
-        dialogs[1] = "*odgłosy intensywnego przedzierania się przez busz*";
-        showOneDialog(2);
-        delete[] dialogs;
-        dialogs = nullptr;
-        if (sex == 0)
-            loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
-        if (sex == 1)
-            loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
-        connect(this, &GameScreen::sceneEnded, this, [this]() {
-            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
-            ui->enemyStatWidget->show();
-            ui->enemyHealthBar->show();
-            drawEnemy(2);
-            fight();
-            connect(this, &GameScreen::enemyKilled, this, [this]() {
-                disconnect(deadEnemy, nullptr, nullptr, nullptr);
-                deadEnemy->hideBossButton();
-                deadEnemy->hideTransitionButton();
-                ui->enemyLabel->hide();
-                ui->enemyStatWidget->hide();
-                ui->enemyHealthBar->hide();
-                deadEnemy->show();
-                dialogs = new QString[2];
-                if (sex == 0)
-                    dialogs[0] = "PODRÓŻNICZKA";
-                if (sex == 1)
-                    dialogs[0] = "PODRÓŻNIK";
-                dialogs[1] = "Haha! Takiego!";
-                showOneDialog(2);
-                delete[] dialogs;
-                dialogs = nullptr;
-                if (sex == 0)
-                    loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
-                if (sex == 1)
-                    loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
-                connect(this, &GameScreen::sceneEnded, this, &GameScreen::level2PostLevelCleanup);
-            });
-        });
-    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {level2BossFight();});
+}
+void GameScreen::level2BossFight()
+{
+    fadeAwayAnimation(this, 1000);
+    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+
+    deadHero->showGoBackButton();
+    deadEnemy->hide();
+    deadEnemy->hideBossButton();
+    deadEnemy->hideTransitionButton();
+
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background3.png) 0 0 0 0 stretch stretch;"
+                          "}");
+
+    fadeInAnimation(this, 1000);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "*odgłos intensywnego przedzierania się przez busz*";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
 }
 void GameScreen::level2PostLevelCleanup()
 {
@@ -3041,6 +3005,10 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
+    if (shieldOn)
+    {
+        takeOffShield();
+    }
     gameProgress++;
     int loot = calculateLoot(gameLevel, enemyType);
     wealth += loot;
@@ -3049,6 +3017,20 @@ void GameScreen::enemyIsDead()
     delay(500);
     ui->amountOfMoneyLabel->setStyleSheet("color: rgb(180,180,180); font-size: 20px;");
     connectShop();
+}
+void GameScreen::takeOffShield()
+{
+    ui->heroHealthBar->setMaximum(heroMaxHealth);
+    ui->heroHealthBar->setValue(heroHealth);
+    ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
+                                     "color: rgb(180,180,180);"
+                                     "background-color: rgb(100,200,100);"
+                                     "text-align: center;"
+                                     "font-size: 24px;"
+                                     "}"
+                                     "#heroHealthBar::chunk {"
+                                     "background-color: rgb(10,150,0);"
+                                     "}");
 }
 int GameScreen::calculateLoot(int level, int enemyType)
 {
