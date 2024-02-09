@@ -705,10 +705,15 @@ void GameScreen::level3FirstFunction()
 }
 void GameScreen::level3HelperFunction()
 {
+    fadeAwayAnimation(this, 1000);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    this->setStyleSheet("#GameScreen {"
+                        "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background3.png) 0 0 0 0 stretch stretch;"
+                        "}");
+    fadeInAnimation(this, 1000);
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -735,17 +740,12 @@ void GameScreen::level3HelperFunction()
         drawEnemy(1);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
-            fadeAwayAnimation(this, 1000);
-            fadeInAnimation(this, 1000);
             dialogs = new QString[2];
             dialogs[0] = "JAN BROŻEK";
             dialogs[1] = "Nareszcie... spokój... jebać Kurzelów";
             showOneDialog(2);
             delete[] dialogs;
             dialogs = nullptr;
-            this->setStyleSheet("#GameScreen {"
-                                "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background3.png) 0 0 0 0 stretch stretch;"
-                                "}");
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt", 22);
             if (sex == 1)
@@ -1861,7 +1861,8 @@ void GameScreen::level6PostLevelCleanup()
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
     deadEnemy->hideBossButton();
-    deadEnemy->hideTransitionButton();
+    deadEnemy->showTransitionButton();
+    deadEnemy->hide();
     deadHero->hideGoBackButton();
 
     gameProgress = 0;
