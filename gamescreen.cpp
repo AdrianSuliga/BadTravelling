@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level2FirstFunction();
+    level1FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -448,6 +448,7 @@ void GameScreen::level2FirstFunction()
         if (gameProgress == 2)
         {
             fadeAwayAnimation(this, 1000);
+            delay(1000);
             level2HelperFunction();
             return;
         }
@@ -692,6 +693,7 @@ void GameScreen::level3FirstFunction()
                 }
                 if (gameProgress == 6)
                 {
+                    deadEnemy->hide();
                     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
                     deadEnemy->hideTransitionButton();
                     level3HelperFunction();
@@ -733,17 +735,17 @@ void GameScreen::level3HelperFunction()
         drawEnemy(1);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
+            fadeAwayAnimation(this, 1000);
+            fadeInAnimation(this, 1000);
             dialogs = new QString[2];
             dialogs[0] = "JAN BROŻEK";
             dialogs[1] = "Nareszcie... spokój... jebać Kurzelów";
             showOneDialog(2);
             delete[] dialogs;
             dialogs = nullptr;
-            fadeAwayAnimation(this, 1000);
             this->setStyleSheet("#GameScreen {"
                                 "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background3.png) 0 0 0 0 stretch stretch;"
                                 "}");
-            fadeInAnimation(this, 1000);
             if (sex == 0)
                 loadScene(":/dialogs/dialogs/female/Level 3 - Kurzelow/RozmowaZAdamemPrzedWalka.txt", 22);
             if (sex == 1)
@@ -958,6 +960,7 @@ void GameScreen::level3PostLevelCleanup()
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
     deadEnemy->hideBossButton();
+    deadEnemy->showTransitionButton();
     deadHero->hideGoBackButton();
 
     this->setStyleSheet("#GameScreen {"
@@ -2508,6 +2511,8 @@ void GameScreen::userWantsToBuyHealth()
             ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
         ui->heroHealthBar->setMaximum(heroMaxHealth);
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
 
         ui->heroHealthPointsLabel->setStyleSheet("color: rgb(10,150,0); font-size: 16px;");
 
