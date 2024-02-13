@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level5FirstFunction();
+    level4PostLevelCleanup();
 }
 
 GameScreen::~GameScreen()
@@ -2045,6 +2045,7 @@ void GameScreen::level7SecondFunction()
                 loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialog_04.txt", 44);
             connect(this, &GameScreen::sceneEnded, this, [this]{
                 fadeAwayAnimation(this, 1000);
+                deadEnemy->hide();
                 fadeInAnimation(this, 1000);
                 level7ThirdFunction();
             });
