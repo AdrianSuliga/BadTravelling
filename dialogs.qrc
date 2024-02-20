@@ -90,5 +90,27 @@
         <file>dialogs/male/Level 7 - Wiejska/Dialogs_07_DrOwned.txt</file>
         <file>dialogs/male/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt</file>
         <file>dialogs/male/Level 7 - Wiejska/Dialogs_08_DrOwned.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_01_BeforeDapoFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_02_AfterDapoFightBeforePawelFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_03_AfterPawelFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_04_BeforeLoversFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_05_AfterLoversFightBeforeDejaFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_06_AfterDejaFightBeforeTosiaFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_07_TransitionFromTosiaToBuszDragon.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_08_AfterBuszDragonBeforeJadziaFight.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_09_AfterJadziaBeforeBozenka.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_10_TransitionBozenka.txt</file>
+        <file>dialogs/female/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_01_BeforeDapoFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_02_AfterDapoFightBeforePawelFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_03_AfterPawelFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_04_BeforeLoversFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_05_AfterLoversFightBeforeDejaFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_06_AfterDejaFightBeforeTosiaFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_07_TransitionFromTosiaToBuszDragon.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_08_AfterBuszDragonBeforeJadziaFight.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_09_AfterJadziaBeforeBozenka.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_10_TransitionBozenka.txt</file>
+        <file>dialogs/male/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt</file>
     </qresource>
 </RCC>
