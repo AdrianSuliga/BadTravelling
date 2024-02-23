@@ -162,7 +162,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    level1FirstFunction();
+    level7PostLevelCleanup();
 }
 
 GameScreen::~GameScreen()
@@ -2438,7 +2438,20 @@ void GameScreen::level7PostLevelCleanup()
 //LEVEL 8 - SIKORSKI HIGH
 void GameScreen::level8FirstFunction()
 {
+    if (curseRemoved)
+    {
+        this->setStyleSheet("GameScreen {"
+                            "border-image: url(:/images/images/Level 8 - Sikorski High/Level8Background_1_Fixed.png) 0 0 0 0 stretch stretch;"
+                            "}");
+    }
+    else
+    {
+        this->setStyleSheet("GameScreen {"
+                            "border-image: url(:/images/images/Level 8 - Sikorski High/Level8Background_1.png) 0 0 0 0 stretch stretch;"
+                            "}");
+    }
     fadeInAnimation(this, 1000);
+
 }
 
 //SHOP
