@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 100;
+    wealth = 100000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -2946,6 +2946,39 @@ void GameScreen::drawEnemy(int whatToDraw)
         }
         break;
     case 8:
+        switch (whatToDraw)
+        {
+        case 0:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Dapo.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 0;
+            eBaseDef = 0;
+            eBaseHp = 0;
+            break;
+        case 1:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/KsiadzPawel.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 2:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Monika&Marczu.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 3:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 4:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 5:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 6:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;");
+            break;
+        case 7:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;");
+            break;
+        }
+        break;
+    default:
+        qDebug() << "WRONG GAME LEVEL IN SPAWNING FUNCTION!";
         break;
     }
     enemyAttack = eBaseAtt;
