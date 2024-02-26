@@ -67,7 +67,14 @@ private slots:
     void level7RetreatFunction();
     void level7PostLevelCleanup();
     //LEVEL 8
-    void level8FirstFunction();
+    void level8DapoFunction();
+    void level8PawelFunction();
+    void level8MonikaMarczuFunction();
+    void level8TosiaFunction();
+    void level8DejaFunction();
+    void level8JadziaFunction();
+    void level8BozenkaFunction();
+    void level8RetreatFunction();
     //SHOP
     void connectShop();
     void disconnectShop();
