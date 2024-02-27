@@ -100,7 +100,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     nameToPath["DAPO"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Dapo.png) 0 0 0 0 stretch stretch;";
     nameToPath["KSIĄDZ PAWEŁ"] = "border-image: url(:/images/images/Level 8 - Sikorski High/KsiadzPawel.png) 0 0 0 0 stretch stretch;";
-    nameToPath["FORBIDDEN LOVERS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Monika&Marczu.png) 0 0 0 0 stretch stretch;";
+    nameToPath["FORBIDDEN LOVERS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/MonikaAndMarczu.png) 0 0 0 0 stretch stretch;";
     nameToPath["PANI DEJA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;";
     nameToPath["PANI JADZIA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;";
     nameToPath["BUSZER"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;";
@@ -2529,6 +2529,7 @@ void GameScreen::level8PawelFunction()
         if (sex == 1)
             loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_03_AfterPawelFight.txt", 6);
         connect(this, &GameScreen::sceneEnded, this, [this]() {
+            delay(1000);
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
             disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
             disconnect(deadEnemy, nullptr, nullptr, nullptr);
