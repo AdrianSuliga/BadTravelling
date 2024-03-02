@@ -2564,8 +2564,6 @@ void GameScreen::level8MonikaMarczuFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
-        ui->speakerLabel->setStyleSheet("");
-        ui->nameLabel->setText("");
         deadEnemy->showBossButton();
         drawEnemy(2);
         fight();
@@ -2606,19 +2604,83 @@ void GameScreen::level8TosiaFunction()
     ui->enemyHealthBar->show();
     ui->nameLabel->setText("");
     ui->speakerLabel->setStyleSheet("");
+    numberOfRounds=0;
     drawEnemy(3);
     fight();
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        ui->enemyLabel->hide();
+        ui->enemyStatWidget->hide();
+        ui->enemyHealthBar->hide();
+    });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
-
-    })
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        level8DejaFunction();
+    });
 }
 void GameScreen::level8DejaFunction()
 {
-
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    dialogs = new QString[2];
+    dialogs[0] = "...";
+    dialogs[1] = "Jaka tragiczna historia";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_06_AfterTosiaFightBeforeDejaFight.txt", 26);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_06_AfterTosiaFightBeforeDejaFight.txt", 26);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        ui->enemyLabel->show();
+        drawEnemy(4);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        numberOfRounds=0;
+        ui->enemyLabel->hide();
+        ui->enemyHealthBar->hide();
+        ui->enemyStatWidget->hide();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        deadEnemy->hide();
+        ui->enemyLabel->hide();
+        ui->enemyStatWidget->hide();
+        ui->enemyHealthBar->hide();
+        dialogs = new QString[2];
+        dialogs[0] = "...";
+        dialogs[1] = "Nieźle, nieźle";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_07_AfterDejaFight.txt", 12);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_07_AfterDejaFight.txt", 12);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            delay(1000);
+            fadeAwayAnimation(this, 1000);
+            this->setStyleSheet("$GameScreen {"
+                                "border-image: url(:/images/images/Level 8 - Sikorski High/level8Background_3.png) 0 0 0 0 stretch stretch;"
+                                "}");
+            ui->nameLabel->setText("");
+            ui->speakerLabel->setStyleSheet("");
+            fadeInAnimation(this, 1000);
+            level8JadziaFunction();
+        });
+    });
 }
 void GameScreen::level8JadziaFunction()
 {
-
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
 }
 void GameScreen::level8BozenkaFunction()
 {
@@ -2766,7 +2828,7 @@ void GameScreen::userWantsToBuyHealth()
         wealth -= healthPrice;
         healthLevel++;
         if (sex == 0)
-            heroMaxHealth += healthLevel * 15;
+            heroMaxHealth += healthLevel * 25;
         if (sex == 1)
             heroMaxHealth += healthLevel * 18;
         if (healthLevel * 3 <= 75)
@@ -3143,21 +3205,21 @@ void GameScreen::drawEnemy(int whatToDraw)
             break;
         case 3:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 230;
+            eBaseDef = 260;
+            eBaseHp = 7500;
+            break;
+        case 4:
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;");
             eBaseAtt = 250;
             eBaseDef = 300;
             eBaseHp = 8000;
             break;
-        case 4:
-            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 275;
-            eBaseDef = 300;
-            eBaseHp = 8500;
-            break;
         case 5:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;");
             eBaseAtt = 300;
-            eBaseDef = 350;
-            eBaseHp = 9000;
+            eBaseDef = 300;
+            eBaseHp = 8000;
             break;
         case 6:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;");
@@ -3463,11 +3525,11 @@ int GameScreen::calculateLoot(int level, int enemyType)
         break;
     case 8:
         if (enemyType <= 1)
-            loot = 12500;
+            loot = 20000;
         if (enemyType >= 2 && enemyType <= 4)
-            loot = 25000;
-        if (enemyType >= 5)
             loot = 50000;
+        if (enemyType >= 5)
+            loot = 100000;
         break;
     default:
         loot = 0;
