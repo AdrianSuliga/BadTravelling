@@ -2532,13 +2532,13 @@ void GameScreen::level8PawelFunction()
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
             disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
             disconnect(deadEnemy, nullptr, nullptr, nullptr);
-            heroHealth = heroMaxHealth;
-            ui->heroHealthBar->setValue(heroMaxHealth);
             numberOfRounds = 0;
             deadEnemy->hide();
             fadeAwayAnimation(this, 1000);
             ui->speakerLabel->setStyleSheet("");
             ui->nameLabel->setText("");
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
             this->setStyleSheet("#GameScreen {"
                                 "border-image: url(:/images/images/Level 8 - Sikorski High/level8Background_2.png) 0 0 0 0 stretch stretch;"
                                 "}");
@@ -2636,6 +2636,7 @@ void GameScreen::level8DejaFunction()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_06_AfterTosiaFightBeforeDejaFight.txt", 26);
     connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         ui->enemyLabel->show();
@@ -2666,9 +2667,11 @@ void GameScreen::level8DejaFunction()
         connect(this, &GameScreen::sceneEnded, this, [this]() {
             delay(1000);
             fadeAwayAnimation(this, 1000);
-            this->setStyleSheet("$GameScreen {"
+            this->setStyleSheet("#GameScreen {"
                                 "border-image: url(:/images/images/Level 8 - Sikorski High/level8Background_3.png) 0 0 0 0 stretch stretch;"
                                 "}");
+            heroHealth=heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
             ui->nameLabel->setText("");
             ui->speakerLabel->setStyleSheet("");
             fadeInAnimation(this, 1000);
@@ -2681,10 +2684,50 @@ void GameScreen::level8JadziaFunction()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŹNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Okej... chyba już mi lepiej";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_08_BeforeJadziaFight.txt", 34);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_08_BeforeJadziaFight.txt", 34);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(5);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        deadEnemy->hideBossButton();
+        dialogs = new QString[2];
+        dialogs[0] = "PANI JADZIA";
+        dialogs[1] = "Zawiodłam się na tobie...";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_09_AfterJadziaBeforeBozenka.txt", 40);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_09_AfterJadziaBeforeBozenka.txt", 40);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            level8BozenkaFunction();
+        });
+    });
+
 }
 void GameScreen::level8BozenkaFunction()
 {
-
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
 }
 void GameScreen::level8RetreatFunction()
 {
@@ -3446,9 +3489,7 @@ void GameScreen::enemyIsDead()
     ui->enemyHealthBar->hide();
     deadEnemy->show();
     if (shieldOn)
-    {
         takeOffShield();
-    }
     gameProgress++;
     int loot = calculateLoot(gameLevel, enemyType);
     wealth += loot;
@@ -3524,12 +3565,12 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 25000;
         break;
     case 8:
-        if (enemyType <= 1)
-            loot = 20000;
-        if (enemyType >= 2 && enemyType <= 4)
-            loot = 50000;
-        if (enemyType >= 5)
-            loot = 100000;
+        if (gameProgress <= 1)
+            loot = 25000;
+        if (gameProgress >= 2 && gameProgress <= 4)
+            loot = 75000;
+        if (gameProgress >= 5)
+            loot = 150000;
         break;
     default:
         loot = 0;
