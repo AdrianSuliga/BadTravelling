@@ -2721,17 +2721,77 @@ void GameScreen::level8JadziaFunction()
             level8BozenkaFunction();
         });
     });
-
 }
 void GameScreen::level8BozenkaFunction()
 {
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    deadEnemy->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    deadEnemy->hideBossButton();
+    numberOfRounds = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroMaxHealth);
+    drawEnemy(6);
+    fight();
+    connect(this, &GameScreen::enemyKilled, this, [this]{
+        disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+        deadEnemy->hide();
+        dialogs = new QString[2];
+        dialogs[0] = "BOŻENKA";
+        dialogs[1] = "Ach!";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_10_TransitionBozenka.txt", 32);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_10_TransitionBozenka.txt", 32);
+        connect(this, &GameScreen::sceneEnded, this, [this]{
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            deadEnemy->hideBossButton();
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
+            drawEnemy(7);
+            fight();
+            connect(this, &GameScreen::enemyKilled, this, [this]{
+                level8CleanUp();
+            });
+        });
+    });
 }
 void GameScreen::level8RetreatFunction()
 {
 
+}
+void GameScreen::level8CleanUp()
+{
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+
+    dialogs = new QString[2];
+    if (sex == 0)
+        dialogs[0] = "PODRÓŻNICZKA";
+    if (sex == 1)
+        dialogs[0] = "PODRÓŻNIK";
+    dialogs[1] = "Nareszcie";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 2);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 2);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+
+    });
 }
 
 //SHOP
@@ -3565,12 +3625,12 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 25000;
         break;
     case 8:
-        if (gameProgress <= 1)
+        if (gameProgress <= 2)
             loot = 25000;
-        if (gameProgress >= 2 && gameProgress <= 4)
-            loot = 75000;
+        if (gameProgress >= 3 && gameProgress <= 4)
+            loot = 60000;
         if (gameProgress >= 5)
-            loot = 150000;
+            loot = 100000;
         break;
     default:
         loot = 0;
