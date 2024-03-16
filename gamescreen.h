@@ -77,6 +77,7 @@ private slots:
     void level8RetreatFunction();
     void level8CleanUp();
     //END CREDITS
+    void end_function();
     //SHOP
     void connectShop();
     void disconnectShop();
@@ -117,7 +118,7 @@ signals:
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved;
+    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved, sezySpared;
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
