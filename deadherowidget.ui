@@ -18,7 +18,7 @@
 background-color: rgba(20,20,20,150);
 }</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5,3,2">
+  <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,4,5,2">
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -43,7 +43,7 @@ background-color: rgba(20,20,20,150);
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,2,2,3">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,3,3,4">
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
@@ -58,29 +58,55 @@ background-color: rgba(20,20,20,150);
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
+      <widget class="QClickableWidget" name="resurectWidget" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="1,3">
+        <item>
+         <widget class="QLabel" name="resurectLabel">
+          <property name="text">
+           <string>WSKRZESZ SIĘ</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="resurectIcon">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="goBackButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
+      <widget class="QClickableWidget" name="goBackWidget" native="true">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,3">
+        <item>
+         <widget class="QLabel" name="goBackLabel">
+          <property name="text">
+           <string>WYCOFAJ SIĘ</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="goBackIcon">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item>
@@ -113,6 +139,14 @@ background-color: rgba(20,20,20,150);
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QClickableWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">qclickablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

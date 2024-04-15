@@ -22,8 +22,6 @@ protected:
 signals:
     void resurrectYourself();
     void goBackToFighting();
-private slots:
-    void on_pushButton_clicked();
 private:
     Ui::DeadHeroWidget *ui;
 };
