@@ -75,9 +75,10 @@ private slots:
     void level8JadziaFunction();
     void level8BozenkaFunction();
     void level8RetreatFunction();
-    void level8CleanUp();
+    void level8PostLevelCleanup();
     //END CREDITS
-    void end_function();
+    void good_end_function();
+    void bad_end_function();
     //SHOP
     void connectShop();
     void disconnectShop();

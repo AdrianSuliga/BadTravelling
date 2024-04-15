@@ -162,7 +162,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    level7PostLevelCleanup();
+    level8PostLevelCleanup();
 }
 
 GameScreen::~GameScreen()
@@ -2765,16 +2765,35 @@ void GameScreen::level8BozenkaFunction()
             drawEnemy(7);
             fight();
             connect(this, &GameScreen::enemyKilled, this, [this]{
-                level8CleanUp();
+                level8PostLevelCleanup();
             });
         });
     });
 }
 void GameScreen::level8RetreatFunction()
 {
+    fadeAwayAnimation(this, 1000);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
 
+    deadEnemy->showBossButton();
+    deadEnemy->showTransitionButton();
+    deadHero->hideGoBackButton();
+    gameProgress = 0;
+    numberOfRounds = 0;
+    heroHealth = heroMaxHealth;
+    ui->heroHealthBar->setValue(heroHealth);
+    deadHero->hide();
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    ui->enemyLabel->setStyleSheet("");
+    ui->speakerLabel->setStyleSheet("");
+    ui->nameLabel->setText("");
 }
-void GameScreen::level8CleanUp()
+void GameScreen::level8PostLevelCleanup()
 {
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
@@ -2796,10 +2815,14 @@ void GameScreen::level8CleanUp()
     connect(this, &GameScreen::sceneEnded, this, [this]{
         riDialog->show();
         riDialog->setIcon(3);
-        connect(riDialog, &RecoveredItemDialog::accepted, this, [this]{
+        connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
+            riDialog->hide();
             numberOfRounds = 0;
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            ui->dialogLabel->setText("");
+            ui->nameLabel->setText("");
+            ui->speakerLabel->setStyleSheet("");
             deadEnemy->hide();
             fadeAwayAnimation(this, 1000);
             if (curseRemoved)
@@ -2815,13 +2838,20 @@ void GameScreen::level8CleanUp()
                                     "}");
             }
             fadeInAnimation(this, 1000);
-            end_function();
+            if (curseRemoved && sezySpared)
+                good_end_function();
+            else
+                bad_end_function();
         });
     });
 }
 
-//END CREDITS
-void GameScreen::end_function()
+//END FUNCTIONS
+void GameScreen::good_end_function()
+{
+
+}
+void GameScreen::bad_end_function()
 {
 
 }
