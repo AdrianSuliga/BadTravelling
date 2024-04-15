@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 45000;
+    wealth = 70000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level1FirstFunction();
+    level7FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -1975,6 +1975,7 @@ void GameScreen::level7SecondFunction()
     disconnect(deadHero, nullptr, nullptr, nullptr);
     gameProgress = 0;
     deadEnemy->hideTransitionButton();
+    deadEnemy->hide();
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
     numberOfRounds = 0;
@@ -2239,9 +2240,11 @@ void GameScreen::level7AlfaFight()
             loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_08_DrOwned.txt", 52);
         if (sex == 1 && drPieprzerOwned == false)
             loadScene(":/dialogs/dialogs/male/Level 7 - Wiejska/Dialogs_08_DrNotOwned.txt", 36);
-        riDialog->show();
-        riDialog->setIcon(3);
-        connect(riDialog, &RecoveredItemDialog::acceptMessage, this, &GameScreen::level7PostLevelCleanup);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            riDialog->show();
+            riDialog->setIcon(2);
+            connect(riDialog, &RecoveredItemDialog::acceptMessage, this, &GameScreen::level7PostLevelCleanup);
+        });
     });
 }
 void GameScreen::level7RetreatFunction()
@@ -2312,6 +2315,7 @@ void GameScreen::level7RetreatFunction()
 void GameScreen::level7PostLevelCleanup()
 {
     riDialog->hide();
+    fadeAwayAnimation(this, 1000);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -2320,6 +2324,13 @@ void GameScreen::level7PostLevelCleanup()
 
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
+    deadEnemy->hide();
+    deadEnemy->hideBossButton();
+    deadEnemy->showTransitionButton();
+
+    this->setStyleSheet("#GameScreen {"
+                        ""
+                        "}");
 
     numberOfRounds = 0;
     gameProgress = 0;
@@ -2335,8 +2346,6 @@ void GameScreen::level7PostLevelCleanup()
 //LEVEL 8 - SIKORSKI HIGH
 void GameScreen::level8FirstFunction()
 {
-    fadeAwayAnimation(this, 1000);
-    this -> setStyleSheet("");
     fadeInAnimation(this, 1000);
 }
 
