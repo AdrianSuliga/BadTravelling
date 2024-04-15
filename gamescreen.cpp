@@ -103,8 +103,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     nameToPath["FORBIDDEN LOVERS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/MonikaAndMarczu.png) 0 0 0 0 stretch stretch;";
     nameToPath["PANI DEJA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;";
     nameToPath["PANI JADZIA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;";
-    nameToPath["BUSZER"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;";
-    nameToPath["BUSZ DRAGON"] = "border-image: url(:/images/images/Level 8 - Sikorski High/BuszDragon.png) 0 0 0 0 stretch stretch;";
+    nameToPath["BUSZER Z SIKORSKIEGO"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;";
     nameToPath["BOŻENKA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;";
     nameToPath["BOŻENKUS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;";
 
@@ -2561,12 +2560,57 @@ void GameScreen::level8MonikaMarczuFunction()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_04_BeforeLoversFight.txt", 14);
     connect(this, &GameScreen::sceneEnded, this, [this]() {
-
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        ui->speakerLabel->setStyleSheet("");
+        ui->nameLabel->setText("");
+        deadEnemy->showBossButton();
+        drawEnemy(2);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        ui->speakerLabel->setStyleSheet("");
+        ui->nameLabel->setText("");
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        deadEnemy->hide();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        dialogs = new QString[2];
+        if (sex == 0)
+            dialogs[0] = "PODRÓŻNICZKA";
+        if (sex == 1)
+            dialogs[0] = "PODRÓŻNIK";
+        dialogs[1] = "Okropne miejsce";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_05_AfterLoversFightBeforeTosiaFight.txt", 38);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_05_AfterLoversFightBeforeTosiaFight.txt", 38);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            level8TosiaFunction();
+        });
     });
 }
 void GameScreen::level8TosiaFunction()
 {
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    ui->nameLabel->setText("");
+    ui->speakerLabel->setStyleSheet("");
+    drawEnemy(3);
+    fight();
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
 
+    })
 }
 void GameScreen::level8DejaFunction()
 {
@@ -3092,7 +3136,7 @@ void GameScreen::drawEnemy(int whatToDraw)
             eBaseHp = 6500;
             break;
         case 2:
-            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Monika&Marczu.png) 0 0 0 0 stretch stretch;");
+            ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/MonikaAndMarczu.png) 0 0 0 0 stretch stretch;");
             eBaseAtt = 225;
             eBaseDef = 250;
             eBaseHp = 7250;
@@ -3536,7 +3580,6 @@ void GameScreen::heroDefends()
     delay(1500);
 
     heroShield = rand() % static_cast<int>(0.8 * heroDefense + 1) + static_cast<int>(heroDefense);
-    ui->dialogLabel->setText("OTRZYMUJESZ: " + QString::number(heroShield) + " punktów tarczy.");
     ui->heroHealthBar->setMaximum(heroShield);
     ui->heroHealthBar->setValue(heroShield);
     ui->heroHealthBar->setStyleSheet("#heroHealthBar {"
@@ -3585,7 +3628,6 @@ void GameScreen::heroHealsHimself()
         enemyHealth = 0;
 
     ui->enemyHealthBar->setValue(enemyHealth);
-    ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage) + " obrażeń krytycznych");
     delay(500);
     if (enemyHealth == 0)
     {
