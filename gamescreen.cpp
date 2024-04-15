@@ -2316,6 +2316,7 @@ void GameScreen::level7RetreatFunction()
 void GameScreen::level7PostLevelCleanup()
 {
     riDialog->hide();
+    ui->idLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
     fadeAwayAnimation(this, 1000);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
