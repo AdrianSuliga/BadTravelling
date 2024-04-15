@@ -2482,18 +2482,86 @@ void GameScreen::level8DapoFunction()
         ui->enemyHealthBar->show();
         heroHealth=heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
-        drawEnemy(0);
+        drawEnemy(gameProgress);
         fight();
     });
-    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level8PawelFunction);
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+        disconnect(deadEnemy, nullptr, nullptr, nullptr);
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        numberOfRounds = 0;
+        deadEnemy->hideBossButton();
+        deadEnemy->hide();
+        level8PawelFunction();
+    });
 }
 void GameScreen::level8PawelFunction()
 {
-
+    dialogs = new QString[2];
+    dialogs[0] = "DAPO";
+    dialogs[1] = "Aaaaa!";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_02_AfterDapoFightBeforePawelFight.txt", 36);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_02_AfterDapoFightBeforePawelFight.txt", 36);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        drawEnemy(1);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        dialogs = new QString[2];
+        dialogs[0] = "KSIĄDZ PAWEŁ";
+        dialogs[1] = "PRZEKLINAM CIĘ!!!";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_03_AfterPawelFight.txt", 6);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_03_AfterPawelFight.txt", 6);
+        connect(this, &GameScreen::sceneEnded, this, [this]() {
+            disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+            disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+            disconnect(deadEnemy, nullptr, nullptr, nullptr);
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
+            numberOfRounds = 0;
+            deadEnemy->hide();
+            fadeAwayAnimation(this, 1000);
+            ui->speakerLabel->setStyleSheet("");
+            ui->nameLabel->setText("");
+            this->setStyleSheet("#GameScreen {"
+                                "border-image: url(:/images/images/Level 8 - Sikorski High/level8Background_2.png) 0 0 0 0 stretch stretch;"
+                                "}");
+            fadeInAnimation(this, 1000);
+            level8MonikaMarczuFunction();
+        });
+    });
 }
 void GameScreen::level8MonikaMarczuFunction()
 {
+    dialogs = new QString[2];
+    dialogs[0] = "...";
+    dialogs[1] = "Oto Sikorski High";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_04_BeforeLoversFight.txt", 14);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_04_BeforeLoversFight.txt", 14);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
 
+    });
 }
 void GameScreen::level8TosiaFunction()
 {
@@ -3122,7 +3190,6 @@ void GameScreen::fight()
             {
                 enemyHealth -= enemyRealDamage * 0.25;
                 ui->enemyHealthBar->setValue(enemyHealth);
-                ui->dialogLabel->setText("ODBIJASZ: " + QString::number(enemyRealDamage*0.25));
             }
         }
         else if (shieldOn == true && heroShield <= enemyRealDamage)
@@ -3424,21 +3491,13 @@ void GameScreen::heroAttacks()
 
     int baseDamage = floor(0.5 * static_cast<double>(heroAttack) * (1 + static_cast<double>(heroAttack) / static_cast<double>(enemyDefense)));
     int realDamage = rand() % static_cast<int>(0.4*baseDamage + 1) + static_cast<int>(0.8*baseDamage);
-    bool isItCrit = false;
 
     if (rand() % 100 + 1 < heroCritRate)
-    {
-        isItCrit = true;
         realDamage *= 1.5;
-    }
 
     ui->infoAboutActionLabel->setText("");
     ui->confirmButton->hide();
     delay(150);
-    if (isItCrit == false)
-        ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10));
-    else if (isItCrit == true)
-        ui->dialogLabel->setText("ZADAJESZ: " + QString::number(realDamage, 10) + " OBRAŻEŃ KRYTYCZNYCH");
     if (enemyHealth >= realDamage)
         enemyHealth -= realDamage;
     else if (enemyHealth < realDamage)
