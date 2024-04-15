@@ -550,6 +550,36 @@ void GameScreen::level2BossFight()
     showOneDialog(2);
     delete[] dialogs;
     dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
+    connect(this, &GameScreen::sceneEnded, this, [this]() {
+        disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        numberOfRounds=0;
+        drawEnemy(2);
+        fight();
+    });
+    connect(this, &GameScreen::enemyKilled, this, [this]() {
+        dialogs = new QString[2];
+        if (sex == 0)
+            dialogs[0] = "PODRÓŻNICZKA";
+        if (sex == 1)
+            dialogs[0] = "PODRÓŻNIK";
+        dialogs[1] = "Takiego!";
+        showOneDialog(2);
+        delete[] dialogs;
+        dialogs = nullptr;
+        if (sex == 0)
+            loadScene(":/dialogs/dialogs/female/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
+        if (sex == 1)
+            loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
+        connect(this, &GameScreen::sceneEnded, this, &GameScreen::level2PostLevelCleanup);
+    });
 }
 void GameScreen::level2PostLevelCleanup()
 {
