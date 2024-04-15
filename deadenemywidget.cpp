@@ -42,7 +42,11 @@ void DeadEnemyWidget::showBossButton()
     });
 }
 
-void DeadEnemyWidget::hideBossButton() {ui->bossButton->hide();}
+void DeadEnemyWidget::hideBossButton()
+{
+    ui->bossButton->hide();
+    disconnect(ui->bossButton, nullptr, nullptr, nullptr);
+}
 
 void DeadEnemyWidget::hideTransitionButton() {ui->pushButton->hide();}
 
