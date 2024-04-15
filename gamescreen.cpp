@@ -2794,25 +2794,29 @@ void GameScreen::level8CleanUp()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 30);
     connect(this, &GameScreen::sceneEnded, this, [this]{
-        numberOfRounds = 0;
-        heroHealth = heroMaxHealth;
-        ui->heroHealthBar->setValue(heroHealth);
-        deadEnemy->hide();
-        fadeAwayAnimation(this, 1000);
-        if (curseRemoved)
-        {
-            this->setStyleSheet("#GameScreen {"
-                                "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2.png) 0 0 0 0 stretch stretch;"
-                                "}");
-        }
-        else
-        {
-            this->setStyleSheet("#GameScreen {"
-                                "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
-                                "}");
-        }
-        fadeInAnimation(this, 1000);
-        end_function();
+        riDialog->show();
+        riDialog->setIcon(3);
+        connect(riDialog, &RecoveredItemDialog::accepted, this, [this]{
+            numberOfRounds = 0;
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroHealth);
+            deadEnemy->hide();
+            fadeAwayAnimation(this, 1000);
+            if (curseRemoved)
+            {
+                this->setStyleSheet("#GameScreen {"
+                                    "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2.png) 0 0 0 0 stretch stretch;"
+                                    "}");
+            }
+            else
+            {
+                this->setStyleSheet("#GameScreen {"
+                                    "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
+                                    "}");
+            }
+            fadeInAnimation(this, 1000);
+            end_function();
+        });
     });
 }
 
