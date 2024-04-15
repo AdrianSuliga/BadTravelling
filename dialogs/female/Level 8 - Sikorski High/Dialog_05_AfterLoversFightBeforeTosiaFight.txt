@@ -1,6 +1,6 @@
-PODRÓŻNIK
+PODRÓŻNICZKA
 O co im chodziło...?
-PODRÓŻNIK
+PODRÓŻNICZKA
 Dziwne
 ...
 Dostrzegasz młodą dziewczynę idącą korytarzem
@@ -10,7 +10,7 @@ Jej twarz wyraża jedno
 Szaleństwo
 ...
 Jej oczy widziały za dużo i zaglądały za daleko
-PODRÓŻNIK
+PODRÓŻNICZKA
 Wszystko... w porządku?
 BUSZER Z SIKORSKIEGO
 Oni... nie
@@ -20,7 +20,7 @@ BUSZER Z SIKORSKIEGO
 Chciałam tylko... tylko
 BUSZER Z SIKORSKIEGO
 zabuszyć w łazience
-PODRÓŻNIK
+PODRÓŻNICZKA
 Co się stało?
 BUSZER Z SIKORSKIEGO
 ONI SIĘ RUCHALI!
@@ -34,5 +34,5 @@ Szaleństwo jakie w tej chwili
 przepełnia tą osobę sprawia, że
 ...
 dalsza rozmowa jest niemożliwa
-PODRÓŻNIK
+PODRÓŻNICZKA
 Przykro mi...
