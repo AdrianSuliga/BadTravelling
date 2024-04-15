@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 70000;
+    wealth = 100;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level4PostLevelCleanup();
+    level2FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -521,12 +521,26 @@ void GameScreen::level2HelperFunction()
         drawEnemy(-1);
         fight();
     });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
+            if (enemyType == 2)
+                drawEnemy(2);
+            else
+                drawEnemy(-1);
+            fight();
+        });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {level2BossFight();});
 }
 void GameScreen::level2BossFight()
 {
     fadeAwayAnimation(this, 1000);
-    disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -557,6 +571,7 @@ void GameScreen::level2BossFight()
         loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPrzedWalka.txt", 26);
     connect(this, &GameScreen::sceneEnded, this, [this]() {
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+        heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
@@ -581,6 +596,82 @@ void GameScreen::level2BossFight()
             loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/RozmowaZJanemPoWalce.txt", 32);
         connect(this, &GameScreen::sceneEnded, this, &GameScreen::level2PostLevelCleanup);
     });
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        if (enemyType == 2)
+            drawEnemy(2);
+        else
+            drawEnemy(-1);
+        fight();
+    });
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this](){
+        level2RetreatFromBossFunction();
+        return;
+    });
+}
+void GameScreen::level2RetreatFromBossFunction()
+{
+    fadeAwayAnimation(this, 1000);
+    disconnect(deadHero, nullptr, nullptr, nullptr);
+    disconnect(deadEnemy, nullptr, nullptr, nullptr);
+    disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
+
+    deadEnemy->showBossButton();
+    deadEnemy->showTransitionButton();
+    deadEnemy->hide();
+    deadHero->hide();
+    numberOfRounds = 0;
+    heroHealth=heroMaxHealth;
+    ui->heroHealthBar->setValue(heroMaxHealth);
+
+    ui->enemyLabel->setStyleSheet("");
+    ui->attackActionButton->setEnabled(false);
+    ui->defenseActionButton->setEnabled(false);
+    ui->healActionButton->setEnabled(false);
+
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background2.png) 0 0 0 0 stretch stretch;"
+                          "}");
+    ui->enemyLabel->show();
+    ui->enemyStatWidget->show();
+    ui->enemyHealthBar->show();
+    drawEnemy(-1);
+    fadeInAnimation(this, 1000);
+    fight();
+
+    connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        numberOfRounds = 0;
+        deadEnemy->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        drawEnemy(-1);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {level2BossFight();});
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+            numberOfRounds = 0;
+            deadHero->hide();
+            ui->enemyLabel->show();
+            ui->enemyStatWidget->show();
+            ui->enemyHealthBar->show();
+            heroHealth = heroMaxHealth;
+            ui->heroHealthBar->setValue(heroMaxHealth);
+            if (enemyType == 2)
+                drawEnemy(2);
+            else
+                drawEnemy(-1);
+            fight();
+        });
 }
 void GameScreen::level2PostLevelCleanup()
 {

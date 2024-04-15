@@ -32,6 +32,7 @@ private slots:
     void level2FirstFunction();
     void level2HelperFunction();
     void level2BossFight();
+    void level2RetreatFromBossFunction();
     void level2PostLevelCleanup();
     //LEVEL 3
     void level3FirstFunction();
