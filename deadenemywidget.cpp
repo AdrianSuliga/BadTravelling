@@ -15,18 +15,22 @@ DeadEnemyWidget::DeadEnemyWidget(QWidget *parent) :
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont Girassol(family);
     ui->label->setFont(Girassol);
+    ui->continueLabel->setFont(Girassol);
+    ui->bossLabel->setFont(Girassol);
     ui->label->setStyleSheet("font-size: 60px; color: rgb(180,180,180);");
-    ui->pushButton->setFont(Girassol);
-    ui->pushButton->setStyleSheet("QPushButton {border-style: solid; color: rgb(180,180,180); font-size: 40px; margin: 10px;"
-                                  "border-image: url(:/images/images/AppScreenArt/TitleIcon.png) 0 0 0 0 stretch stretch;}"
-                                  "QPushButton:hover {background-color: rgba(50,50,50,100); border-radius: 10px; border-style: solid;"
+    ui->continueLabel->setStyleSheet("font-size: 32px; color: rgb(180,180,180);");
+    ui->bossLabel->setStyleSheet("font-size: 32px; color: rgb(180,180,180);");
+    ui->continueIconLabel->setFont(Girassol);
+    ui->continueIconLabel->setStyleSheet("QLabel {border-style: solid; color: rgb(180,180,180); font-size: 40px; margin: 10px;"
+                                  "border-image: url(:/images/images/AppScreenArt/TitleIcon.png) 0 0 0 0 stretch stretch;}");
+    ui->bossIconLabel->setStyleSheet("QLabel {border-style: solid; color: rgb(180,180,180); font-size: 40px; margin: 10px;"
+                                  "border-image: url(:/images/images/AppScreenArt/skull.png) 0 0 0 0 stretch stretch;}");
+    ui->continueWidget->setStyleSheet("#continueWidget:hover {background-color: rgba(50,50,50,100); border-radius: 10px;"
+                                      "border-style: solid; border-width: 2px; border-color: rgb(180,180,180);}");
+    ui->bossWidget->setStyleSheet("#bossWidget:hover {background-color: rgba(50,50,50,100); border-radius: 10px; border-style: solid;"
                                   "border-width: 2px; border-color: rgb(180,180,180);}");
-    ui->bossButton->setStyleSheet("QPushButton {border-style: solid; color: rgb(180,180,180); font-size: 40px; margin: 10px;"
-                                  "border-image: url(:/images/images/AppScreenArt/skull.png) 0 0 0 0 stretch stretch;}"
-                                  "QPushButton:hover {background-color: rgba(50,50,50,100); border-radius: 10px; border-style: solid;"
-                                  "border-width: 2px; border-color: rgb(180,180,180);}");
-    ui->bossButton->hide();
-    connect(ui->pushButton, &QPushButton::clicked, this, [this]() {emit transitionToNextPhase();});
+    ui->bossWidget->hide();
+    connect(ui->continueWidget, &QClickableWidget::clicked, this, [this]() {emit transitionToNextPhase();});
 }
 
 DeadEnemyWidget::~DeadEnemyWidget()
@@ -36,21 +40,26 @@ DeadEnemyWidget::~DeadEnemyWidget()
 
 void DeadEnemyWidget::showBossButton()
 {
-    ui->bossButton->show();
-    connect(ui->bossButton, &QPushButton::clicked, this, [this]() {
-        emit fightBoss();
-    });
+    ui->bossWidget->show();
+    ui->bossIconLabel->show();
+    connect(ui->bossWidget, &QClickableWidget::clicked, this, [this]() {emit fightBoss();});
 }
 
 void DeadEnemyWidget::hideBossButton()
 {
-    ui->bossButton->hide();
-    disconnect(ui->bossButton, nullptr, nullptr, nullptr);
+    ui->bossWidget->hide();
+    disconnect(ui->bossWidget, nullptr, nullptr, nullptr);
 }
 
-void DeadEnemyWidget::hideTransitionButton() {ui->pushButton->hide();}
+void DeadEnemyWidget::hideTransitionButton()
+{
+    ui->continueWidget->hide();
+}
 
-void DeadEnemyWidget::showTransitionButton() {ui->pushButton->show();}
+void DeadEnemyWidget::showTransitionButton()
+{
+    ui->continueWidget->show();
+}
 
 void DeadEnemyWidget::paintEvent(QPaintEvent *event)
 {
