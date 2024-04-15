@@ -135,6 +135,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     shieldBroken = false;
 
     curseRemoved = false;
+    sezySpared = false;
 
     enemyAttack = -1;
     enemyDefense = -1;
@@ -2172,7 +2173,10 @@ void GameScreen::level7ThirdFunction()
     connect(this, &GameScreen::sceneEnded, this, [this]{
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         if (drPieprzerOwned)
+        {
+            sezySpared = true;
             level7BossFight();
+        }
         else
         {
             numberOfRounds = 0;
@@ -2739,7 +2743,6 @@ void GameScreen::level8BozenkaFunction()
     fight();
     connect(this, &GameScreen::enemyKilled, this, [this]{
         disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
-        deadEnemy->hide();
         dialogs = new QString[2];
         dialogs[0] = "BOŻENKA";
         dialogs[1] = "Ach!";
@@ -2781,17 +2784,41 @@ void GameScreen::level8CleanUp()
         dialogs[0] = "PODRÓŻNICZKA";
     if (sex == 1)
         dialogs[0] = "PODRÓŻNIK";
-    dialogs[1] = "Nareszcie";
+    dialogs[1] = "Nie masz szans";
     showOneDialog(2);
     delete[] dialogs;
     dialogs = nullptr;
     if (sex == 0)
-        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 2);
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 30);
     if (sex == 1)
-        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 2);
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt", 30);
     connect(this, &GameScreen::sceneEnded, this, [this]{
-
+        numberOfRounds = 0;
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        deadEnemy->hide();
+        fadeAwayAnimation(this, 1000);
+        if (curseRemoved)
+        {
+            this->setStyleSheet("#GameScreen {"
+                                "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2.png) 0 0 0 0 stretch stretch;"
+                                "}");
+        }
+        else
+        {
+            this->setStyleSheet("#GameScreen {"
+                                "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_2_Fixed.png) 0 0 0 0 stretch stretch;"
+                                "}");
+        }
+        fadeInAnimation(this, 1000);
+        end_function();
     });
+}
+
+//END CREDITS
+void GameScreen::end_function()
+{
+
 }
 
 //SHOP

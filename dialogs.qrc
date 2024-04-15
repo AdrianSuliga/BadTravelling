@@ -112,5 +112,9 @@
         <file>dialogs/female/Level 8 - Sikorski High/Dialog_09_AfterJadziaBeforeBozenka.txt</file>
         <file>dialogs/female/Level 8 - Sikorski High/Dialog_10_TransitionBozenka.txt</file>
         <file>dialogs/female/Level 8 - Sikorski High/Dialog_11_AfterBozenkaFight.txt</file>
+        <file>dialogs/female/Level 9 - Ending/Ending_Dialog_Bad.txt</file>
+        <file>dialogs/female/Level 9 - Ending/Ending_Dialog_Good.txt</file>
+        <file>dialogs/male/Level 9 - Ending/Ending_Dialog_Bad.txt</file>
+        <file>dialogs/male/Level 9 - Ending/Ending_Dialog_Good.txt</file>
     </qresource>
 </RCC>
