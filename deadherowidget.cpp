@@ -37,7 +37,11 @@ void DeadHeroWidget::showGoBackButton()
     });
 }
 
+void DeadHeroWidget::showResurectButton() {ui->pushButton->show();}
+
 void DeadHeroWidget::hideGoBackButton() {ui->goBackButton->hide();}
+
+void DeadHeroWidget::hideResurectButton() {ui->pushButton->hide();}
 
 void DeadHeroWidget::paintEvent(QPaintEvent *event)
 {

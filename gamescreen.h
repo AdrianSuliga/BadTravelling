@@ -31,6 +31,7 @@ private slots:
     //LEVEL 2
     void level2FirstFunction();
     void level2HelperFunction();
+    void level2BossFight();
     void level2PostLevelCleanup();
     //LEVEL 3
     void level3FirstFunction();
@@ -89,6 +90,7 @@ private slots:
     void fight();
     void heroIsDead();
     void enemyIsDead();
+    void takeOffShield();
     int calculateLoot(int level, int enemyType);
     int drawStat(int base);
     void on_attackActionButton_clicked();
