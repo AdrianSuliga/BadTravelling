@@ -2743,6 +2743,7 @@ void GameScreen::level8BozenkaFunction()
     fight();
     connect(this, &GameScreen::enemyKilled, this, [this]{
         disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
+        deadEnemy->hide();
         dialogs = new QString[2];
         dialogs[0] = "BOŻENKA";
         dialogs[1] = "Ach!";
