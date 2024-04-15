@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 100000;
+    wealth = 150000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -2416,9 +2416,13 @@ void GameScreen::level7PostLevelCleanup()
 
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
+    ui->enemyStatWidget->hide();
+    ui->enemyHealthBar->hide();
     deadEnemy->hide();
-    deadEnemy->hideBossButton();
-    deadEnemy->showTransitionButton();
+    deadEnemy->showBossButton();
+    deadEnemy->hideTransitionButton();
+    deadHero->showResurectButton();
+    deadHero->hideGoBackButton();
 
     this->setStyleSheet("#GameScreen {"
                         ""
@@ -2432,11 +2436,11 @@ void GameScreen::level7PostLevelCleanup()
     ui->nameLabel->setText("");
     ui->dialogLabel->setText("");
 
-    level8FirstFunction();
+    level8DapoFunction();
 }
 
 //LEVEL 8 - SIKORSKI HIGH
-void GameScreen::level8FirstFunction()
+void GameScreen::level8DapoFunction()
 {
     if (curseRemoved)
     {
@@ -2451,6 +2455,64 @@ void GameScreen::level8FirstFunction()
                             "}");
     }
     fadeInAnimation(this, 1000);
+
+    dialogs = new QString[2];
+    dialogs[0] = "...";
+    dialogs[1] = "Po całym tym czasie";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 8 - Sikorski High/Dialog_01_BeforeDapoFight.txt", 32);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 8 - Sikorski High/Dialog_01_BeforeDapoFight.txt", 32);
+    connect(this, &GameScreen::sceneEnded, this, [this](){
+        ui->enemyHealthBar->show();
+        ui->enemyStatWidget->show();
+        ui->enemyLabel->show();
+        drawEnemy(0);
+        fight();
+    });
+    connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level8RetreatFunction);
+    connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
+        numberOfRounds = 0;
+        deadHero->hide();
+        ui->enemyLabel->show();
+        ui->enemyStatWidget->show();
+        ui->enemyHealthBar->show();
+        heroHealth=heroMaxHealth;
+        ui->heroHealthBar->setValue(heroMaxHealth);
+        drawEnemy(0);
+        fight();
+    });
+    connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, &GameScreen::level8PawelFunction);
+}
+void GameScreen::level8PawelFunction()
+{
+
+}
+void GameScreen::level8MonikaMarczuFunction()
+{
+
+}
+void GameScreen::level8TosiaFunction()
+{
+
+}
+void GameScreen::level8DejaFunction()
+{
+
+}
+void GameScreen::level8JadziaFunction()
+{
+
+}
+void GameScreen::level8BozenkaFunction()
+{
+
+}
+void GameScreen::level8RetreatFunction()
+{
 
 }
 
@@ -2950,30 +3012,51 @@ void GameScreen::drawEnemy(int whatToDraw)
         {
         case 0:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Dapo.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 0;
-            eBaseDef = 0;
-            eBaseHp = 0;
+            eBaseAtt = 175;
+            eBaseDef = 200;
+            eBaseHp = 5000;
             break;
         case 1:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/KsiadzPawel.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 200;
+            eBaseDef = 225;
+            eBaseHp = 6500;
             break;
         case 2:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Monika&Marczu.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 225;
+            eBaseDef = 250;
+            eBaseHp = 7250;
             break;
         case 3:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 250;
+            eBaseDef = 300;
+            eBaseHp = 8000;
             break;
         case 4:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 275;
+            eBaseDef = 300;
+            eBaseHp = 8500;
             break;
         case 5:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 300;
+            eBaseDef = 350;
+            eBaseHp = 9000;
             break;
         case 6:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 420;
+            eBaseDef = 500;
+            eBaseHp = 10000;
             break;
         case 7:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;");
+            eBaseAtt = 450;
+            eBaseDef = 500;
+            eBaseHp = 20000;
             break;
         }
         break;
@@ -3267,10 +3350,17 @@ int GameScreen::calculateLoot(int level, int enemyType)
             loot = 25000;
         break;
     case 8:
+        if (enemyType <= 1)
+            loot = 12500;
+        if (enemyType >= 2 && enemyType <= 4)
+            loot = 25000;
+        if (enemyType >= 5)
+            loot = 50000;
         break;
     default:
         loot = 0;
         qDebug() << "WTF DUDE?!";
+        break;
     }
     return loot;
 }
