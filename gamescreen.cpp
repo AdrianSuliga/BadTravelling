@@ -162,8 +162,6 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    riDialog->show();
-    riDialog->setIcon(1);
     level1FirstFunction();
 }
 
