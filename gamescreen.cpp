@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level7FirstFunction();
+    level5FirstFunction();
 }
 
 GameScreen::~GameScreen()
