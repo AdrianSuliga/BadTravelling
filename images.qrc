@@ -5,6 +5,13 @@
         <file>other/Music/AlphaBattleMusic.mp3</file>
         <file>other/Music/MainAmbient.mp3</file>
         <file>other/Music/PoteznyMatfizBattleMusic.mp3</file>
+        <file>other/Music/BozenkaFaza1.mp3</file>
+        <file>other/Music/BozenkaFaza2.mp3</file>
+        <file>other/Music/JagodaBattleMusic.mp3</file>
+        <file>other/Music/JaworekBattleMusic.mp3</file>
+        <file>other/Music/JezusBattleMusic.mp3</file>
+        <file>other/Music/SezyBattleMusic.mp3</file>
+        <file>other/Music/MainBattleMusic.mp3</file>
     </qresource>
     <qresource prefix="/dialogs"/>
     <qresource prefix="/images">

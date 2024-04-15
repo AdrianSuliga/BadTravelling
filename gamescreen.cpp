@@ -134,6 +134,10 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     shieldOn = false;
     shieldBroken = false;
 
+    player = new QMediaPlayer();
+    audioOutput = new QAudioOutput();
+    player->setAudioOutput(audioOutput);
+
     curseRemoved = false;
     sezySpared = false;
 
@@ -275,6 +279,8 @@ void GameScreen::level1FirstFunction()
         tutorialWidget->hide();
         delete tutorialWidget;
         tutorialWidget = nullptr;
+        player->setSource(QUrl("qrc:/other/other/Music/MainAmbient.mp3"));
+        player->play();
         enemyType = 0;
         drawEnemy(enemyType);
         dialogs = new QString[2];
@@ -294,6 +300,8 @@ void GameScreen::level1FirstFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            player->stop();
+            player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         });

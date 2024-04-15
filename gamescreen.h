@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QHash>
+#include <QAudioOutput>
+#include <QMediaPlayer>
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
 #include <tutorialinfo.h>
@@ -126,6 +128,8 @@ private:
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
     short weaponLevel, shieldLevel, healthLevel, gameLevel, gameProgress, enemyType, actionPoints, numberOfRounds, counterOfLines;
     QString* dialogs;
+    QMediaPlayer* player;
+    QAudioOutput* audioOutput;
     QHash<QString, QString> nameToPath;
     DeadEnemyWidget *deadEnemy;
     DeadHeroWidget *deadHero;
