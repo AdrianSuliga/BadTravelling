@@ -107,5 +107,7 @@
         <file>images/Level 6 - Underworld/Level6Background.png</file>
         <file>images/Level 8 - Sikorski High/level8Background_2.png</file>
         <file>images/Level 8 - Sikorski High/level8Background_3.png</file>
+        <file>images/Level 8 - Sikorski High/Level8Background_1.png</file>
+        <file>images/Level 8 - Sikorski High/Level8Background_1_Fixed.png</file>
     </qresource>
 </RCC>
