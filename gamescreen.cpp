@@ -142,7 +142,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     enemyHealth = -1;
     enemyMaxHealth = -1;
 
-    wealth = 1000;
+    wealth = 5000;
 
     weaponLevel = 0;
     shieldLevel = 0;
@@ -163,7 +163,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
 
     connectShop();
 
-    level1MainFunction();
+    level4FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -268,7 +268,7 @@ void GameScreen::paintEvent(QPaintEvent *event)
 }
 
 //LEVEL 1 - CENTRAL SQUARE
-void GameScreen::level1MainFunction()
+void GameScreen::level1FirstFunction()
 {
     srand(time(nullptr));
     showTutorial();
@@ -383,12 +383,12 @@ void GameScreen::endSceneAndPostLevelCleanup()
         ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
         ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);");
         fadeAwayAnimation(this, 2000);
-        level2MainFunction();
+        level2FirstFunction();
     });
 }
 
 //LEVEL 2 - PILICA RIVER
-void GameScreen::level2MainFunction()
+void GameScreen::level2FirstFunction()
 {
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background1.png) 0 0 0 0 stretch stretch;"
@@ -617,11 +617,11 @@ void GameScreen::level2PostLevelCleanup()
     updateActionPointsButtons();
     gameLevel = 3;
 
-    level3MainFunction();
+    level3FirstFunction();
 }
 
 //LEVEL 3 - KURZELÓW
-void GameScreen::level3MainFunction()
+void GameScreen::level3FirstFunction()
 {
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background1.png) 0 0 0 0 stretch stretch;"

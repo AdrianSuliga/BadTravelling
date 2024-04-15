@@ -25,15 +25,15 @@ private slots:
     //SETUP
     void loadVariables();
     //LEVEL 1
-    void level1MainFunction();
+    void level1FirstFunction();
     void showTutorial();
     void endSceneAndPostLevelCleanup();
     //LEVEL 2
-    void level2MainFunction();
+    void level2FirstFunction();
     void level2HelperFunction();
     void level2PostLevelCleanup();
     //LEVEL 3
-    void level3MainFunction();
+    void level3FirstFunction();
     void level3HelperFunction();
     void level3BossFight();
     void level3RetreatFromBossFunction();
