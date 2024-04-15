@@ -5,6 +5,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QSettings>
+#include <QAudioOutput>
+#include <QMediaPlayer>
 #include "titlescreen.h"
 #include "titlebar.h"
 #include "sexscreen.h"
@@ -60,5 +62,7 @@ private:
     QVBoxLayout *mainLayout;
 
     QSettings settings;
+    QMediaPlayer* player;
+    QAudioOutput* audioOutput;
 };
 #endif // MAINWINDOW_H

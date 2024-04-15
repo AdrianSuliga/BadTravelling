@@ -59,11 +59,19 @@ void MainWindow::setTitleScreen()
     connect(tB, &TitleBar::minimise, this, &MainWindow::showMinimized);
     connect(tB, &TitleBar::maximise, this, &MainWindow::unmaximizeIt);
     connect(tB, &TitleBar::userWantsToExit, this, &MainWindow::close);
+
+    player = new QMediaPlayer();
+    audioOutput = new QAudioOutput();
+    player->setAudioOutput(audioOutput);
+    player->setSource(QUrl("qrc:/other/other/Music/TitleScreenBackgroundMusic.mp3"));
+    audioOutput->setVolume(50);
+    player->play();
 }
 
 void MainWindow::setSexScreen()
 {
     fadeAwayAnimation(tS, 500);
+    player->stop();
     delete tS;
     tS = nullptr;
 
@@ -171,9 +179,13 @@ void MainWindow::end_credits()
     delete pS;
     delete tB;
     delete mainLayout;
+    delete player;
+    delete audioOutput;
     pS = nullptr;
     tB = nullptr;
     mainLayout = nullptr;
+    player = nullptr;
+    audioOutput = nullptr;
 
     settings.clear();
     setTitleScreen();
