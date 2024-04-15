@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QSettings>
 #include "titlescreen.h"
 #include "titlebar.h"
 #include "sexscreen.h"
@@ -37,6 +38,8 @@ private slots:
     void setPrologueGameplayScreen();
     //GAME SCREEN
     void setGameScreen();
+    //END
+    void end_credits();
     //GLOBAL FUNCTIONALITIES
     void fadeAwayAnimation(QWidget *widget, int ms);
     void fadeInAnimation(QWidget *widget, int ms);
@@ -55,5 +58,7 @@ private:
     GameScreen *gS;
 
     QVBoxLayout *mainLayout;
+
+    QSettings settings;
 };
 #endif // MAINWINDOW_H

@@ -162,7 +162,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    level8PostLevelCleanup();
+    good_end_function();
 }
 
 GameScreen::~GameScreen()
@@ -2816,6 +2816,7 @@ void GameScreen::level8PostLevelCleanup()
         riDialog->show();
         riDialog->setIcon(3);
         connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
+            ui->moneyLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
             riDialog->hide();
             numberOfRounds = 0;
             heroHealth = heroMaxHealth;
@@ -2823,6 +2824,8 @@ void GameScreen::level8PostLevelCleanup()
             ui->dialogLabel->setText("");
             ui->nameLabel->setText("");
             ui->speakerLabel->setStyleSheet("");
+            ui->enemyHealthBar->hide();
+            ui->enemyStatWidget->hide();
             deadEnemy->hide();
             fadeAwayAnimation(this, 1000);
             if (curseRemoved)
@@ -2849,11 +2852,39 @@ void GameScreen::level8PostLevelCleanup()
 //END FUNCTIONS
 void GameScreen::good_end_function()
 {
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
 
+    dialogs = new QString[2];
+    dialogs[0] = "...";
+    dialogs[1] = "A więc nareszcie... nadszedł czas";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 9 - Ending/Ending_Dialog_Good.txt", 32);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 9 - Ending/Ending_Dialog_Good.txt", 32);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        emit gameEnded();
+    });
 }
 void GameScreen::bad_end_function()
 {
+    disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
 
+    dialogs = new QString[2];
+    dialogs[0] = "...";
+    dialogs[1] = "A więc nareszcie... nadszedł czas";
+    showOneDialog(2);
+    delete[] dialogs;
+    dialogs = nullptr;
+    if (sex == 0)
+        loadScene(":/dialogs/dialogs/female/Level 9 - Ending/Ending_Dialog_Bad.txt", 10);
+    if (sex == 1)
+        loadScene(":/dialogs/dialogs/male/Level 9 - Ending/Ending_Dialog_Bad.txt", 10);
+    connect(this, &GameScreen::sceneEnded, this, [this]{
+        emit gameEnded();
+    });
 }
 
 //SHOP

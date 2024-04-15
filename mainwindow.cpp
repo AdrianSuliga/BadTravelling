@@ -65,6 +65,7 @@ void MainWindow::setSexScreen()
 {
     fadeAwayAnimation(tS, 500);
     delete tS;
+    tS = nullptr;
 
     sS = new SexScreen();
     mainLayout -> insertWidget(1, sS);
@@ -80,6 +81,7 @@ void MainWindow::setPrologueScreen()
 {
     fadeAwayAnimation(sS, 500);
     delete sS;
+    sS = nullptr;
 
     pS = new PrologueScreen(this, sex);
     mainLayout -> insertWidget(1, pS);
@@ -136,6 +138,7 @@ void MainWindow::setPrologueGameplayScreen()
 {
     pG = new PrologueGameplay(this, sex);
     delete pS;
+    pS = nullptr;
     mainLayout -> insertWidget(1, pG);
     fadeInAnimation(pG, 2000);
 
@@ -146,10 +149,34 @@ void MainWindow::setGameScreen()
 {
     fadeAwayAnimation(sS, 500);
     delete sS;
+    sS = nullptr;
 
     gS = new GameScreen(this, sex);
     mainLayout -> insertWidget(1, gS);
     fadeInAnimation(gS, 2000);
+
+    connect(gS, &GameScreen::gameEnded, this, &MainWindow::end_credits);
+}
+
+void MainWindow::end_credits()
+{
+    fadeAwayAnimation(gS, 2000);
+    delete gS;
+    gS = nullptr;
+
+    pS = new PrologueScreen(this, sex);
+    mainLayout -> insertWidget(1, pS);
+    fadeInAnimation(pS, 2000);
+    animatePrologueText(":/dialogs/dialogs/male/Level 9 - Ending/Credits.txt");
+    delete pS;
+    delete tB;
+    delete mainLayout;
+    pS = nullptr;
+    tB = nullptr;
+    mainLayout = nullptr;
+
+    settings.clear();
+    setTitleScreen();
 }
 
 void MainWindow::fadeAwayAnimation(QWidget *widget, int ms)

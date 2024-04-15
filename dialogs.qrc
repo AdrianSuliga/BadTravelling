@@ -116,5 +116,6 @@
         <file>dialogs/female/Level 9 - Ending/Ending_Dialog_Good.txt</file>
         <file>dialogs/male/Level 9 - Ending/Ending_Dialog_Bad.txt</file>
         <file>dialogs/male/Level 9 - Ending/Ending_Dialog_Good.txt</file>
+        <file>dialogs/male/Level 9 - Ending/Credits.txt</file>
     </qresource>
 </RCC>

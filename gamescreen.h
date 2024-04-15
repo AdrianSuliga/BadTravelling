@@ -116,6 +116,7 @@ signals:
     void heroKilled();
     void enemyKilled();
     void sceneEnded();
+    void gameEnded();
 private:
     Ui::GameScreen *ui;
     int sex;
