@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFile>
+#include <QMediaPlayer>
 #include <QTime>
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>

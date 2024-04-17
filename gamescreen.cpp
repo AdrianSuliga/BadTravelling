@@ -166,7 +166,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    good_end_function();
+    level1FirstFunction();
 }
 
 GameScreen::~GameScreen()
@@ -302,6 +302,7 @@ void GameScreen::level1FirstFunction()
             ui->enemyHealthBar->show();
             player->stop();
             player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+            player->play();
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         });
@@ -344,6 +345,9 @@ void GameScreen::level1FirstFunction()
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
             deadHero->hideResurectButton();
+            player->stop();
+            player->setSource(QUrl(":/other/other/Music/MainBattleMusic.mp3"));
+            player->play();
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         });
@@ -3635,6 +3639,9 @@ void GameScreen::heroIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadHero->show();
+    player->stop();
+    player->setSource(QUrl("qrc:/other/other/Music/MainAmbient.mp3"));
+    player->play();
     double loss = 0.1 * static_cast<double>(wealth);
     wealth -= static_cast<int>(loss);
     ui->amountOfMoneyLabel->setText(QString::number(wealth, 10));
@@ -3649,6 +3656,9 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
+    player->stop();
+    player->setSource(QUrl("qrc:/other/other/Music/MainAmbient.mp3"));
+    player->play();
     if (shieldOn)
         takeOffShield();
     gameProgress++;
