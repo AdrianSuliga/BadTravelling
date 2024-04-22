@@ -166,7 +166,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    level1FirstFunction();
+    level2PostLevelCleanup();
 }
 
 GameScreen::~GameScreen()
@@ -346,7 +346,7 @@ void GameScreen::level1FirstFunction()
             ui->enemyHealthBar->show();
             deadHero->hideResurectButton();
             player->stop();
-            player->setSource(QUrl(":/other/other/Music/MainBattleMusic.mp3"));
+            player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
             player->play();
             fight();
             disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
@@ -443,10 +443,23 @@ void GameScreen::level2FirstFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
 
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
+        if (gameProgress == 2)
+        {
+            player->stop();
+            player->setSource(QUrl("qrc:/other/other/Music/MainAmbient.mp3"));
+            player->play();
+            fadeAwayAnimation(this, 1000);
+            delay(1000);
+            level2HelperFunction();
+            return;
+        }
         numberOfRounds = 0;
         deadEnemy->hide();
         ui->enemyLabel->show();
@@ -455,14 +468,10 @@ void GameScreen::level2FirstFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
-        if (gameProgress == 2)
-        {
-            fadeAwayAnimation(this, 1000);
-            delay(1000);
-            level2HelperFunction();
-            return;
-        }
     });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
         numberOfRounds = 0;
@@ -476,6 +485,9 @@ void GameScreen::level2FirstFunction()
             drawEnemy(2);
         else
             drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
 }
@@ -515,9 +527,15 @@ void GameScreen::level2HelperFunction()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 2 - Pilica River/MonologWTrakcieWalk.txt", 8);
     connect(this, &GameScreen::sceneEnded, this, [this]() {
+        ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         drawEnemy(-1);
+        heroHealth = heroMaxHealth;
+        ui->heroHealthBar->setValue(heroHealth);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     });
@@ -530,6 +548,9 @@ void GameScreen::level2HelperFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, [this]() {
@@ -544,6 +565,9 @@ void GameScreen::level2HelperFunction()
                 drawEnemy(2);
             else
                 drawEnemy(-1);
+            player->stop();
+            player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+            player->play();
             fight();
         });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {level2BossFight();});
@@ -589,6 +613,9 @@ void GameScreen::level2BossFight()
         ui->enemyHealthBar->show();
         numberOfRounds=0;
         drawEnemy(2);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/JezusBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(this, &GameScreen::enemyKilled, this, [this]() {
@@ -617,8 +644,9 @@ void GameScreen::level2BossFight()
         ui->heroHealthBar->setValue(heroMaxHealth);
         if (enemyType == 2)
             drawEnemy(2);
-        else
-            drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/JezusBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, [this](){
@@ -655,6 +683,9 @@ void GameScreen::level2RetreatFromBossFunction()
     ui->enemyHealthBar->show();
     drawEnemy(-1);
     fadeInAnimation(this, 1000);
+    player->stop();
+    player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+    player->play();
     fight();
 
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
@@ -666,6 +697,9 @@ void GameScreen::level2RetreatFromBossFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(-1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {level2BossFight();});
@@ -681,6 +715,9 @@ void GameScreen::level2RetreatFromBossFunction()
                 drawEnemy(2);
             else
                 drawEnemy(-1);
+            player->stop();
+            player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+            player->play();
             fight();
         });
 }
