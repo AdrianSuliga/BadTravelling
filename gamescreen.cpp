@@ -786,6 +786,9 @@ void GameScreen::level3FirstFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         drawEnemy(0);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
 
@@ -801,6 +804,9 @@ void GameScreen::level3FirstFunction()
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
             drawEnemy(0);
+            player->stop();
+            player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+            player->play();
             fight();
             connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]() {
                 numberOfRounds = 0;
@@ -811,6 +817,9 @@ void GameScreen::level3FirstFunction()
                 ui->enemyStatWidget->show();
                 ui->enemyHealthBar->show();
                 drawEnemy(0);
+                player->stop();
+                player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+                player->play();
                 fight();
             });
             connect(this, &GameScreen::enemyKilled, this, [this]() {
@@ -821,7 +830,7 @@ void GameScreen::level3FirstFunction()
                                         "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background2.png) 0 0 0 0 stretch stretch;"
                                         "}");
                     fadeInAnimation(this, 1000);
-                    QString toShow = "Nie ma im końca...";
+                    QString toShow = "Nie ma im końca..."; // THE FUCK?!
                     QString buff = "";
                     for (int i=0; i<toShow.length(); i++)
                     {
@@ -877,6 +886,9 @@ void GameScreen::level3HelperFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
             dialogs = new QString[2];
@@ -901,6 +913,9 @@ void GameScreen::level3HelperFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(1);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
 }
@@ -924,6 +939,9 @@ void GameScreen::level3BossFight()
     ui->heroHealthBar->setValue(heroHealth);
     numberOfRounds = 0;
     drawEnemy(2);
+    player->stop();
+    player->setSource(QUrl("qrc:/other/other/Music/AdamBattleMusic.mp3"));
+    player->play();
     fight();
 
     connect(this, &GameScreen::enemyKilled, this, [this] {
@@ -1022,6 +1040,9 @@ void GameScreen::level3BossFight()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(gameProgress);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/AdamBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level3RetreatFromBossFunction);
@@ -1051,6 +1072,9 @@ void GameScreen::level3RetreatFromBossFunction()
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
     drawEnemy(0);
+    player->stop();
+    player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+    player->play();
     fight();
 
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
@@ -1062,6 +1086,9 @@ void GameScreen::level3RetreatFromBossFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(0);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
     connect(deadEnemy, &DeadEnemyWidget::fightBoss, this, [this]() {
@@ -1082,6 +1109,9 @@ void GameScreen::level3RetreatFromBossFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(0);
+        player->stop();
+        player->setSource(QUrl("qrc:/other/other/Music/MainBattleMusic.mp3"));
+        player->play();
         fight();
     });
 }

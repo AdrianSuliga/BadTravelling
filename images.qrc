@@ -12,6 +12,7 @@
         <file>other/Music/JezusBattleMusic.mp3</file>
         <file>other/Music/SezyBattleMusic.mp3</file>
         <file>other/Music/MainBattleMusic.mp3</file>
+        <file>other/Music/AdamBattleMusic.mp3</file>
     </qresource>
     <qresource prefix="/dialogs"/>
     <qresource prefix="/images">
