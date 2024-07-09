@@ -1181,6 +1181,7 @@ void GameScreen::level4FirstFunction()
         ui->enemyStatWidget->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -1193,6 +1194,7 @@ void GameScreen::level4FirstFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(0);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         fight();
     });
     connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -1214,6 +1216,7 @@ void GameScreen::level4FirstFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(0);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         fight();
     });
 }
@@ -1249,6 +1252,7 @@ void GameScreen::level4SecondFunction()
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
             drawEnemy(1);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             fight();
 
         connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
@@ -1260,6 +1264,7 @@ void GameScreen::level4SecondFunction()
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
             drawEnemy(1);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             fight();
         });
 
@@ -1289,6 +1294,7 @@ void GameScreen::level4SecondFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(1);
             fight();
         });
@@ -1303,6 +1309,7 @@ void GameScreen::level4BossFight()
     gameProgress = 0;
     deadEnemy->hideBossButton();
     deadEnemy->hideTransitionButton();
+    bossFightOn = true;
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -1330,6 +1337,7 @@ void GameScreen::level4BossFight()
             ui->heroHealthBar->setValue(heroHealth);
             deadEnemy->hide();
             drawEnemy(2);
+            changeMusic("qrc:/other/other/Music/JagodaBattleMusic.mp3");
             fight();
             break;
         case 1:
@@ -1343,6 +1351,7 @@ void GameScreen::level4BossFight()
             break;
         case 2:
             delay(1000);
+            changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
             riDialog->setIcon(1);
             riDialog->show();
             connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
@@ -3726,8 +3735,14 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
-    if (gameLevel != 3 || !bossFightOn)
+    if ((gameLevel == 3 || gameLevel == 4) && bossFightOn)
+    {
+
+    }
+    else
+    {
         changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
+    }
     if (shieldOn)
         takeOffShield();
     gameProgress++;
