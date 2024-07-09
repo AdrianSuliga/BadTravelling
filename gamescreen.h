@@ -94,6 +94,7 @@ private slots:
     void delay(int ms);
     void fadeAwayAnimation(QWidget* widget, int ms);
     void fadeInAnimation(QWidget* widget, int ms);
+    void changeMusic(QString path);
     //DIALOGS
     void loadScene(QString pathToDialog, int numOfLines);
     void showOneDialog(int totalNumOfLines);
@@ -122,7 +123,7 @@ signals:
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved, sezySpared;
+    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved, sezySpared, bossFightOn;
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;

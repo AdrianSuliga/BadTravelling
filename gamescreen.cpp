@@ -133,6 +133,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     heroHealRate = 0;
     shieldOn = false;
     shieldBroken = false;
+    bossFightOn = false;
 
     player = new QMediaPlayer();
     audioOutput = new QAudioOutput();
@@ -762,6 +763,7 @@ void GameScreen::level3FirstFunction()
                           "}");
     deadEnemy->showTransitionButton();
     fadeInAnimation(this, 2000);
+    changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -830,14 +832,16 @@ void GameScreen::level3FirstFunction()
                                         "border-image: url(:/images/images/Level 3 - Kurzelow/Level3Background2.png) 0 0 0 0 stretch stretch;"
                                         "}");
                     fadeInAnimation(this, 1000);
-                    QString toShow = "Nie ma im końca..."; // THE FUCK?!
-                    QString buff = "";
-                    for (int i=0; i<toShow.length(); i++)
-                    {
-                        buff += toShow[i];
-                        ui->dialogLabel->setText(buff);
-                        delay(50);
-                    }
+                    dialogs = new QString[2];
+                    if (sex == 0)
+                        dialogs[0] = "PODRÓŻNICZKA";
+                    if (sex == 1)
+                        dialogs[0] = "PODRÓŻNIK";
+                    dialogs[1] = "Nie ma im końca...";
+                    showOneDialog(2);
+                    delete[] dialogs;
+                    dialogs = nullptr;
+
                 }
                 if (gameProgress == 6)
                 {
@@ -926,6 +930,7 @@ void GameScreen::level3BossFight()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     gameProgress = 2;
+    bossFightOn = true;
 
     deadHero->showGoBackButton();
     deadEnemy->hideBossButton();
@@ -939,9 +944,7 @@ void GameScreen::level3BossFight()
     ui->heroHealthBar->setValue(heroHealth);
     numberOfRounds = 0;
     drawEnemy(2);
-    player->stop();
-    player->setSource(QUrl("qrc:/other/other/Music/AdamBattleMusic.mp3"));
-    player->play();
+    changeMusic("qrc:/other/other/Music/AdamBattleMusic.mp3");
     fight();
 
     connect(this, &GameScreen::enemyKilled, this, [this] {
@@ -1019,6 +1022,7 @@ void GameScreen::level3BossFight()
             drawEnemy(gameProgress);
             break;
         case 6:
+            player->stop();
             riDialog->show();
             riDialog->setIcon(0);
             ui->enemyLabel->setStyleSheet("");
@@ -1040,9 +1044,6 @@ void GameScreen::level3BossFight()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(gameProgress);
-        player->stop();
-        player->setSource(QUrl("qrc:/other/other/Music/AdamBattleMusic.mp3"));
-        player->play();
         fight();
     });
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level3RetreatFromBossFunction);
@@ -1135,7 +1136,9 @@ void GameScreen::level3PostLevelCleanup()
     this->setStyleSheet("#GameScreen {"
                         "border-image: url() 0 0 0 0 stretch stretch;"
                         "}");
+    changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
 
+    bossFightOn = false;
     gameProgress = 0;
     gameLevel = 4;
     heroHealth = heroMaxHealth;
@@ -3723,9 +3726,8 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
-    player->stop();
-    player->setSource(QUrl("qrc:/other/other/Music/MainAmbient.mp3"));
-    player->play();
+    if (gameLevel != 3 || !bossFightOn)
+        changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
     if (shieldOn)
         takeOffShield();
     gameProgress++;
@@ -4149,6 +4151,12 @@ void GameScreen::fadeInAnimation(QWidget *widget, int ms)
     fadeInAnimation -> setEasingCurve(QEasingCurve::InBack);
     fadeInAnimation -> start(QPropertyAnimation::DeleteWhenStopped);
     delay(ms);
+}
+void GameScreen::changeMusic(QString path)
+{
+    player->stop();
+    player->setSource(QUrl(path));
+    player->play();
 }
 
 //DIALOGS
