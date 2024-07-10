@@ -167,7 +167,7 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     loadVariables();
 
     connectShop();
-    level2PostLevelCleanup();
+    level4PostLevelCleanup();
 }
 
 GameScreen::~GameScreen()
@@ -1433,6 +1433,7 @@ void GameScreen::level4RetreatFunction()
     ui->heroHealthBar->setValue(heroHealth);
     drawEnemy(1);
     fadeInAnimation(this, 1000);
+    changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
     fight();
 
     connect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, this, [this]{
@@ -1443,6 +1444,7 @@ void GameScreen::level4RetreatFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
@@ -1467,6 +1469,7 @@ void GameScreen::level4RetreatFunction()
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         drawEnemy(1);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         fight();
     });
 }
@@ -1482,7 +1485,9 @@ void GameScreen::level4PostLevelCleanup()
     deadHero->hideGoBackButton();
     deadEnemy->showTransitionButton();
 
-    this -> setStyleSheet("#GameScreen {}");
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_1.png) 0 0 0 0 stretch stretch;"
+                          "}");
 
     gameLevel = 5;
     gameProgress = 0;
@@ -1495,18 +1500,13 @@ void GameScreen::level4PostLevelCleanup()
     ui->nameLabel->setText("");
     ui->dialogLabel->setText("");
 
+    fadeInAnimation(this, 1000);
     level5FirstFunction();
 }
 
 //LEVEL 5 - CENTRAL SQUARE AGAIN
 void GameScreen::level5FirstFunction()
 {
-    this -> setStyleSheet("#GameScreen {"
-                          "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_1.png) 0 0 0 0 stretch stretch;"
-                          "}");
-
-    fadeInAnimation(this, 1000);
-
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -1528,6 +1528,7 @@ void GameScreen::level5FirstFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -1542,6 +1543,7 @@ void GameScreen::level5FirstFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(0);
             fight();
         });
@@ -1553,6 +1555,7 @@ void GameScreen::level5FirstFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(0);
             fight();
         });
@@ -1598,6 +1601,7 @@ void GameScreen::level5SecondFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
 
@@ -1616,6 +1620,7 @@ void GameScreen::level5SecondFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(1);
             fight();
         });
@@ -1627,6 +1632,7 @@ void GameScreen::level5SecondFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(1);
             fight();
         });
@@ -1665,6 +1671,7 @@ void GameScreen::level5BossFight()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/PoteznyMatfizBattleMusic.mp3");
         drawEnemy(2);
         fight();
 
@@ -1676,6 +1683,7 @@ void GameScreen::level5BossFight()
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
             deadHero->hide();
+            changeMusic("qrc:/other/other/Music/PoteznyMatfizBattleMusic.mp3");
             drawEnemy(2);
             fight();
         });
@@ -1698,9 +1706,9 @@ void GameScreen::level5BossFight()
                 loadScene(":/dialogs/dialogs/male/Level 5 - Central Square Again/RozmowaGdyNieMaszManula.txt", 20);
             connect(this, &GameScreen::sceneEnded, this, [this]{
                 level5PostLevelCleanup();
-                if (manulOwned == true)
+                if (manulOwned)
                     level6FirstFunction();
-                if (manulOwned == false)
+                else
                     level7FirstFunction();
             });
         });
@@ -1725,6 +1733,7 @@ void GameScreen::level5RetreatFunction()
     ui->enemyHealthBar->show();
     fadeInAnimation(this, 1000);
 
+    changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
     drawEnemy(1);
     fight();
 
@@ -1736,6 +1745,7 @@ void GameScreen::level5RetreatFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
@@ -1749,6 +1759,7 @@ void GameScreen::level5RetreatFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
