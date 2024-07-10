@@ -1817,6 +1817,7 @@ void GameScreen::level6FirstFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -1835,6 +1836,7 @@ void GameScreen::level6FirstFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -1846,6 +1848,7 @@ void GameScreen::level6FirstFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -1883,6 +1886,7 @@ void GameScreen::level6SecondFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -1900,6 +1904,7 @@ void GameScreen::level6SecondFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(1);
             fight();
         });
@@ -1911,6 +1916,7 @@ void GameScreen::level6SecondFunction()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(1);
             fight();
         });
@@ -1946,6 +1952,7 @@ void GameScreen::level6BossFight()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/JaworekBattleMusic.mp3");
         drawEnemy(2);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -1994,6 +2001,7 @@ void GameScreen::level6BossFight()
             ui->enemyHealthBar->show();
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
+            changeMusic("qrc:/other/other/Music/JaworekBattleMusic.mp3");
             drawEnemy(2);
             fight();
         });
@@ -2017,6 +2025,7 @@ void GameScreen::level6RetreatFunction()
     ui->enemyLabel->show();
     ui->enemyStatWidget->show();
     ui->enemyHealthBar->show();
+    changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
     drawEnemy(1);
     fight();
 
@@ -2028,6 +2037,7 @@ void GameScreen::level6RetreatFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
@@ -2041,6 +2051,7 @@ void GameScreen::level6RetreatFunction()
         ui->enemyHealthBar->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
