@@ -2119,6 +2119,7 @@ void GameScreen::level7FirstFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -2153,6 +2154,7 @@ void GameScreen::level7FirstFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(0);
             fight();
         });
@@ -2164,6 +2166,7 @@ void GameScreen::level7FirstFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(0);
             fight();
         });
@@ -2221,6 +2224,7 @@ void GameScreen::level7SecondFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(2);
         fight();
 
@@ -2232,6 +2236,7 @@ void GameScreen::level7SecondFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
             drawEnemy(2);
             fight();
         });
@@ -2297,6 +2302,7 @@ void GameScreen::level7ThirdFunction()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/SezyBattleMusic.mp3");
             drawEnemy(3);
             fight();
             connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -2320,6 +2326,7 @@ void GameScreen::level7ThirdFunction()
                 ui->enemyHealthBar->show();
                 heroHealth = heroMaxHealth;
                 ui->heroHealthBar->setValue(heroHealth);
+                changeMusic("qrc:/other/other/Music/SezyBattleMusic.mp3");
                 drawEnemy(3);
                 fight();
             });
@@ -2354,6 +2361,7 @@ void GameScreen::level7BossFight()
         deadHero->hide();
     ui->heroHealthBar->setValue(heroHealth);
     ui->dialogLabel->setText("");
+    bossFightOn = true;
     fadeInAnimation(this, 1000);
 
     dialogs = new QString[2];
@@ -2380,6 +2388,7 @@ void GameScreen::level7BossFight()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/AlphaBattleMusic.mp3");
         drawEnemy(4);
         fight();
         connect(this, &GameScreen::enemyKilled, this, [this]{
@@ -2408,6 +2417,7 @@ void GameScreen::level7BossFight()
             ui->enemyLabel->show();
             ui->enemyStatWidget->show();
             ui->enemyHealthBar->show();
+            changeMusic("qrc:/other/other/Music/AlphaBattleMusic.mp3");
             drawEnemy(4);
             fight();
         });
@@ -2433,6 +2443,8 @@ void GameScreen::level7AlfaFight()
     connect(deadHero, &DeadHeroWidget::resurrectYourself, this, &GameScreen::level7BossFight);
     connect(deadHero, &DeadHeroWidget::goBackToFighting, this, &GameScreen::level7RetreatFunction);
     connect(this, &GameScreen::enemyKilled, this, [this]{
+        bossFightOn = false;
+        changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
         dialogs = new QString[2];
         dialogs[0] = "SENIOR HISZPANEK";
         dialogs[1] = "Nieeee!!!";
@@ -2489,6 +2501,7 @@ void GameScreen::level7RetreatFunction()
                             "}");
     }
     fadeInAnimation(this, 1000);
+    changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
     drawEnemy(0);
     fight();
 
@@ -2500,6 +2513,7 @@ void GameScreen::level7RetreatFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -2511,6 +2525,7 @@ void GameScreen::level7RetreatFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -3757,7 +3772,7 @@ void GameScreen::enemyIsDead()
     ui->enemyStatWidget->hide();
     ui->enemyHealthBar->hide();
     deadEnemy->show();
-    if ((gameLevel == 3 || gameLevel == 4) && bossFightOn)
+    if ((gameLevel == 3 || gameLevel == 4 || gameLevel == 7) && bossFightOn)
     {
 
     }
