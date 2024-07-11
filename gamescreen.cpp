@@ -2601,6 +2601,7 @@ void GameScreen::level8DapoFunction()
         ui->enemyHealthBar->show();
         ui->enemyStatWidget->show();
         ui->enemyLabel->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(0);
         fight();
     });
@@ -2613,6 +2614,7 @@ void GameScreen::level8DapoFunction()
         ui->enemyHealthBar->show();
         heroHealth=heroMaxHealth;
         ui->heroHealthBar->setValue(heroMaxHealth);
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(gameProgress);
         fight();
     });
@@ -2644,6 +2646,7 @@ void GameScreen::level8PawelFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(1);
         fight();
     });
@@ -2697,6 +2700,7 @@ void GameScreen::level8MonikaMarczuFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         deadEnemy->showBossButton();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(2);
         fight();
     });
@@ -2737,6 +2741,7 @@ void GameScreen::level8TosiaFunction()
     ui->nameLabel->setText("");
     ui->speakerLabel->setStyleSheet("");
     numberOfRounds=0;
+    changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
     drawEnemy(3);
     fight();
     connect(this, &GameScreen::enemyKilled, this, [this]() {
@@ -2772,6 +2777,7 @@ void GameScreen::level8DejaFunction()
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
         ui->enemyLabel->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(4);
         fight();
     });
@@ -2834,6 +2840,7 @@ void GameScreen::level8JadziaFunction()
         ui->enemyLabel->show();
         ui->enemyStatWidget->show();
         ui->enemyHealthBar->show();
+        changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
         drawEnemy(5);
         fight();
     });
@@ -2867,11 +2874,13 @@ void GameScreen::level8BozenkaFunction()
     numberOfRounds = 0;
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroMaxHealth);
+    changeMusic("qrc:/other/other/Music/BozenkaFaza1.mp3");
     drawEnemy(6);
     fight();
     connect(this, &GameScreen::enemyKilled, this, [this]{
         disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
         deadEnemy->hide();
+        changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
         dialogs = new QString[2];
         dialogs[0] = "BOŻENKA";
         dialogs[1] = "Ach!";
@@ -2890,9 +2899,11 @@ void GameScreen::level8BozenkaFunction()
             numberOfRounds = 0;
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroMaxHealth);
+            changeMusic("qrc:/other/other/Music/BozenkaFaza2.mp3");
             drawEnemy(7);
             fight();
             connect(this, &GameScreen::enemyKilled, this, [this]{
+                changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
                 level8PostLevelCleanup();
             });
         });
@@ -2993,6 +3004,7 @@ void GameScreen::good_end_function()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 9 - Ending/Ending_Dialog_Good.txt", 32);
     connect(this, &GameScreen::sceneEnded, this, [this]{
+        player->stop();
         emit gameEnded();
     });
 }
@@ -3011,6 +3023,7 @@ void GameScreen::bad_end_function()
     if (sex == 1)
         loadScene(":/dialogs/dialogs/male/Level 9 - Ending/Ending_Dialog_Bad.txt", 10);
     connect(this, &GameScreen::sceneEnded, this, [this]{
+        player->stop();
         emit gameEnded();
     });
 }
