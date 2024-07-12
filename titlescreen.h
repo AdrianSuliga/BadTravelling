@@ -16,6 +16,8 @@ public:
     explicit TitleScreen(QWidget *parent = nullptr);
     ~TitleScreen();
     void paintEvent(QPaintEvent *event);
+    void activate_continue_button();
+    void deactivate_continue_button();
 signals:
     void continueClicked();
     void newgameClicked();

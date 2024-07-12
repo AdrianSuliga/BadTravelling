@@ -8,6 +8,9 @@
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 
+const int SECOND = 100;
+QSettings main_settings("BEBELNO ENTERTAINMENT", "Lost in Wloszczowa");
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -48,13 +51,19 @@ void MainWindow::setTitleScreen()
     tB = new TitleBar(this);
     tB -> setFixedHeight(30);
 
+    if (main_settings.contains("IS_SAVED"))
+        tS->activate_continue_button();
+    else
+        tS->deactivate_continue_button();
+
     mainLayout = new QVBoxLayout(ui->centralwidget);
     mainLayout -> insertWidget(0, tB);
     mainLayout -> insertWidget(1, tS);
 
-    //connect(tS, &TitleScreen::continueClicked, this, );
+    if (main_settings.contains("IS_SAVED"))
+        connect(tS, &TitleScreen::continueClicked, this, [this]{ setGameScreen(false); });
+
     connect(tS, &TitleScreen::newgameClicked, this, &MainWindow::setSexScreen);
-    //connect(tS, &TitleScreen::aboutClicked, this );
     connect(tS, &TitleScreen::exitClicked, this, &MainWindow::close);
 
     connect(tB, &TitleBar::minimise, this, &MainWindow::showMinimized);
@@ -80,10 +89,8 @@ void MainWindow::setSexScreen()
     mainLayout -> insertWidget(1, sS);
     fadeInAnimation(sS, 500);
 
-    //connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setPrologueScreen();});
-    //connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setPrologueScreen();});
-    connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setGameScreen();});
-    connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setGameScreen();});
+    connect(sS, &SexScreen::manChosen, this, [this]() {sex = 1; setPrologueScreen();});
+    connect(sS, &SexScreen::womanChosen, this, [this]() {sex = 0; setPrologueScreen();});
 }
 
 void MainWindow::setPrologueScreen()
@@ -122,21 +129,21 @@ void MainWindow::animatePrologueText(QString path)
             if (line == "")
             {
                 pS->animateText("");
-                delay(1000);
+                delay(SECOND);
             }
             else if (lineCount == 4 || lineCount == 7 || lineCount == 9 || lineCount == 10)
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 3000);
-                delay(5000);
-                fadeAwayAnimation(pS, 1000);
+                fadeInAnimation(pS, 3 * SECOND);
+                delay(5 * SECOND);
+                fadeAwayAnimation(pS, SECOND);
             }
             else
             {
                 pS->animateText(line);
-                fadeInAnimation(pS, 3000);
-                delay(2000);
-                fadeAwayAnimation(pS, 1000);
+                fadeInAnimation(pS, 3 * SECOND);
+                delay(2 * SECOND);
+                fadeAwayAnimation(pS, SECOND);
             }
             lineCount++;
         }
@@ -151,19 +158,31 @@ void MainWindow::setPrologueGameplayScreen()
     mainLayout -> insertWidget(1, pG);
     fadeInAnimation(pG, 2000);
 
-    connect(pG, &PrologueGameplay::prologueEnded, this, &MainWindow::setGameScreen);
+    connect(pG, &PrologueGameplay::prologueEnded, this, [this]() { setGameScreen(true); });
 }
 
-void MainWindow::setGameScreen()
+void MainWindow::setGameScreen(bool is_new_game)
 {
-    fadeAwayAnimation(sS, 500);
-    delete sS;
-    sS = nullptr;
+    if (is_new_game)
+    {
+        fadeAwayAnimation(pG, 500);
+        delete pG;
+        pG = nullptr;
+    }
+    else
+    {
+        fadeAwayAnimation(tS, 500);
+        delete tS;
+        tS = nullptr;
+    }
 
-    gS = new GameScreen(this, sex);
+    gS = new GameScreen(this, sex, is_new_game);
     mainLayout -> insertWidget(1, gS);
     fadeInAnimation(gS, 2000);
 
+    connect(gS, &GameScreen::saveMade, this, [this]() {
+        main_settings.setValue("IS_VALUE", true);
+    });
     connect(gS, &GameScreen::gameEnded, this, &MainWindow::end_credits);
 }
 
@@ -188,7 +207,7 @@ void MainWindow::end_credits()
     player = nullptr;
     audioOutput = nullptr;
 
-    settings.clear();
+    main_settings.clear();
     setTitleScreen();
 }
 

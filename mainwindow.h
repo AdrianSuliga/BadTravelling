@@ -39,7 +39,7 @@ private slots:
     //PROLOGUE GAMEPLAY SCREEN
     void setPrologueGameplayScreen();
     //GAME SCREEN
-    void setGameScreen();
+    void setGameScreen(bool is_new_game);
     //END
     void end_credits();
     //GLOBAL FUNCTIONALITIES
@@ -60,8 +60,6 @@ private:
     GameScreen *gS;
 
     QVBoxLayout *mainLayout;
-
-    QSettings settings;
     QMediaPlayer* player;
     QAudioOutput* audioOutput;
 };

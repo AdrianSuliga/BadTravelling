@@ -117,5 +117,10 @@
         <file>images/Level 8 - Sikorski High/level8Background_3.png</file>
         <file>images/Level 8 - Sikorski High/Level8Background_1.png</file>
         <file>images/Level 8 - Sikorski High/Level8Background_1_Fixed.png</file>
+        <file>images/Level 0 - Prologue/Pic1.png</file>
+        <file>images/Level 0 - Prologue/Pic2.png</file>
+        <file>images/Level 0 - Prologue/Pic3.png</file>
+        <file>images/Level 0 - Prologue/Pic4.png</file>
+        <file>images/Level 0 - Prologue/Pic5.png</file>
     </qresource>
 </RCC>

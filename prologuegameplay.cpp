@@ -28,7 +28,7 @@ void PrologueGameplay::animateText(QString text)
     if (text == "")
     {
         ui->dialogLabel->setText("");
-        delay(50);
+        delay(5);
         return;
     }
     QString toShow = "";
@@ -36,7 +36,7 @@ void PrologueGameplay::animateText(QString text)
     {
         toShow += text[i];
         ui->dialogLabel->setText(toShow);
-        delay(50);
+        delay(5);
     }
 }
 

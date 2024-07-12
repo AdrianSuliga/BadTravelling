@@ -5,6 +5,7 @@
 #include <QHash>
 #include <QAudioOutput>
 #include <QMediaPlayer>
+#include <QSettings>
 #include <deadenemywidget.h>
 #include <deadherowidget.h>
 #include <tutorialinfo.h>
@@ -19,7 +20,7 @@ class GameScreen : public QWidget
     Q_OBJECT
 
 public:
-    explicit GameScreen(QWidget *parent = nullptr, int gender = -1);
+    explicit GameScreen(QWidget *parent = nullptr, int gender = -1, bool is_new_game = false);
     ~GameScreen();
 protected:
     void paintEvent(QPaintEvent *event);
@@ -115,10 +116,13 @@ private slots:
     void heroAttacks();
     void heroDefends();
     void heroHealsHimself();
+    //SAVE
+    void writeSettings();
 signals:
     void heroKilled();
     void enemyKilled();
     void sceneEnded();
+    void saveMade();
     void gameEnded();
 private:
     Ui::GameScreen *ui;
@@ -136,6 +140,7 @@ private:
     DeadHeroWidget *deadHero;
     TutorialInfo *tutorialWidget;
     RecoveredItemDialog *riDialog;
+    QSettings game_settings;
 };
 
 #endif // GAMESCREEN_H

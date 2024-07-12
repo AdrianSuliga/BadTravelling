@@ -13,7 +13,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 
-GameScreen::GameScreen(QWidget *parent, int gender) :
+GameScreen::GameScreen(QWidget *parent, int gender, bool is_new_game) :
     QWidget(parent),
     ui(new Ui::GameScreen)
 {
@@ -54,12 +54,6 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     ui->infoAboutActionLabel->setFont(Girassol);
     ui->confirmButton->setFont(Girassol);
 
-    gameLevel = 1;
-    gameProgress = 1;
-    enemyType = -1;
-    numberOfRounds = 0;
-    counterOfLines = 0;
-    actionPoints = 0;
     nameToPath["..."] = "";
     nameToPath["???"] = "";
     nameToPath["PODRÓŻNIK"] = "border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;";
@@ -107,67 +101,44 @@ GameScreen::GameScreen(QWidget *parent, int gender) :
     nameToPath["BOŻENKA"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;";
     nameToPath["BOŻENKUS"] = "border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;";
 
-    if (sex == 0)
-    {
-        ui->heroLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;");
-        ui->speakerLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;");
-        ui->nameLabel->setText("PODRÓŻNICZKA");
-        heroAttack = 10;
-        heroDefense = 15;
-        heroHealth = 100;
-        heroMaxHealth = 100;
-    }
-    if (sex == 1)
-    {
-        ui->heroLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;");
-        ui->speakerLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;");
-        ui->nameLabel->setText("PODRÓŻNIK");
-        heroAttack = 20;
-        heroDefense = 15;
-        heroHealth = 50;
-        heroMaxHealth = 50;
-    }
-    heroShield = 0;
-    heroReflectionRate = 0;
-    heroCritRate = 0;
-    heroHealRate = 0;
-    shieldOn = false;
-    shieldBroken = false;
-    bossFightOn = false;
-
     player = new QMediaPlayer();
     audioOutput = new QAudioOutput();
     player->setAudioOutput(audioOutput);
 
-    curseRemoved = false;
-    sezySpared = false;
-
-    enemyAttack = -1;
-    enemyDefense = -1;
-    enemyHealth = -1;
-    enemyMaxHealth = -1;
-
-    wealth = 150000;
-
-    weaponLevel = 0;
-    shieldLevel = 0;
-    healthLevel = 0;
-
-    weaponPrice = 100 * weaponLevel * weaponLevel * cbrt(weaponLevel) + 100;
-    shieldPrice = 90 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 90;
-    healthPrice = 120 * healthLevel * healthLevel * cbrt(healthLevel) + 120;
-    blahajPrice = 5000;
-    manulPrice = 10000;
-    drPieprzerPrice = 20000;
-
-    blahajOwned = false;
-    manulOwned = false;
-    drPieprzerOwned = false;
+    if (is_new_game)
+        game_settings.clear();
 
     loadVariables();
-
     connectShop();
-    level4PostLevelCleanup();
+
+    switch (gameLevel) {
+        case 1:
+            level1FirstFunction();
+        break;
+        case 2:
+            level2FirstFunction();
+        break;
+        case 3:
+            level3FirstFunction();
+        break;
+        case 4:
+            level4FirstFunction();
+        break;
+        case 5:
+            level5FirstFunction();
+        break;
+        case 6:
+            level6FirstFunction();
+        break;
+        case 7:
+            level7FirstFunction();
+        break;
+        case 8:
+            level8DapoFunction();
+        break;
+        default:
+        break;
+    }
 }
 
 GameScreen::~GameScreen()
@@ -177,6 +148,97 @@ GameScreen::~GameScreen()
 
 void GameScreen::loadVariables()
 {
+    if (game_settings.contains("GAME_LEVEL"))
+    {
+        gameLevel = game_settings.value("GAME_LEVEL").toInt();
+
+        heroAttack = game_settings.value("HERO_ATTACK").toInt();
+        heroDefense = game_settings.value("HERO_DEFENSE").toInt();
+        heroMaxHealth = game_settings.value("HERO_HEALTH").toInt();
+        heroCritRate = game_settings.value("HERO_CRIT_RATE").toInt();
+        heroReflectionRate = game_settings.value("HERO_REFLECTION_RATE").toInt();
+        heroHealRate = game_settings.value("HERO_HEAL_RATE").toInt();
+
+        curseRemoved = game_settings.value("CURSE_REMOVED").toBool();
+        sezySpared = game_settings.value("SEZY_SPARED").toBool();
+
+        wealth = game_settings.value("WEALTH").toInt();
+
+        weaponLevel = game_settings.value("WEAPON_LEVEL").toInt();
+        shieldLevel = game_settings.value("SHIELD_LEVEL").toInt();
+        healthLevel = game_settings.value("HEALTH_LEVEL").toInt();
+
+        blahajOwned = game_settings.value("BLAHAJ_OWNED").toBool();
+        manulOwned = game_settings.value("MANUL_OWNED").toBool();
+        drPieprzerOwned = game_settings.value("DR_PIEPRZER_OWNED").toBool();
+    }
+    else
+    {
+        gameLevel = 1;
+
+        if (sex == 0)
+        {
+            heroAttack = 10;
+            heroDefense = 15;
+            heroMaxHealth = 100;
+        }
+        if (sex == 1)
+        {
+            heroAttack = 20;
+            heroDefense = 15;
+            heroMaxHealth = 50;
+        }
+        heroCritRate = 0;
+        heroReflectionRate = 0;
+        heroHealRate = 0;
+
+        curseRemoved = false;
+        sezySpared = false;
+
+        wealth = 0;
+
+        weaponLevel = 0;
+        shieldLevel = 0;
+        healthLevel = 0;
+
+        blahajOwned = false;
+        manulOwned = false;
+        drPieprzerOwned = false;
+    }
+
+    heroHealth = heroMaxHealth;
+    gameProgress = 1;
+    enemyType = -1;
+    numberOfRounds = 0;
+    counterOfLines = 0;
+    actionPoints = 0;
+    heroShield = 0;
+
+    enemyAttack = -1;
+    enemyDefense = -1;
+    enemyHealth = -1;
+    enemyMaxHealth = -1;
+
+    shieldOn = false;
+    shieldBroken = false;
+    bossFightOn = false;
+
+    weaponPrice = 100 * weaponLevel * weaponLevel * cbrt(weaponLevel) + 100;
+    shieldPrice = 90 * shieldLevel * shieldLevel * cbrt(shieldLevel) + 90;
+    healthPrice = 120 * healthLevel * healthLevel * cbrt(healthLevel) + 120;
+    blahajPrice = 5000;
+    manulPrice = 10000;
+    drPieprzerPrice = 20000;
+
+    if (sex == 0)
+        ui->heroLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Woman.png) 0 0 0 0 stretch stretch;");
+    if (sex == 1)
+        ui->heroLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/Man.png) 0 0 0 0 stretch stretch;");
+
+    ui->heroAttackPointsLabel->setText(QString::number(heroAttack));
+    ui->heroDefensePointsLabel->setText(QString::number(heroDefense));
+    ui->heroHealthPointsLabel->setText(QString::number(heroMaxHealth));
+
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 1 - Central Square/Level1Background.png) 0 0 0 0 stretch stretch;"
                         "}");
@@ -373,6 +435,8 @@ void GameScreen::endSceneAndPostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
+    writeSettings();
+    emit saveMade();
 
     //LOAD END SCENE
     dialogs = new QString[2];
@@ -733,6 +797,7 @@ void GameScreen::level2PostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::fightBoss, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
+    writeSettings();
 
     deadEnemy->hide();
     ui->enemyLabel->show();
@@ -1129,6 +1194,7 @@ void GameScreen::level3PostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
+    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadHero->hideGoBackButton();
@@ -1482,6 +1548,7 @@ void GameScreen::level4PostLevelCleanup()
     disconnect(riDialog, &RecoveredItemDialog::acceptMessage, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
+    writeSettings();
     deadHero->hideGoBackButton();
     deadEnemy->showTransitionButton();
 
@@ -1772,6 +1839,7 @@ void GameScreen::level5PostLevelCleanup()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
+    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadEnemy->hide();
@@ -2063,6 +2131,7 @@ void GameScreen::level6PostLevelCleanup()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
+    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadEnemy->hide();
@@ -2544,6 +2613,7 @@ void GameScreen::level7PostLevelCleanup()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(riDialog, nullptr, nullptr, nullptr);
+    writeSettings();
 
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
@@ -4045,7 +4115,6 @@ void GameScreen::heroHealsHimself()
     }
     fight();
 }
-
 void GameScreen::updateActionPointsButtons()
 {
     switch (actionPoints)
@@ -4184,6 +4253,37 @@ void GameScreen::updateActionPointsButtons()
     ui->thirdActionBox->setEnabled(false);
     ui->fourthActionBox->setEnabled(false);
     ui->fifthActionBox->setEnabled(false);
+}
+
+//SAVE
+void GameScreen::writeSettings()
+{
+    //Game level
+    game_settings.setValue("GAME_LEVEL", gameLevel);
+
+    //Character stats
+    game_settings.setValue("SEX", sex);
+    game_settings.setValue("HERO_ATTACK", heroAttack);
+    game_settings.setValue("HERO_DEFENSE", heroDefense);
+    game_settings.setValue("HERO_HEALTH", heroMaxHealth);
+    game_settings.setValue("HERO_CRIT_RATE", heroCritRate);
+    game_settings.setValue("HERO_REFLECTION_RATE", heroReflectionRate);
+    game_settings.setValue("HERO_HEAL_RATE", heroHealRate);
+
+    //Character levels
+    game_settings.setValue("WEAPON_LEVEL", weaponLevel);
+    game_settings.setValue("SHIELD_LEVEL", shieldLevel);
+    game_settings.setValue("HEALTH_LEVEL", healthLevel);
+
+    //Bought items
+    game_settings.setValue("WEALTH", wealth);
+    game_settings.setValue("BLAHAJ_OWNED", blahajOwned);
+    game_settings.setValue("MANUL_OWNED", manulOwned);
+    game_settings.setValue("DR_PIEPRZER_OWNED", drPieprzerOwned);
+
+    //Decisions
+    game_settings.setValue("CURSE_REMOVED", curseRemoved);
+    game_settings.setValue("SEZY_SPARED", sezySpared);
 }
 
 //OTHER

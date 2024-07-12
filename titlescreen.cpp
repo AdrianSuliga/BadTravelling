@@ -39,6 +39,25 @@ void TitleScreen::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+void TitleScreen::activate_continue_button()
+{
+    ui->continueButton->setEnabled(true);
+}
+
+void TitleScreen::deactivate_continue_button()
+{
+    ui->continueButton->setEnabled(false);
+    ui->continueButton->setStyleSheet("QPushButton {"
+                                      "border-style: solid;"
+                                      "font-size: 40px;"
+                                      "font-weight: bold;"
+                                      "border-radius: 20px;"
+                                      "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), stop:1 rgba(60,60,60,200));"
+                                      "color: rgb(120, 120, 120);"
+                                      "}"
+                                      "QPushButton:hover {}");
+}
+
 void TitleScreen::on_exitButton_clicked() {emit exitClicked();}
 void TitleScreen::on_aboutButton_clicked() {emit aboutClicked();}
 void TitleScreen::on_newgameButton_clicked() {emit newgameClicked();}
