@@ -42,6 +42,17 @@ void TitleScreen::paintEvent(QPaintEvent *event)
 void TitleScreen::activate_continue_button()
 {
     ui->continueButton->setEnabled(true);
+    ui->continueButton->setStyleSheet("QPushButton {"
+                                      "border-style: solid;"
+                                      "font-size: 40px;"
+                                      "font-weight: bold;"
+                                      "border-radius: 20px;"
+                                      "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(40,40,40,200), stop:1 rgba(60,60,60,200));"
+                                      "color: rgb(180, 180, 180);"
+                                      "}"
+                                      "QPushButton:hover {"
+                                      "background-color: qlineargradient(spread:pad, x1:0.29207, y1:0.389, x2:1, y2:0, stop:0 rgba(20,20,20,200), stop:1 rgba(40,40,40,200));"
+                                      "}");
 }
 
 void TitleScreen::deactivate_continue_button()

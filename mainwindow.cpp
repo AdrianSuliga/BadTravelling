@@ -61,7 +61,10 @@ void MainWindow::setTitleScreen()
     mainLayout -> insertWidget(1, tS);
 
     if (main_settings.contains("IS_SAVED"))
-        connect(tS, &TitleScreen::continueClicked, this, [this]{ setGameScreen(false); });
+        connect(tS, &TitleScreen::continueClicked, this, [this]{
+            player->stop();
+            setGameScreen(false);
+        });
 
     connect(tS, &TitleScreen::newgameClicked, this, &MainWindow::setSexScreen);
     connect(tS, &TitleScreen::exitClicked, this, &MainWindow::close);
@@ -166,22 +169,23 @@ void MainWindow::setGameScreen(bool is_new_game)
     if (is_new_game)
     {
         fadeAwayAnimation(pG, 500);
+        gS = new GameScreen(this, sex, is_new_game);
         delete pG;
         pG = nullptr;
     }
     else
     {
         fadeAwayAnimation(tS, 500);
+        gS = new GameScreen(this, sex, is_new_game);
         delete tS;
         tS = nullptr;
     }
 
-    gS = new GameScreen(this, sex, is_new_game);
     mainLayout -> insertWidget(1, gS);
     fadeInAnimation(gS, 2000);
 
     connect(gS, &GameScreen::saveMade, this, [this]() {
-        main_settings.setValue("IS_VALUE", true);
+        main_settings.setValue("IS_SAVED", true);
     });
     connect(gS, &GameScreen::gameEnded, this, &MainWindow::end_credits);
 }

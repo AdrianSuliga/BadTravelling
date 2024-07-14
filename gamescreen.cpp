@@ -13,6 +13,8 @@
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 
+QSettings game_settings("BEBELNO ENTERTAINMENT", "Lost in Wloszczowa");
+
 GameScreen::GameScreen(QWidget *parent, int gender, bool is_new_game) :
     QWidget(parent),
     ui(new Ui::GameScreen)
@@ -23,7 +25,6 @@ GameScreen::GameScreen(QWidget *parent, int gender, bool is_new_game) :
     QFont Girassol(family);
 
     sex = gender;
-
     ui->dialogLabel->setFont(Girassol);
     ui->nameLabel->setFont(Girassol);
 
@@ -113,27 +114,24 @@ GameScreen::GameScreen(QWidget *parent, int gender, bool is_new_game) :
 
     switch (gameLevel) {
         case 1:
-            level1FirstFunction();
-        break;
-        case 2:
             level2FirstFunction();
         break;
-        case 3:
+        case 2:
             level3FirstFunction();
         break;
-        case 4:
+        case 3:
             level4FirstFunction();
         break;
-        case 5:
+        case 4:
             level5FirstFunction();
         break;
-        case 6:
+        case 5:
             level6FirstFunction();
         break;
-        case 7:
+        case 6:
             level7FirstFunction();
         break;
-        case 8:
+        case 7:
             level8DapoFunction();
         break;
         default:
@@ -146,11 +144,13 @@ GameScreen::~GameScreen()
     delete ui;
 }
 
+//SAVE
 void GameScreen::loadVariables()
 {
     if (game_settings.contains("GAME_LEVEL"))
     {
         gameLevel = game_settings.value("GAME_LEVEL").toInt();
+        sex = game_settings.value("SEX").toInt();
 
         heroAttack = game_settings.value("HERO_ATTACK").toInt();
         heroDefense = game_settings.value("HERO_DEFENSE").toInt();
@@ -242,6 +242,7 @@ void GameScreen::loadVariables()
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 1 - Central Square/Level1Background.png) 0 0 0 0 stretch stretch;"
                         "}");
+
     ui->heroAttackPointsLabel->setText(QString::number(heroAttack, 10));
     ui->heroDefensePointsLabel->setText(QString::number(heroDefense, 10));
     ui->heroHealthPointsLabel->setText(QString::number(heroHealth, 10));
@@ -325,6 +326,86 @@ void GameScreen::loadVariables()
     tutorialWidget->hide();
     ui->confirmButton->hide();
 }
+void GameScreen::writeSettings()
+{
+    //Game level
+    game_settings.setValue("GAME_LEVEL", gameLevel);
+
+    //Character stats
+    game_settings.setValue("SEX", sex);
+    game_settings.setValue("HERO_ATTACK", heroAttack);
+    game_settings.setValue("HERO_DEFENSE", heroDefense);
+    game_settings.setValue("HERO_HEALTH", heroMaxHealth);
+    game_settings.setValue("HERO_CRIT_RATE", heroCritRate);
+    game_settings.setValue("HERO_REFLECTION_RATE", heroReflectionRate);
+    game_settings.setValue("HERO_HEAL_RATE", heroHealRate);
+
+    //Character levels
+    game_settings.setValue("WEAPON_LEVEL", weaponLevel);
+    game_settings.setValue("SHIELD_LEVEL", shieldLevel);
+    game_settings.setValue("HEALTH_LEVEL", healthLevel);
+
+    //Bought items
+    game_settings.setValue("WEALTH", wealth);
+    game_settings.setValue("BLAHAJ_OWNED", blahajOwned);
+    game_settings.setValue("MANUL_OWNED", manulOwned);
+    game_settings.setValue("DR_PIEPRZER_OWNED", drPieprzerOwned);
+
+    //Decisions
+    game_settings.setValue("CURSE_REMOVED", curseRemoved);
+    game_settings.setValue("SEZY_SPARED", sezySpared);
+}
+void GameScreen::printSettings()
+{
+    qDebug() << "LEVEL: " << game_settings.value("GAME_LEVEL").toInt();
+    qDebug() << game_settings.value("SEX").toInt();
+
+    qDebug() << game_settings.value("HERO_ATTACK").toInt();
+    qDebug() << game_settings.value("HERO_DEFENSE").toInt();
+    qDebug() << game_settings.value("HERO_HEALTH").toInt();
+    qDebug() << game_settings.value("HERO_CRIT_RATE").toInt();
+    qDebug() << game_settings.value("HERO_REFLECTION_RATE").toInt();
+    qDebug() << game_settings.value("HERO_HEAL_RATE").toInt();
+
+    qDebug() << game_settings.value("CURSE_REMOVED").toBool();
+    qDebug() << game_settings.value("SEZY_SPARED").toBool();
+
+    qDebug() << game_settings.value("WEALTH").toInt();
+
+    qDebug() << game_settings.value("WEAPON_LEVEL").toInt();
+    qDebug() << game_settings.value("SHIELD_LEVEL").toInt();
+    qDebug() << game_settings.value("HEALTH_LEVEL").toInt();
+
+    qDebug() << game_settings.value("BLAHAJ_OWNED").toBool();
+    qDebug() << game_settings.value("MANUL_OWNED").toBool();
+    qDebug() << game_settings.value("DR_PIEPRZER_OWNED").toBool();
+}
+void GameScreen::printVars()
+{
+    qDebug() << "LEVEL: " << gameLevel;
+    qDebug() << sex;
+
+    qDebug() << heroAttack;
+    qDebug() << heroDefense;
+    qDebug() << heroMaxHealth;
+    qDebug() << heroCritRate;
+    qDebug() << heroReflectionRate;
+    qDebug() << heroHealRate;
+
+    qDebug() << curseRemoved;
+    qDebug() << sezySpared;
+
+    qDebug() << wealth;
+
+    qDebug() << weaponLevel;
+    qDebug() << shieldLevel;
+    qDebug() << healthLevel;
+
+    qDebug() << blahajOwned;
+    qDebug() << manulOwned;
+    qDebug() << drPieprzerOwned;
+}
+
 void GameScreen::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;
@@ -435,8 +516,6 @@ void GameScreen::endSceneAndPostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(this, &GameScreen::heroKilled, nullptr, nullptr);
-    writeSettings();
-    emit saveMade();
 
     //LOAD END SCENE
     dialogs = new QString[2];
@@ -474,6 +553,8 @@ void GameScreen::level2FirstFunction()
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
+    writeSettings();
+    emit saveMade();
     deadHero->hide();
     deadHero->showResurectButton();
     ui->enemyLabel->show();
@@ -797,7 +878,6 @@ void GameScreen::level2PostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::fightBoss, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
-    writeSettings();
 
     deadEnemy->hide();
     ui->enemyLabel->show();
@@ -829,6 +909,7 @@ void GameScreen::level3FirstFunction()
     deadEnemy->showTransitionButton();
     fadeInAnimation(this, 2000);
     changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
+    writeSettings();
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -1194,7 +1275,6 @@ void GameScreen::level3PostLevelCleanup()
     disconnect(deadEnemy, &DeadEnemyWidget::transitionToNextPhase, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::resurrectYourself, nullptr, nullptr);
     disconnect(deadHero, &DeadHeroWidget::goBackToFighting, nullptr, nullptr);
-    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadHero->hideGoBackButton();
@@ -1225,6 +1305,7 @@ void GameScreen::level4FirstFunction()
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_1.png) 0 0 0 0 stretch stretch;"
                         "}");
+    writeSettings();
     fadeInAnimation(this, 2000);
     dialogs = new QString[2];
     if (sex == 0)
@@ -1548,7 +1629,6 @@ void GameScreen::level4PostLevelCleanup()
     disconnect(riDialog, &RecoveredItemDialog::acceptMessage, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
-    writeSettings();
     deadHero->hideGoBackButton();
     deadEnemy->showTransitionButton();
 
@@ -1574,6 +1654,7 @@ void GameScreen::level4PostLevelCleanup()
 //LEVEL 5 - CENTRAL SQUARE AGAIN
 void GameScreen::level5FirstFunction()
 {
+    writeSettings();
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -1839,7 +1920,6 @@ void GameScreen::level5PostLevelCleanup()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
-    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadEnemy->hide();
@@ -1859,6 +1939,7 @@ void GameScreen::level5PostLevelCleanup()
 void GameScreen::level6FirstFunction()
 {
     gameLevel = 6;
+    writeSettings();
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 6 - Underworld/Level6Background.png) 0 0 0 0 stretch stretch;"
                         "}");
@@ -2131,7 +2212,6 @@ void GameScreen::level6PostLevelCleanup()
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
     disconnect(deadHero, nullptr, nullptr, nullptr);
-    writeSettings();
     deadEnemy->hideBossButton();
     deadEnemy->showTransitionButton();
     deadEnemy->hide();
@@ -2152,6 +2232,7 @@ void GameScreen::level6PostLevelCleanup()
 void GameScreen::level7FirstFunction()
 {
     gameLevel = 7;
+    writeSettings();
     if (curseRemoved)
     {
         this -> setStyleSheet("#GameScreen {"
@@ -2613,7 +2694,6 @@ void GameScreen::level7PostLevelCleanup()
     disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
     disconnect(riDialog, nullptr, nullptr, nullptr);
-    writeSettings();
 
     heroHealth = heroMaxHealth;
     ui->heroHealthBar->setValue(heroHealth);
@@ -2655,6 +2735,7 @@ void GameScreen::level8DapoFunction()
                             "border-image: url(:/images/images/Level 8 - Sikorski High/Level8Background_1.png) 0 0 0 0 stretch stretch;"
                             "}");
     }
+    writeSettings();
     fadeInAnimation(this, 1000);
 
     dialogs = new QString[2];
@@ -4253,37 +4334,6 @@ void GameScreen::updateActionPointsButtons()
     ui->thirdActionBox->setEnabled(false);
     ui->fourthActionBox->setEnabled(false);
     ui->fifthActionBox->setEnabled(false);
-}
-
-//SAVE
-void GameScreen::writeSettings()
-{
-    //Game level
-    game_settings.setValue("GAME_LEVEL", gameLevel);
-
-    //Character stats
-    game_settings.setValue("SEX", sex);
-    game_settings.setValue("HERO_ATTACK", heroAttack);
-    game_settings.setValue("HERO_DEFENSE", heroDefense);
-    game_settings.setValue("HERO_HEALTH", heroMaxHealth);
-    game_settings.setValue("HERO_CRIT_RATE", heroCritRate);
-    game_settings.setValue("HERO_REFLECTION_RATE", heroReflectionRate);
-    game_settings.setValue("HERO_HEAL_RATE", heroHealRate);
-
-    //Character levels
-    game_settings.setValue("WEAPON_LEVEL", weaponLevel);
-    game_settings.setValue("SHIELD_LEVEL", shieldLevel);
-    game_settings.setValue("HEALTH_LEVEL", healthLevel);
-
-    //Bought items
-    game_settings.setValue("WEALTH", wealth);
-    game_settings.setValue("BLAHAJ_OWNED", blahajOwned);
-    game_settings.setValue("MANUL_OWNED", manulOwned);
-    game_settings.setValue("DR_PIEPRZER_OWNED", drPieprzerOwned);
-
-    //Decisions
-    game_settings.setValue("CURSE_REMOVED", curseRemoved);
-    game_settings.setValue("SEZY_SPARED", sezySpared);
 }
 
 //OTHER

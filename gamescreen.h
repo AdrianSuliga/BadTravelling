@@ -118,6 +118,8 @@ private slots:
     void heroHealsHimself();
     //SAVE
     void writeSettings();
+    void printSettings();
+    void printVars();
 signals:
     void heroKilled();
     void enemyKilled();
@@ -140,7 +142,6 @@ private:
     DeadHeroWidget *deadHero;
     TutorialInfo *tutorialWidget;
     RecoveredItemDialog *riDialog;
-    QSettings game_settings;
 };
 
 #endif // GAMESCREEN_H
