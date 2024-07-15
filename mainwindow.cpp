@@ -8,7 +8,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 
-const int SECOND = 100;
+const int SECOND = 1000;
 QSettings main_settings("BEBELNO ENTERTAINMENT", "Lost in Wloszczowa");
 
 MainWindow::MainWindow(QWidget *parent)

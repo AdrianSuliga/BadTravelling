@@ -113,6 +113,9 @@ GameScreen::GameScreen(QWidget *parent, int gender, bool is_new_game) :
     connectShop();
 
     switch (gameLevel) {
+        case 0:
+            level1FirstFunction();
+        break;
         case 1:
             level2FirstFunction();
         break;
@@ -171,10 +174,15 @@ void GameScreen::loadVariables()
         blahajOwned = game_settings.value("BLAHAJ_OWNED").toBool();
         manulOwned = game_settings.value("MANUL_OWNED").toBool();
         drPieprzerOwned = game_settings.value("DR_PIEPRZER_OWNED").toBool();
+
+        keyChainRetrieved = game_settings.value("KEY_CHAIN_RETRIVED").toBool();
+        keyRetrieved = game_settings.value("KEY_RETRIEVED").toBool();
+        idRetrieved = game_settings.value("ID_RETRIEVED").toBool();
+        moneyRetrieved = game_settings.value("MONEY_RETRIVED").toBool();
     }
     else
     {
-        gameLevel = 1;
+        gameLevel = 0;
 
         if (sex == 0)
         {
@@ -204,6 +212,11 @@ void GameScreen::loadVariables()
         blahajOwned = false;
         manulOwned = false;
         drPieprzerOwned = false;
+
+        keyChainRetrieved = false;
+        keyRetrieved = false;
+        idRetrieved = false;
+        moneyRetrieved = false;
     }
 
     heroHealth = heroMaxHealth;
@@ -254,6 +267,9 @@ void GameScreen::loadVariables()
     ui->enemyHealthPointsLabel->setText("-");
     ui->enemyHealthBar->setMaximum(1);
     ui->enemyHealthBar->setValue(0);
+    ui->enemyHealthBar->hide();
+    ui->enemyLabel->hide();
+    ui->enemyStatWidget->hide();
 
     if (weaponLevel >= 0 && weaponLevel <= 2)
         ui->weaponShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
@@ -288,6 +304,39 @@ void GameScreen::loadVariables()
     if (healthLevel >= 12)
         ui->healthShopLabel->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
 
+    if (weaponLevel >= 1 && weaponLevel <= 3)
+        ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
+    if (weaponLevel >= 4 && weaponLevel <= 6)
+        ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass2.png) 0 0 0 0 stretch stretch;");
+    if (weaponLevel >= 7 && weaponLevel <= 9)
+        ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass3.png) 0 0 0 0 stretch stretch;");
+    if (weaponLevel >= 10 && weaponLevel <= 12)
+        ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass4.png) 0 0 0 0 stretch stretch;");
+    if (weaponLevel >= 13)
+        ui->attackActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/WeaponClass1.png) 0 0 0 0 stretch stretch;");
+
+    if (shieldLevel >= 1 && shieldLevel <= 3)
+        ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass1.png) 0 0 0 0 stretch stretch;");
+    if (shieldLevel >= 4 && shieldLevel <= 6)
+        ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass2.png) 0 0 0 0 stretch stretch;");
+    if (shieldLevel >= 7 && shieldLevel <= 9)
+        ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass3.png) 0 0 0 0 stretch stretch;");
+    if (shieldLevel >= 10 && shieldLevel <= 12)
+        ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass4.png) 0 0 0 0 stretch stretch;");
+    if (shieldLevel >= 13)
+        ui->defenseActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/ShieldClass5.png) 0 0 0 0 stretch stretch;");
+
+    if (healthLevel >= 1 && healthLevel <= 3)
+        ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass1.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 4 && healthLevel <= 6)
+        ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass2.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 7 && healthLevel <= 9)
+        ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass3.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 10 && healthLevel <= 12)
+        ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass4.png) 0 0 0 0 stretch stretch;");
+    if (healthLevel >= 13)
+        ui->healActionButton->setStyleSheet("border-image: url(:/images/images/Shop - Normal/HealthClass5.png) 0 0 0 0 stretch stretch;");
+
     ui->weaponShopPriceLabel->setText(QString::number(weaponPrice));
     ui->shieldShopPriceLabel->setText(QString::number(shieldPrice));
     ui->healthShopPriceLabel->setText(QString::number(healthPrice));
@@ -297,14 +346,26 @@ void GameScreen::loadVariables()
 
     ui->amountOfMoneyLabel->setText(QString::number(wealth));
 
-    ui->keychainLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
-                                     "border-image: url(:/images/images/AppScreenArt/keychain.png) 0 0 0 0 stretch stretch;");
-    ui->keyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
-                                "border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
-    ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
-                               "border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
-    ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
-                                  "border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
+    if (keyChainRetrieved)
+    {
+        ui->keychainLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                         "border-image: url(:/images/images/AppScreenArt/keychain.png) 0 0 0 0 stretch stretch;");
+    }
+    if (keyRetrieved)
+    {
+        ui->keyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                    "border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
+    }
+    if (idRetrieved)
+    {
+        ui->idLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                   "border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
+    }
+    if (moneyRetrieved)
+    {
+        ui->moneyLabel->setStyleSheet("background-color: rgba(20,20,20,100);"
+                                      "border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
+    }
 
     ui->firstActionBox->setEnabled(false);
     ui->secondActionBox->setEnabled(false);
@@ -354,56 +415,12 @@ void GameScreen::writeSettings()
     //Decisions
     game_settings.setValue("CURSE_REMOVED", curseRemoved);
     game_settings.setValue("SEZY_SPARED", sezySpared);
-}
-void GameScreen::printSettings()
-{
-    qDebug() << "LEVEL: " << game_settings.value("GAME_LEVEL").toInt();
-    qDebug() << game_settings.value("SEX").toInt();
 
-    qDebug() << game_settings.value("HERO_ATTACK").toInt();
-    qDebug() << game_settings.value("HERO_DEFENSE").toInt();
-    qDebug() << game_settings.value("HERO_HEALTH").toInt();
-    qDebug() << game_settings.value("HERO_CRIT_RATE").toInt();
-    qDebug() << game_settings.value("HERO_REFLECTION_RATE").toInt();
-    qDebug() << game_settings.value("HERO_HEAL_RATE").toInt();
-
-    qDebug() << game_settings.value("CURSE_REMOVED").toBool();
-    qDebug() << game_settings.value("SEZY_SPARED").toBool();
-
-    qDebug() << game_settings.value("WEALTH").toInt();
-
-    qDebug() << game_settings.value("WEAPON_LEVEL").toInt();
-    qDebug() << game_settings.value("SHIELD_LEVEL").toInt();
-    qDebug() << game_settings.value("HEALTH_LEVEL").toInt();
-
-    qDebug() << game_settings.value("BLAHAJ_OWNED").toBool();
-    qDebug() << game_settings.value("MANUL_OWNED").toBool();
-    qDebug() << game_settings.value("DR_PIEPRZER_OWNED").toBool();
-}
-void GameScreen::printVars()
-{
-    qDebug() << "LEVEL: " << gameLevel;
-    qDebug() << sex;
-
-    qDebug() << heroAttack;
-    qDebug() << heroDefense;
-    qDebug() << heroMaxHealth;
-    qDebug() << heroCritRate;
-    qDebug() << heroReflectionRate;
-    qDebug() << heroHealRate;
-
-    qDebug() << curseRemoved;
-    qDebug() << sezySpared;
-
-    qDebug() << wealth;
-
-    qDebug() << weaponLevel;
-    qDebug() << shieldLevel;
-    qDebug() << healthLevel;
-
-    qDebug() << blahajOwned;
-    qDebug() << manulOwned;
-    qDebug() << drPieprzerOwned;
+    //Retrived items
+    game_settings.setValue("KEY_CHAIN_RETRIVED", keyChainRetrieved);
+    game_settings.setValue("KEY_RETRIVED", keyRetrieved);
+    game_settings.setValue("ID_RETRIVED", idRetrieved);
+    game_settings.setValue("MONEY_RETRIVED", moneyRetrieved);
 }
 
 void GameScreen::paintEvent(QPaintEvent *event)
@@ -418,6 +435,7 @@ void GameScreen::paintEvent(QPaintEvent *event)
 void GameScreen::level1FirstFunction()
 {
     srand(time(nullptr));
+    gameLevel = 1;
     showTutorial();
     connect(tutorialWidget, &TutorialInfo::endTutorial, this, [this]() {
         tutorialWidget->hide();
@@ -553,6 +571,7 @@ void GameScreen::level2FirstFunction()
     this -> setStyleSheet("#GameScreen {"
                           "border-image: url(:/images/images/Level 2 - Pilica River/Level2Background1.png) 0 0 0 0 stretch stretch;"
                           "}");
+    gameLevel = 1;
     writeSettings();
     emit saveMade();
     deadHero->hide();
@@ -909,7 +928,9 @@ void GameScreen::level3FirstFunction()
     deadEnemy->showTransitionButton();
     fadeInAnimation(this, 2000);
     changeMusic("qrc:/other/other/Music/MainAmbient.mp3");
+    gameLevel = 2;
     writeSettings();
+    gameLevel = 3;
 
     dialogs = new QString[2];
     if (sex == 0)
@@ -1265,6 +1286,7 @@ void GameScreen::level3RetreatFromBossFunction()
 void GameScreen::level3PostLevelCleanup()
 {
     riDialog->hide();
+    keyChainRetrieved = true;
     fadeAwayAnimation(this, 2000);
 
     disconnect(this, &GameScreen::enemyKilled, nullptr, nullptr);
@@ -1305,7 +1327,9 @@ void GameScreen::level4FirstFunction()
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 4 - Ogrodowa/Level4Background_1.png) 0 0 0 0 stretch stretch;"
                         "}");
+    gameLevel = 3;
     writeSettings();
+    gameLevel = 4;
     fadeInAnimation(this, 2000);
     dialogs = new QString[2];
     if (sex == 0)
@@ -1326,6 +1350,7 @@ void GameScreen::level4FirstFunction()
         disconnect(this, &GameScreen::sceneEnded, nullptr, nullptr);
         ui->enemyHealthBar->show();
         ui->enemyStatWidget->show();
+        ui->enemyLabel->show();
         heroHealth = heroMaxHealth;
         ui->heroHealthBar->setValue(heroHealth);
         changeMusic("qrc:/other/other/Music/MainBattleMusic.mp3");
@@ -1503,6 +1528,7 @@ void GameScreen::level4BossFight()
             riDialog->show();
             connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
                 riDialog->hide();
+                keyRetrieved = true;
                 ui->keyLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/kays.png) 0 0 0 0 stretch stretch;");
                 level4PostLevelCleanup();
             });
@@ -1632,10 +1658,6 @@ void GameScreen::level4PostLevelCleanup()
     deadHero->hideGoBackButton();
     deadEnemy->showTransitionButton();
 
-    this -> setStyleSheet("#GameScreen {"
-                          "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_1.png) 0 0 0 0 stretch stretch;"
-                          "}");
-
     gameLevel = 5;
     gameProgress = 0;
     numberOfRounds = 0;
@@ -1654,7 +1676,12 @@ void GameScreen::level4PostLevelCleanup()
 //LEVEL 5 - CENTRAL SQUARE AGAIN
 void GameScreen::level5FirstFunction()
 {
+    this -> setStyleSheet("#GameScreen {"
+                          "border-image: url(:/images/images/Level 5 - Central Square Again/Level5Background_1.png) 0 0 0 0 stretch stretch;"
+                          "}");
+    gameLevel = 4;
     writeSettings();
+    gameLevel = 5;
     dialogs = new QString[2];
     if (sex == 0)
         dialogs[0] = "PODRÓŻNICZKA";
@@ -1938,8 +1965,9 @@ void GameScreen::level5PostLevelCleanup()
 //LEVEL 6 - UNDERWORLD
 void GameScreen::level6FirstFunction()
 {
-    gameLevel = 6;
+    gameLevel = 5;
     writeSettings();
+    gameLevel = 6;
     this->setStyleSheet("#GameScreen {"
                         "border-image: url(:/images/images/Level 6 - Underworld/Level6Background.png) 0 0 0 0 stretch stretch;"
                         "}");
@@ -2231,8 +2259,9 @@ void GameScreen::level6PostLevelCleanup()
 //LEVEL 7 - WIEJSKA
 void GameScreen::level7FirstFunction()
 {
-    gameLevel = 7;
+    gameLevel = 6;
     writeSettings();
+    gameLevel = 7;
     if (curseRemoved)
     {
         this -> setStyleSheet("#GameScreen {"
@@ -2687,6 +2716,7 @@ void GameScreen::level7RetreatFunction()
 void GameScreen::level7PostLevelCleanup()
 {
     riDialog->hide();
+    idRetrieved = true;
     ui->idLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/id.png) 0 0 0 0 stretch stretch;");
     fadeAwayAnimation(this, 1000);
     disconnect(deadEnemy, nullptr, nullptr, nullptr);
@@ -2735,7 +2765,9 @@ void GameScreen::level8DapoFunction()
                             "border-image: url(:/images/images/Level 8 - Sikorski High/Level8Background_1.png) 0 0 0 0 stretch stretch;"
                             "}");
     }
+    gameLevel = 7;
     writeSettings();
+    gameLevel = 8;
     fadeInAnimation(this, 1000);
 
     dialogs = new QString[2];
@@ -3108,6 +3140,7 @@ void GameScreen::level8PostLevelCleanup()
         connect(riDialog, &RecoveredItemDialog::acceptMessage, this, [this]{
             ui->moneyLabel->setStyleSheet("border-image: url(:/images/images/AppScreenArt/wallet.png) 0 0 0 0 stretch stretch;");
             riDialog->hide();
+            moneyRetrieved = true;
             numberOfRounds = 0;
             heroHealth = heroMaxHealth;
             ui->heroHealthBar->setValue(heroHealth);
@@ -3681,45 +3714,45 @@ void GameScreen::drawEnemy(int whatToDraw)
             break;
         case 1:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/KsiadzPawel.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 200;
+            eBaseAtt = 180;
             eBaseDef = 225;
-            eBaseHp = 6500;
+            eBaseHp = 5500;
             break;
         case 2:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/MonikaAndMarczu.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 225;
-            eBaseDef = 250;
-            eBaseHp = 7250;
+            eBaseAtt = 200;
+            eBaseDef = 225;
+            eBaseHp = 6250;
             break;
         case 3:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Tosia.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 230;
-            eBaseDef = 260;
-            eBaseHp = 7500;
+            eBaseAtt = 225;
+            eBaseDef = 250;
+            eBaseHp = 7000;
             break;
         case 4:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniDeja.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 250;
-            eBaseDef = 300;
-            eBaseHp = 8000;
+            eBaseAtt = 240;
+            eBaseDef = 270;
+            eBaseHp = 7500;
             break;
         case 5:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/PaniJadzia.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 300;
-            eBaseDef = 300;
+            eBaseAtt = 260;
+            eBaseDef = 280;
             eBaseHp = 8000;
             break;
         case 6:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenka.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 420;
-            eBaseDef = 500;
-            eBaseHp = 10000;
+            eBaseAtt = 300;
+            eBaseDef = 300;
+            eBaseHp = 9000;
             break;
         case 7:
             ui->enemyLabel->setStyleSheet("border-image: url(:/images/images/Level 8 - Sikorski High/Bozenkus.png) 0 0 0 0 stretch stretch;");
-            eBaseAtt = 450;
-            eBaseDef = 500;
-            eBaseHp = 20000;
+            eBaseAtt = 400;
+            eBaseDef = 400;
+            eBaseHp = 15000;
             break;
         }
         break;
@@ -3979,6 +4012,8 @@ int GameScreen::calculateLoot(int level, int enemyType)
         break;
     case 2:
         loot = 35;
+        if (enemyType == 2)
+            loot = 500;
         break;
     case 3:
         if (enemyType == 0)
@@ -4101,13 +4136,13 @@ void GameScreen::heroAttacks()
 
     ui->infoAboutActionLabel->setText("");
     ui->confirmButton->hide();
-    delay(150);
+    delay(1500);
     if (enemyHealth >= realDamage)
         enemyHealth -= realDamage;
     else if (enemyHealth < realDamage)
         enemyHealth = 0;
     ui->enemyHealthBar->setValue(enemyHealth);
-    delay(50);
+    delay(500);
     if (actionPoints < 5)
     {
         actionPoints++;
@@ -4412,7 +4447,7 @@ void GameScreen::showOneDialog(int totalNumOfLines)
     {
         toShow += text[i];
         ui->dialogLabel->setText(toShow);
-        delay(10);
+        delay(30);
     }
     counterOfLines += 2;
     if (counterOfLines == totalNumOfLines)

@@ -25,7 +25,8 @@ public:
 protected:
     void paintEvent(QPaintEvent *event);
 private slots:
-    //SETUP
+    //SAVE
+    void writeSettings();
     void loadVariables();
     //LEVEL 1
     void level1FirstFunction();
@@ -116,10 +117,6 @@ private slots:
     void heroAttacks();
     void heroDefends();
     void heroHealsHimself();
-    //SAVE
-    void writeSettings();
-    void printSettings();
-    void printVars();
 signals:
     void heroKilled();
     void enemyKilled();
@@ -129,7 +126,8 @@ signals:
 private:
     Ui::GameScreen *ui;
     int sex;
-    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved, sezySpared, bossFightOn;
+    bool blahajOwned, manulOwned, drPieprzerOwned, shieldOn, shieldBroken, curseRemoved, sezySpared, bossFightOn,
+        keyChainRetrieved, keyRetrieved, idRetrieved, moneyRetrieved;
     int heroAttack, heroCritRate, heroDefense, heroShield, heroReflectionRate, heroHealth, heroMaxHealth, heroHealRate,
         enemyAttack, enemyDefense, enemyHealth, enemyMaxHealth;
     int wealth, weaponPrice, shieldPrice, healthPrice, blahajPrice, manulPrice, drPieprzerPrice;
